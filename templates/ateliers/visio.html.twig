@@ -1,0 +1,99 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ visio.titre }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
+{% endblock %}
+
+{% block body %}
+    <a href="{{ path('app_visio') }}" type="submit" class="button">Retour</a>
+    <h1>{{ visio.titre }}</h1>
+
+    <section class="cards-container">
+        <div class="card">
+            <h5 class="titre">ℹ️ Informations pratiques</h5>
+            <p>📅 <strong>Date :</strong> {{ visio.dateVisio|date('d/m/Y') }}</p>
+            <p>💶 <strong>Tarif :</strong> {{ visio.prix }} €</p>
+            <br>
+            <hr>
+            <br>
+
+            <div>ℹ️ Le lien de connexion vous sera envoyé par email après votre inscription.</div>
+            <br>
+        </div>
+
+        <div class="card">
+            <h5 class="titre">✍️ Inscription</h5>
+            {% if inscrit %}
+                <!-- Message de confirmation après inscription -->
+                <h5>✓ Merci pour votre inscription !</h5>
+                <p style="margin-bottom: 0;">Votre inscription a bien été enregistrée.</p>
+            {% else %}
+                {{ form_start(form) }}
+
+                <div class="form">
+                    {{ form_label(form.name) }}
+                    {{ form_widget(form.name) }}
+                    {{ form_errors(form.name) }}
+                </div>
+
+                <div class="form">
+                    {{ form_label(form.prenom) }}
+                    {{ form_widget(form.prenom) }}
+                    {{ form_errors(form.prenom) }}
+                </div>
+
+                <div class="form">
+                    {{ form_label(form.email) }}
+                    {{ form_widget(form.email) }}
+                    {{ form_errors(form.email) }}
+                </div>
+
+                <div class="form">
+                    {{ form_label(form.telephone) }}
+                    {{ form_widget(form.telephone) }}
+                    {{ form_errors(form.telephone) }}
+                </div>
+
+                <div class="form">
+                    {{ form_label(form.moyenPaiement) }}
+                    <div class="radio-group">
+                        {{ form_widget(form.moyenPaiement) }}
+                    </div>
+                    {{ form_errors(form.moyenPaiement) }}
+                </div>
+
+                {# Le lien HelloAsso, caché par défaut #}
+                {% if visio.lienHelloAsso %}
+                    <div id="helloasso-link">
+                        <strong>Pour finaliser votre paiement par CB :</strong><br>
+                        Après validation du formulaire, vous serez redirigé vers HelloAsso pour effectuer le paiement.
+                    </div>
+                {% endif %}
+
+                <button type="submit" class="button">Valider</button>
+                {{ form_end(form) }}
+            {% endif %}
+        </div>
+    </section>
+
+    {# Afficher la card "Complet" uniquement si la visio est complète #}
+    {% if visio.complet %}
+        <div class="card mt-3" style="border: 2px solid #dc3545;">
+            <div class="card-header" style="background-color: #dc3545; color: white;">
+                <h5>❌ Complet</h5>
+            </div>
+            <div class="card-body text-center">
+                <p style="margin-bottom: 1rem;">Cette visioconférence affiche complet.</p>
+            </div>
+        </div>
+    {% endif %}
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/scripts.js') }}"></script>
+{% endblock %}

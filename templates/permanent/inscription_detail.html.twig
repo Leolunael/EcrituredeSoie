@@ -1,0 +1,165 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails de mon inscription - {{ evenement.titre }}{% endblock %}
+
+{% block body %}
+    <div class="container my-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="mb-4">
+                    {# ✅ MODIFIÉ: Route pour permanent #}
+                    <a href="{{ path('permanent_dashboard') }}" class="btn btn-secondary">
+                        <i class="bi bi-arrow-left"></i> Retour à mon espace
+                    </a>
+                </div>
+
+                <div class="card">
+                    <div class="card-header {% if type == 'Atelier' %}bg-warning{% elseif type == 'Visio' %}bg-info{% elseif type == 'Lettre' %}bg-success{% else %}bg-primary{% endif %}">
+                        <h4 style="color: white;">
+                            {% if type == 'Atelier' %}
+                                <i class="bi bi-calendar-event"></i> Inscription à l'atelier
+                            {% elseif type == 'Visio' %}
+                                <i class="bi bi-camera-video"></i> Inscription à la visio
+                            {% elseif type == 'Lettre' %}
+                                <i class="bi bi-envelope-heart"></i> Inscription à la lettre
+                            {% else %}
+                                <i class="bi bi-file-text"></i> Détails de l'inscription
+                            {% endif %}
+                        </h4>
+                    </div>
+                    <div class="card-body">
+                        {# Informations sur l'événement #}
+                        {% if evenement %}
+                            <div class="alert mb-4 {% if type == 'Atelier' %}alert-warning{% elseif type == 'Visio' %}alert-info{% elseif type == 'Lettre' %}alert-success{% else %}alert-primary{% endif %}">
+                                <h5>
+                                    {% if type == 'Atelier' %}
+                                        <i class="bi bi-calendar-event"></i> Atelier présentiel
+                                    {% elseif type == 'Visio' %}
+                                        <i class="bi bi-camera-video"></i> Atelier en visio
+                                    {% elseif type == 'Lettre' %}
+                                        <i class="bi bi-envelope-heart"></i> Lettre du cœur
+                                    {% else %}
+                                        <i class="bi bi-info-circle"></i> Événement
+                                    {% endif %}
+                                </h5>
+                                <p class="mb-1">
+                                    <strong>Titre :</strong> {{ evenement.titre ?? evenement.nom ?? 'Non spécifié' }}
+                                </p>
+
+                                {# Date selon le type #}
+                                {% if type == 'Atelier' and evenement.dateAtelier is defined %}
+                                    <p class="mb-1">
+                                        <strong>Date :</strong> {{ evenement.dateAtelier|date('d/m/Y à H:i') }}
+                                    </p>
+                                    {% if evenement.lieu %}
+                                        <p class="mb-1">
+                                            <strong>Lieu :</strong> {{ evenement.lieu }}
+                                        </p>
+                                    {% endif %}
+                                {% elseif type == 'Visio' and evenement.dateVisio is defined %}
+                                    <p class="mb-1">
+                                        <strong>Date :</strong> {{ evenement.dateVisio|date('d/m/Y à H:i') }}
+                                    </p>
+                                    <p class="mb-1">
+                                        <strong>Format :</strong> En ligne (visioconférence)
+                                    </p>
+                                {% elseif evenement.date is defined %}
+                                    <p class="mb-1">
+                                        <strong>Date :</strong> {{ evenement.date|date('d/m/Y') }}
+                                    </p>
+                                {% endif %}
+
+                                {% if evenement.prix is defined %}
+                                    <p>
+                                        <strong>Prix :</strong> {{ evenement.prix }} euros
+                                    </p>
+                                {% endif %}
+
+                                {% if evenement.description %}
+                                    <hr>
+                                    <p class="small">
+                                        <strong>Description :</strong> {{ evenement.description }}
+                                    </p>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+
+                        {# Informations personnelles #}
+                        <h5 class="mb-3">
+                            <i class="bi bi-person"></i> Informations personnelles
+                        </h5>
+                        <div class="row mb-4">
+                            <div class="col-md-6 mb-3">
+                                <label class="text-muted small">Nom</label>
+                                <p class="fw-bold">{{ inscription.name }}</p>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="text-muted small">Prénom</label>
+                                <p class="fw-bold">{{ inscription.prenom }}</p>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="text-muted small">Email</label>
+                                <p class="fw-bold">{{ inscription.email }}</p>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="text-muted small">Téléphone</label>
+                                <p class="fw-bold">{{ inscription.telephone ?? 'Non renseigné' }}</p>
+                            </div>
+                        </div>
+
+                        {# Informations sur l'inscription #}
+                        <h5 class="mb-3">
+                            <i class="bi bi-info-circle"></i> Détails de l'inscription
+                        </h5>
+                        <div class="row mb-4">
+                            {% if inscription.dateInscription %}
+                                <div class="col-md-6 mb-3">
+                                    <label class="text-muted small">Date d'inscription</label>
+                                    <p class="fw-bold">
+                                        {{ inscription.dateInscription|date('d/m/Y à H:i') }}
+                                    </p>
+                                </div>
+                            {% endif %}
+
+                            {% if inscription.moyenPaiement %}
+                                <div class="col-md-6 mb-3">
+                                    <label class="text-muted small">Moyen de paiement</label>
+                                    <p class="fw-bold">
+                                        {% if inscription.moyenPaiement == 'cheque' %}
+                                            <span class="badge bg-info">
+                                                <i class="bi bi-envelope"></i> Chèque
+                                            </span>
+                                        {% elseif inscription.moyenPaiement == 'especes' %}
+                                            <span class="badge bg-success">
+                                                <i class="bi bi-cash"></i> Espèces
+                                            </span>
+                                        {% elseif inscription.moyenPaiement == 'cb' %}
+                                            <span class="badge bg-primary">
+                                                <i class="bi bi-credit-card"></i> Carte Bancaire (HelloAsso)
+                                            </span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">
+                                                {{ inscription.moyenPaiement }}
+                                            </span>
+                                        {% endif %}
+                                    </p>
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        {# Boutons d'action #}
+                        <div class="mt-4 d-flex gap-2">
+                            {# ✅ MODIFIÉ: Route pour permanent #}
+                            <a href="{{ path('permanent_dashboard') }}" class="btn btn-primary">
+                                <i class="bi bi-house"></i> Retour à mon espace
+                            </a>
+                            <button onclick="window.print()" class="btn btn-secondary">
+                                <i class="bi bi-printer"></i> Imprimer
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

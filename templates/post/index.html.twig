@@ -1,0 +1,92 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Espace Permanent - Publications{% endblock %}
+
+{% block body %}
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h1><i class="fas fa-newspaper"></i> Publications</h1>
+                </div>
+
+                {% for message in app.flashes('success') %}
+                    <div class="alert alert-success alert-dismissible">
+                        {{ message }}
+                        <button type="button" class="btn-close"></button>
+                    </div>
+                {% endfor %}
+
+                {% if posts is empty %}
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle"></i>
+                        Aucune publication pour le moment. Soyez le premier à publier !
+                    </div>
+                {% else %}
+                    {% for post in posts %}
+                        <div class="card mb-4 shadow-sm">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <div>
+                                        <h3 class="card-title mb-1">{{ post.titre }}</h3>
+                                        <small class="text-muted">
+                                            Par {{ post.auteurNom }}
+                                            {% if post.dateCreation %}
+                                                • Date: {{ post.dateCreation|date('d/m/Y à H:i') }}
+                                            {% endif %}
+                                        </small>
+                                    </div>
+                                </div>
+
+                                <p class="card-text">{{ post.contenu|nl2br|slice(0, 300) }}{% if post.contenu|length > 300 %}...{% endif %}</p>
+
+                                {# Affichage des médias #}
+                                {% if post.image %}
+                                    <div class="mb-3">
+                                        <img src="{{ asset('uploads/posts/' ~ post.image) }}"
+                                             alt="Image"
+                                             class="img-fluid rounded"
+                                             style="max-height: 400px;">
+                                    </div>
+                                {% endif %}
+
+                                {% if post.video %}
+                                    <div class="mb-3">
+                                        <video controls class="w-100" style="max-height: 400px;">
+                                            <source src="{{ asset('uploads/posts/' ~ post.video) }}">
+                                        </video>
+                                    </div>
+                                {% endif %}
+
+                                {% if post.audio %}
+                                    <div class="mb-3">
+                                        <audio controls class="w-100">
+                                            <source src="{{ asset('uploads/posts/' ~ post.audio) }}">
+                                        </audio>
+                                    </div>
+                                {% endif %}
+
+                                {% if post.pdf %}
+                                    <div class="mb-3">
+                                        <a href="{{ asset('uploads/posts/' ~ post.pdf) }}"
+                                           class="btn btn-outline-primary"
+                                           target="_blank">
+                                            <i class="fas fa-file-pdf"></i> Voir le PDF
+                                        </a>
+                                    </div>
+                                {% endif %}
+
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span><i class="fas fa-comment"></i></span>
+                                    <a href="{{ path('app_post_show', {id: post.id}) }}" class="btn btn-primary">
+                                        Voir plus <i class="fas fa-arrow-right"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

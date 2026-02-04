@@ -1,0 +1,111 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Fiche utilisateur - {{ user.prenom }} {{ user.nom }}{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>
+                <i class="fas fa-user-circle"></i>
+                {{ user.prenom }} {{ user.nom }}
+            </h1>
+            <a href="{{ path('admin_users_registered') }}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Retour à la liste
+            </a>
+        </div>
+
+        <div class="row">
+            <!-- Informations principales -->
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-info-circle"></i> Informations personnelles
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-borderless">
+                            <tr>
+                                <th width="40%">Nom :</th>
+                                <td>{{ user.nom }}</td>
+                            </tr>
+                            <tr>
+                                <th>Prénom :</th>
+                                <td>{{ user.prenom }}</td>
+                            </tr>
+                            <tr>
+                                <th>Email :</th>
+                                <td>{{ user.email }}</td>
+                            </tr>
+                            <tr>
+                                <th>Rôles :</th>
+                                <td>
+                                    {% for role in user.roles %}
+                                        <span class="badge bg-primary">{{ role }}</span>
+                                    {% endfor %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Compte vérifié :</th>
+                                <td>
+                                    {% if user.isVerified %}
+                                        <span class="badge bg-success">
+                                        <i class="fas fa-check"></i> Oui
+                                    </span>
+                                    {% else %}
+                                        <span class="badge bg-warning">
+                                        <i class="fas fa-clock"></i> Non
+                                    </span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Statistiques -->
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-chart-bar"></i> Activité
+                        </h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="card mb-3">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-tools"></i> Actions
+                </h5>
+            </div>
+            <div class="card-body">
+                <a href="{{ path('admin_user_edit', {id: user.id}) }}" class="btn btn-primary">
+                    <i class="fas fa-edit"></i> Modifier cet utilisateur
+                </a>
+            </div>
+        </div>
+
+        <div class="card border-danger">
+            <div class="card-header bg-danger text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-exclamation-triangle"></i> Zone dangereuse
+                </h5>
+            </div>
+            <div class="card-body">
+                <form method="post"
+                      action="{{ path('admin_user_delete', {id: user.id}) }}"
+                      onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer définitivement cet utilisateur ?');">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id) }}">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash"></i> Supprimer cet utilisateur
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

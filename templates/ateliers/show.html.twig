@@ -1,0 +1,121 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ atelier.titre }} - Écriture de Soie{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
+{% endblock %}
+
+{% block body %}
+        <a href="{{ path('app_ateliers') }}" type="submit" class="button">Retour</a>
+    <h1>{{ atelier.titre }}</h1>
+
+                <!-- Messages flash -->
+    {% for message in app.flashes('success') %}
+        <div>✓ {{ message }}<button class="button">&times;</button></div>
+    {% endfor %}
+
+    <!-- Informations pratiques -->
+    <section class="cards-container">
+        <div class="card">
+            <h5 class="titre">ℹ️ Informations pratiques</h5>
+
+        <ul>
+            {% if atelier.dateAtelier %}
+                <p style="margin-bottom: 0.75rem;">
+                    📅 <strong>Date :</strong> {{ atelier.dateAtelier|date('d/m/Y à H:i') }}
+                </p>
+            {% endif %}
+
+            {% if atelier.lieu %}
+                <p style="margin-bottom: 0.75rem;">📍 <strong>Lieu :</strong> {{ atelier.lieu }}</p>
+            {% endif %}
+
+            {% if atelier.prix %}
+                <p>💶 <strong>Prix :</strong> {{ atelier.prix }} €</p>
+            {% endif %}
+        </ul>
+
+        <br>
+
+    <!-- Description -->
+            {% if atelier.description %}
+                <h6>📄 Description</h6>
+                    <p style="margin-bottom: 0;">{{ atelier.description|nl2br }}</p>
+            {% endif %}
+
+
+                <!-- Informations complémentaires -->
+            {% if atelier.informations %}
+                <h5 class="card">❗ Informations complémentaires</h5>
+                    <p style="margin-bottom: 0;">{{ atelier.informations|nl2br }}</p>
+            {% endif %}
+        </div>
+    </section>
+
+                <!-- Formulaire d'inscription -->
+    <section class="cards-container">
+        <div class="card">
+            <h5 class="titre">✍️ Inscription</h5>
+            {% if inscrit %}
+        <!-- Message de confirmation après inscription -->
+                <h5>✓ Merci pour votre inscription !</h5>
+                <p style="margin-bottom: 0;">Votre inscription a bien été enregistrée.</p>
+            {% else %}
+        <!-- Afficher le formulaire d'inscription -->
+                {{ form_start(form) }}
+                    <div class="form">
+                        {{ form_label(form.name) }}
+                        {{ form_widget(form.name) }}
+                        {{ form_errors(form.name) }}
+                    </div>
+                    <div class="form">
+                        {{ form_label(form.prenom) }}
+                        {{ form_widget(form.prenom) }}
+                        {{ form_errors(form.prenom) }}
+                    </div>
+
+                    <div class="form">
+                        {{ form_label(form.email) }}
+                        {{ form_widget(form.email) }}
+                        {{ form_errors(form.email) }}
+                    </div>
+
+                    <div class="form">
+                        {{ form_label(form.telephone) }}
+                        {{ form_widget(form.telephone) }}
+                        {{ form_errors(form.telephone) }}
+                    </div>
+
+                    <div class="form">
+                        {{ form_label(form.moyenPaiement) }}
+                        <div class="radio-group">
+                        {{ form_widget(form.moyenPaiement) }}
+                    </div>
+                        {{ form_errors(form.moyenPaiement) }}
+                    </div>
+
+            {# Le lien HelloAsso, caché par défaut #}
+            {% if atelier.lienHelloAsso %}
+                <div id="helloasso-link" {# style="display: none;" #}>
+                    <strong>Pour finaliser votre paiement par CB :</strong><br>
+                    Après validation du formulaire, vous serez redirigé vers HelloAsso pour effectuer le paiement.
+                </div>
+            {% endif %}
+
+                <button type="submit" class="button">Valider</button>
+                {{ form_end(form) }}
+            {% endif %}
+        </div>
+    </section>
+                <!-- Bouton retour -->
+
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/scripts.js') }}"></script>
+
+{% endblock %}

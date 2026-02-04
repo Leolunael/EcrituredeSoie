@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ecriture de Soie{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <h1>{{ information.id ? 'Modifier' : 'Nouvelle' }} information</h1>
+
+        {{ form_start(form) }}
+        <div class="mb-3">
+            {{ form_row(form.titre) }}
+        </div>
+        <div class="mb-3">
+            {{ form_row(form.contenu) }}
+        </div>
+        <div class="mb-3">
+            {{ form_row(form.imageFile) }}
+            {% if information.image %}
+                <div class="mt-2">
+                    <img src="{{ asset('uploads/informations/' ~ information.image) }}"
+                         alt="Image actuelle"
+                         style="max-width: 200px;">
+                    <p class="text-muted">Image actuelle</p>
+                </div>
+            {% endif %}
+        </div>
+        <div class="mb-3">
+            {{ form_row(form.ordre) }}
+        </div>
+        <div class="mb-3 form-check">
+            {{ form_row(form.actif) }}
+        </div>
+
+        <button type="submit" class="btn btn-success">Enregistrer</button>
+        <a href="{{ path('admin_information') }}" class="btn btn-secondary">Annuler</a>
+        {{ form_end(form) }}
+    </div>
+{% endblock %}

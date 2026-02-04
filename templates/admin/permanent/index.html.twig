@@ -1,0 +1,129 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Gestion des Permanents{% endblock %}
+
+{% block body %}
+    <div class="container-fluid mt-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1><i class="fas fa-users me-2"></i> Gestion des Permanents</h1>
+            <div>
+                <a href="{{ path('admin_dashboard') }}" class="btn btn-outline-primary me-2">
+                    <i class="fas fa-chart-line me-1"></i> Tableau de bord
+                </a>
+            </div>
+        </div>
+
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success alert-dismissible fade show">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        {% endfor %}
+
+        <div class="card shadow">
+            <div class="card-body p-0">
+                {% if permanents is empty %}
+                    <div class="p-4 text-center text-muted">
+                        <i class="fas fa-users fa-3x mb-3"></i>
+                        <p>Aucun permanent inscrit pour le moment</p>
+                    </div>
+                {% else %}
+                    <div class="table-responsive">
+                        <table class="table table-hover table-striped mb-0">
+                            <thead class="table-dark">
+                            <tr>
+                                <th>Nom</th>
+                                <th>Email</th>
+                                <th>Téléphone</th>
+                                <th>Inscription</th>
+                                <th>Paiement</th>
+                                <th>Rôle</th>
+                                <th>Statut</th>
+                                <th class="text-center">Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for permanent in permanents %}
+                                <tr>
+                                    <td>
+                                        <strong>{{ permanent.nomComplet }}</strong>
+                                    </td>
+                                    <td>{{ permanent.email }}</td>
+                                    <td>{{ permanent.telephone ?? '-' }}</td>
+                                    <td>{{ permanent.dateInscription|date('d/m/Y') }}</td>
+                                    <td>
+                                        {% if permanent.paiementEffectue %}
+                                            <span class="badge bg-success">
+                                                <i class="fas fa-check-circle me-1"></i> Payé
+                                            </span>
+                                            {% if permanent.datePaiement %}
+                                                <br><small class="text-muted">{{ permanent.datePaiement|date('d/m/Y') }}</small>
+                                            {% endif %}
+                                        {% else %}
+                                            <span class="badge bg-warning text-dark">
+                                                <i class="fas fa-clock me-1"></i> En attente
+                                            </span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if 'ROLE_ADMIN' in permanent.roles %}
+                                            <span class="badge bg-danger">Admin</span>
+                                        {% elseif 'ROLE_USER' in permanent.roles %}
+                                            <span class="badge bg-info">Utilisateur</span>
+                                        {% else %}
+                                            <span class="badge bg-primary">Permanent</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if permanent.actif %}
+                                            <span class="badge bg-success">
+                                                <i class="fas fa-check me-1"></i> Actif
+                                            </span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">
+                                                <i class="fas fa-times me-1"></i> Inactif
+                                            </span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="btn-group" role="group">
+                                            <a href="{{ path('admin_permanent_show', {id: permanent.id}) }}"
+                                               class="btn btn-sm btn-outline-primary"
+                                               title="Voir les détails">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+
+                                            {% if permanent.actif %}
+                                                <form method="post"
+                                                      action="{{ path('admin_permanent_desactiver', {id: permanent.id}) }}"
+                                                      class="d-inline">
+                                                    <button type="submit"
+                                                            class="btn btn-sm btn-outline-warning"
+                                                            title="Désactiver"
+                                                            onclick="return confirm('Désactiver ce permanent ?')">
+                                                        <i class="fas fa-user-slash"></i>
+                                                    </button>
+                                                </form>
+                                            {% else %}
+                                                <form method="post"
+                                                      action="{{ path('admin_permanent_activer', {id: permanent.id}) }}"
+                                                      class="d-inline">
+                                                    <button type="submit"
+                                                            class="btn btn-sm btn-outline-success"
+                                                            title="Activer">
+                                                        <i class="fas fa-user-check"></i>
+                                                    </button>
+                                                </form>
+                                            {% endif %}
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

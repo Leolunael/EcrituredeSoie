@@ -1,0 +1,50 @@
+{# admin/content/new.html.twig #}
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Nouveau Contenu - Administration{% endblock %}
+
+{% block body %}
+    <div class="container mt-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1><i class="bi bi-file-text-fill"></i> Nouveau Contenu</h1>
+            <a href="{{ path('admin_presentation_index') }}" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Retour à la liste
+            </a>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                {{ form_start(form) }}
+
+                <div class="mb-3">
+                    {{ form_row(form.titre) }}
+                </div>
+                <div class="mb-3">
+                    {{ form_row(form.sousTitre) }}
+                </div>
+                <div class="mb-3">
+                    {{ form_row(form.contenu) }}
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        {{ form_row(form.ordre) }}
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        {{ form_row(form.actif) }}
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-end gap-2">
+                    <a href="{{ path('admin_presentation_index') }}" class="btn btn-secondary">
+                        Annuler
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-save"></i> Créer
+                    </button>
+                </div>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+

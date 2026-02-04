@@ -1,0 +1,194 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Détails du Permanent{% endblock %}
+
+{% block body %}
+    <div class="container mt-4">
+        <a href="{{ path('admin_permanent_index') }}" class="btn btn-outline-secondary mb-3">
+            <i class="fas fa-arrow-left me-2"></i> Retour à la liste
+        </a>
+
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success alert-dismissible fade show">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        {% endfor %}
+
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white">
+                        <h3 class="mb-0">
+                            <i class="fas fa-user me-2"></i> {{ permanent.nomComplet }}
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title mb-3">Informations personnelles</h5>
+
+                        <table class="table">
+                            <tbody>
+                            <tr>
+                                <th style="width: 200px;">Nom</th>
+                                <td>{{ permanent.nom }}</td>
+                            </tr>
+                            <tr>
+                                <th>Prénom</th>
+                                <td>{{ permanent.prenom }}</td>
+                            </tr>
+                            <tr>
+                                <th>Email</th>
+                                <td>{{ permanent.email }}</td>
+                            </tr>
+                            <tr>
+                                <th>Téléphone</th>
+                                <td>{{ permanent.telephone ?? 'Non renseigné' }}</td>
+                            </tr>
+                            <tr>
+                                <th>Date d'inscription</th>
+                                <td>{{ permanent.dateInscription|date('d/m/Y à H:i') }}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                        <hr>
+
+                        <h5 class="card-title mb-3">Statut et rôle</h5>
+
+                        <div class="mb-3">
+                            <strong>Statut :</strong>
+                            {% if permanent.actif %}
+                                <span class="badge bg-success">
+                                <i class="fas fa-check me-1"></i> Actif
+                            </span>
+                            {% else %}
+                                <span class="badge bg-secondary">
+                                <i class="fas fa-times me-1"></i> Inactif
+                            </span>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            <strong>Rôle actuel :</strong>
+                            {% if 'ROLE_ADMIN' in permanent.roles %}
+                                <span class="badge bg-danger">Admin</span>
+                            {% elseif 'ROLE_USER' in permanent.roles %}
+                                <span class="badge bg-info">Utilisateur</span>
+                            {% else %}
+                                <span class="badge bg-primary">Permanent</span>
+                            {% endif %}
+                        </div>
+
+                        <form method="post" action="{{ path('admin_permanent_changer_role', {id: permanent.id}) }}" class="mb-3">
+                            <label class="form-label"><strong>Changer le rôle :</strong></label>
+                            <div class="input-group">
+                                <select name="role" class="form-select">
+                                    <option value="ROLE_PERMANENT" {% if 'ROLE_PERMANENT' in permanent.roles and 'ROLE_ADMIN' not in permanent.roles %}selected{% endif %}>Permanent</option>
+                                    <option value="ROLE_USER" {% if 'ROLE_USER' in permanent.roles %}selected{% endif %}>Utilisateur</option>
+                                    <option value="ROLE_ADMIN" {% if 'ROLE_ADMIN' in permanent.roles %}selected{% endif %}>Admin</option>
+                                </select>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save me-1"></i> Modifier
+                                </button>
+                            </div>
+                        </form>
+
+                        <hr>
+
+                        <h5 class="card-title mb-3">Informations de paiement</h5>
+
+                        <table class="table">
+                            <tbody>
+                            <tr>
+                                <th style="width: 200px;">Paiement effectué</th>
+                                <td>
+                                    {% if permanent.paiementEffectue %}
+                                        <span class="badge bg-success">
+                                            <i class="fas fa-check-circle me-1"></i> Oui
+                                        </span>
+                                    {% else %}
+                                        <span class="badge bg-warning text-dark">
+                                            <i class="fas fa-clock me-1"></i> Non - En attente
+                                        </span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% if permanent.datePaiement %}
+                                <tr>
+                                    <th>Date de paiement</th>
+                                    <td>{{ permanent.datePaiement|date('d/m/Y à H:i') }}</td>
+                                </tr>
+                            {% endif %}
+                            <tr>
+                                <th>ID Transaction HelloAsso</th>
+                                <td>{{ permanent.helloAssoTransactionId ?? 'Non disponible' }}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                        {% if not permanent.paiementEffectue %}
+                            <form method="post" action="{{ path('admin_permanent_valider_paiement', {id: permanent.id}) }}">
+                                <div class="alert alert-info">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    Le paiement n'a pas encore été effectué. Vous pouvez le valider manuellement si nécessaire.
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">ID Transaction (optionnel)</label>
+                                    <input type="text" name="transaction_id" class="form-control" placeholder="Ex: HA-123456">
+                                </div>
+                                <button type="submit" class="btn btn-success" onclick="return confirm('Valider le paiement manuellement ?')">
+                                    <i class="fas fa-check me-1"></i> Valider le paiement manuellement
+                                </button>
+                            </form>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card shadow mb-3">
+                    <div class="card-header bg-light">
+                        <h5 class="mb-0">Actions</h5>
+                    </div>
+                    <div class="card-body">
+                        {% if permanent.actif %}
+                            <form method="post" action="{{ path('admin_permanent_desactiver', {id: permanent.id}) }}" class="mb-2">
+                                <button type="submit" class="btn btn-warning w-100" onclick="return confirm('Désactiver ce permanent ?')">
+                                    <i class="fas fa-user-slash me-2"></i> Désactiver
+                                </button>
+                            </form>
+                        {% else %}
+                            <form method="post" action="{{ path('admin_permanent_activer', {id: permanent.id}) }}" class="mb-2">
+                                <button type="submit" class="btn btn-success w-100">
+                                    <i class="fas fa-user-check me-2"></i> Activer
+                                </button>
+                            </form>
+                        {% endif %}
+
+                        <hr>
+
+                        <form method="post" action="{{ path('admin_permanent_delete', {id: permanent.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce permanent ? Cette action est irréversible.')">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ permanent.id) }}">
+                            <button type="submit" class="btn btn-danger w-100">
+                                <i class="fas fa-trash me-2"></i> Supprimer
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="card shadow">
+                    <div class="card-header bg-light">
+                        <h5 class="mb-0">Statistiques</h5>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Membre depuis :</strong><br>
+                            {{ permanent.dateInscription|date('d F Y') }}</p>
+
+                        <p><strong>Ancienneté :</strong><br>
+                            {{ 'now'|date('U') - permanent.dateInscription.timestamp }} jours</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

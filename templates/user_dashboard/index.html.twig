@@ -1,0 +1,100 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ecriture de Soie{% endblock %}
+
+{% block body %}
+    <a href="{{ path('app_home') }}" class="retour-button">Retour</a>
+
+    <h1>Bonjour {{ user.prenom }} {{ user.nom }},</h1>
+
+    {# Informations du compte #}
+    <section class="cards-container">
+        <div class="card card-large">
+            <h3 class="titre">Mes informations</h3>
+
+            <div class="card-body">
+                <p><strong>Nom :</strong> {{ user.nom }}</p>
+                <p><strong>Prénom :</strong> {{ user.prenom }}</p>
+                <p><strong>Email :</strong> {{ user.email }}</p>
+                <p><strong>Téléphone :</strong> {{ user.telephone ?? 'Non renseigné' }}</p>
+                <p><strong>Compte vérifié :</strong>
+                    {% if user.isVerified %}
+                        <span class="badge">✓ Oui</span>
+                    {% else %}
+                        <span class="badge">En attente</span>
+                    {% endif %}
+                </p>
+            </div>
+
+            <a href="{{ path('user_profil') }}" class="button">
+                Modifier mes informations
+            </a>
+        </div>
+
+        {# Liste des inscriptions #}
+        <div class="card card-large">
+            <h3 class="titre">Mes inscriptions ({{ inscriptions|length }})</h3>
+
+            <div class="card-body">
+                {% if inscriptions is empty %}
+                    <p class="texte">Vous n'avez encore aucune inscription.</p>
+                {% else %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Date d'inscription</th>
+                                <th>Moyen de paiement</th>
+                                <th>Action</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for item in inscriptions %}
+                                <tr>
+                                    <td>
+                                        {% if item.type == 'Atelier' %}
+                                            <span>Atelier</span>
+                                        {% elseif item.type == 'Visio' %}
+                                            <span>Visio</span>
+                                        {% else %}
+                                            <span>Lettre</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ item.date|date('d/m/Y') }}</td>
+
+                                    <td>
+                                        {% if item.inscription.moyenPaiement == 'cheque' %}
+                                            Chèque
+                                        {% elseif item.inscription.moyenPaiement == 'especes' %}
+                                            Espèces
+                                        {% else %}
+                                            CB
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if item.type == 'Atelier' %}
+                                            <a href="{{ path('user_inscription_atelier_detail', {id: item.inscription.id}) }}" class="button">
+                                                Voir
+                                            </a>
+                                        {% elseif item.type == 'Visio' %}
+                                            <a href="{{ path('user_inscription_visio_detail', {id: item.inscription.id}) }}" class="button">
+                                                Voir
+                                            </a>
+                                        {% else %}
+                                            <a href="{{ path('user_inscription_lettre_detail', {id: item.inscription.id}) }}" class="button">
+                                                Voir
+                                            </a>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+
+{% endblock %}

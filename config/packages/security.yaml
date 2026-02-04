@@ -2,16 +2,68 @@ security:
     # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
     password_hashers:
         Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
-    # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
+        # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
+        App\Entity\Admin:
+            algorithm: auto
+        App\Entity\User:
+            algorithm: auto
+        App\Document\Permanent:
+            algorithm: auto
+
+    role_hierarchy:
+        ROLE_USER: ROLE_USER
+        ROLE_ADMIN: [ROLE_USER, ROLE_ADMIN]
+
     providers:
-        users_in_memory: { memory: null }
+        # used to reload user from session & other features (e.g. switch_user)
+        app_user_provider:
+            entity:
+                class: App\Entity\User
+                property: email
+
+        admin_provider:
+            entity:
+                class: App\Entity\Admin
+                property: email
+
+        all_users:
+            chain:
+                providers: [ 'admin_provider', 'app_user_provider']
+
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
             lazy: true
-            provider: users_in_memory
+            provider: all_users
+
+            # entry_point: form_login
+
+            form_login:
+                login_path: app_login
+                check_path: app_login
+                default_target_path: app_home
+                enable_csrf: true
+                username_parameter: _username
+                password_parameter: _password
+                # always_use_default_target_path: true
+
+            # custom_authenticator: App\Security\AppAuthenticator
+
+            logout:
+                path: app_logout
+                # where to redirect after logout
+                target: app_login
+                invalidate_session: true
+
+            remember_me:
+                secret: '%kernel.secret%'
+                lifetime: 604800
+                path: /
+                # by default, the feature is enabled by checking a checkbox in the
+                # login form, uncomment the following line to always enable it.
+                #always_remember_me: true
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
@@ -22,7 +74,9 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/login, roles: PUBLIC_ACCESS }
+        - { path: ^/register, roles: PUBLIC_ACCESS }
         # - { path: ^/profile, roles: ROLE_USER }
 
 when@test:

@@ -1,0 +1,127 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Détails du contact{% endblock %}
+
+{% block body %}
+    <div class="container-fluid mt-4">
+        <div class="row mb-4">
+            <div class="col-md-12 d-flex justify-content-between align-items-center">
+                <h1><i class="bi bi-envelope-open"></i> Détails du contact</h1>
+                <a href="{{ path('admin_contactList') }}" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left"></i> Retour à la liste
+                </a>
+            </div>
+        </div>
+
+        {# Messages flash #}
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        {% endfor %}
+
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card mb-4">
+                    <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                        <strong>Message reçu</strong>
+                        <span class="badge {% if contact.traite %}bg-success{% else %}bg-warning text-dark{% endif %}">
+                            {% if contact.traite %}Traité{% else %}Non traité{% endif %}
+                        </span>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="text-muted small">Message :</label>
+                            <p class="border-start border-4 border-primary ps-3 py-2">
+                                {{ contact.message|nl2br }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                {# Actions #}
+                <div class="card">
+                    <div class="card-header">
+                        Actions
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex gap-2">
+                            <form method="post"
+                                  action="{{ path('admin_contact_traiter', {id: contact.id}) }}"
+                                  onsubmit="return confirm('Changer le statut ?')">
+                                <input type="hidden" name="_token" value="{{ csrf_token('traiter_' ~ contact.id) }}">
+                                <button type="submit" class="btn {% if contact.traite %}btn-warning{% else %}btn-success{% endif %}">
+                                    <i class="bi bi-{% if contact.traite %}arrow-counterclockwise{% else %}check-circle{% endif %}"></i>
+                                    {% if contact.traite %}Marquer comme non traité{% else %}Marquer comme traité{% endif %}
+                                </button>
+                            </form>
+
+                            <form method="post"
+                                  action="{{ path('admin_contact_delete', {id: contact.id}) }}"
+                                  onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce contact ?')">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ contact.id) }}">
+                                <button type="submit" class="btn btn-danger">
+                                    <i class="bi bi-trash"></i> Supprimer
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                {# Informations du contact #}
+                <div class="card mb-3">
+                    <div class="card-header bg-light">
+                        <strong>Informations</strong>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="text-muted small">Nom :</label>
+                            <p class="mb-0"><strong>{{ contact.name }}</strong></p>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="text-muted small">Email :</label>
+                            <p class="mb-0">
+                                <a href="mailto:{{ contact.email }}" class="text-decoration-none">
+                                    <i class="bi bi-envelope"></i> {{ contact.email }}
+                                </a>
+                            </p>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="text-muted small">Date de réception :</label>
+                            <p class="mb-0">
+                                <i class="bi bi-calendar"></i> {{ contact.createdAt|date('d/m/Y') }}<br>
+                                <i class="bi bi-clock"></i> {{ contact.createdAt|date('H:i') }}
+                            </p>
+                        </div>
+
+                        <div class="mb-0">
+                            <label class="text-muted small">ID :</label>
+                            <p class="mb-0">#{{ contact.id }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                {# Réponse rapide par email #}
+                <div class="card">
+                    <div class="card-header bg-light">
+                        <strong>Réponse rapide</strong>
+                    </div>
+                    <div class="card-body">
+                        <a href="mailto:{{ contact.email }}?subject=Re: Votre message sur Ecriture de Soie"
+                           class="btn btn-primary w-100">
+                            <i class="bi bi-reply"></i> Répondre par email
+                        </a>
+                        <small class="text-muted d-block mt-2">
+                            Ouvre votre client email par défaut
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Gestion des utilisateurs{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <h1 class="mb-4">Gestion des utilisateurs</h1>
+        <a href="{{ path('admin_index') }}" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Tableau de bord principal
+        </a>
+
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <div class="card border-primary">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">
+                            <i class="fas fa-users"></i> Utilisateurs enregistrés
+                        </h5>
+                        <h2 class="text-primary">{{ stats.users }}</h2>
+                        <p class="text-muted">Comptes avec accès connexion</p>
+                        <a href="{{ path('admin_users_registered') }}" class="btn btn-primary">
+                            Voir la liste
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        <div class="alert alert-info mt-4">
+            <h5><i class="fas fa-info-circle"></i> Informations</h5>
+            <ul class="mb-0">
+                <li><strong>Utilisateurs enregistrés :</strong> Personnes ayant créé un compte avec accès connexion</li>
+            </ul>
+        </div>
+    </div>
+{% endblock %}

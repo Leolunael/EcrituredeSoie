@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ texte.id ? 'Modifier' : 'Nouveau' }} texte{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 offset-md-2">
+                <h1 class="mb-4">{{ texte.id ? 'Modifier' : 'Nouveau' }} texte</h1>
+
+                <div class="card">
+                    <div class="card-body">
+                        {{ form_start(form) }}
+                        <div class="mb-3">
+                            {{ form_label(form.cle) }}
+                            {{ form_widget(form.cle, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(form.cle) }}
+                            <small class="form-text text-muted">
+                                Identifiant unique pour ce texte (ex: accueil_titre, a_propos_texte)
+                            </small>
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_label(form.description) }}
+                            {{ form_widget(form.description, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(form.description) }}
+                            <small class="form-text text-muted">
+                                Description de l'utilisation de ce texte
+                            </small>
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_label(form.imageFile) }}
+                            {{ form_widget(form.imageFile, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(form.imageFile) }}
+                            {% if texte.image %}
+                                <div class="mt-2">
+                                    <small class="text-muted">Image actuelle :</small><br>
+                                    <img src="{{ asset('uploads/textes/' ~ texte.image) }}"
+                                         alt="Image actuelle"
+                                         style="max-width: 200px; max-height: 200px;"
+                                         class="img-thumbnail">
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <a href="{{ path('texte_index') }}" class="btn btn-secondary">
+                                ← Retour
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                💾 Enregistrer
+                            </button>
+                        </div>
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

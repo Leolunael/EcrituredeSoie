@@ -1,0 +1,192 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Gestion des avis{% endblock %}
+
+{% block body %}
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <h1>Gestion des avis</h1>
+            <a href="{{ path('admin_index') }}" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Tableau de bord principal
+            </a>
+        </div>
+    </div>
+
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    {% endfor %}
+
+    {% for message in app.flashes('info') %}
+        <div class="alert alert-info alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    {% endfor %}
+
+    {# AVIS EN ATTENTE DE VALIDATION #}
+    {% set avisEnAttente = avis|filter(a => not a.approuve) %}
+    {% if avisEnAttente|length > 0 %}
+        <div class="card mb-4 border-warning">
+            <div class="card-header bg-warning text-dark">
+                <h5 class="mb-0">
+                    <i class="bi bi-exclamation-triangle"></i>
+                    Avis en attente de validation ({{ avisEnAttente|length }})
+                </h5>
+            </div>
+            <div class="card-body">
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>Auteur</th>
+                        <th>Email</th>
+                        <th>Note</th>
+                        <th>Contenu</th>
+                        <th>Date</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for avi in avisEnAttente %}
+                        <tr class="table-warning">
+                            <td>{{ avi.nom }}</td>
+                            <td>
+                                {% if avi.email %}
+                                    <a href="mailto:{{ avi.email }}" class="text-decoration-none">
+                                        <i class="bi bi-envelope"></i> {{ avi.email }}
+                                    </a>
+                                {% else %}
+                                    <span class="text-muted fst-italic">Non renseigné</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <span class="text-warning">
+                                    {% for i in 1..avi.note %}✏️{% endfor %}
+                                </span>
+                            </td>
+                            <td>{{ avi.commentaire|length > 80 ? avi.commentaire|slice(0, 80) ~ '...' : avi.commentaire }}</td>
+                            <td>{{ avi.dateCreation|date('d/m/Y H:i') }}</td>
+                            <td>
+                                <form method="post"
+                                      action="{{ path('admin_avis_valider', {id: avi.id}) }}"
+                                      style="display: inline;"
+                                      onsubmit="return confirm('Valider cet avis ?')">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('valider_' ~ avi.id) }}">
+                                    <button type="submit" class="btn btn-sm btn-success" title="Valider">
+                                        <i class="bi bi-check-circle"></i> Valider
+                                    </button>
+                                </form>
+
+                                <form method="post"
+                                      action="{{ path('admin_avis_delete', {id: avi.id}) }}"
+                                      style="display: inline;"
+                                      onsubmit="return confirm('Supprimer cet avis ?')">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete_' ~ avi.id) }}">
+                                    <button type="submit" class="btn btn-sm btn-danger" title="Supprimer">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {% endif %}
+
+    {# AVIS VALIDÉS #}
+    {% set avisValides = avis|filter(a => a.approuve) %}
+    <div class="card">
+        <div class="card-header bg-success text-white">
+            <h5 class="mb-0">
+                <i class="bi bi-check-circle"></i>
+                Avis validés ({{ avisValides|length }})
+            </h5>
+        </div>
+        <div class="card-body">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Auteur</th>
+                    <th>Email</th>
+                    <th>Note</th>
+                    <th>Contenu</th>
+                    <th>Date</th>
+                    <th>Réponse</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for avi in avisValides %}
+                    <tr>
+                        <td>{{ loop.index }}</td>
+                        <td>{{ avi.nom }}</td>
+                        <td>
+                            {% if avi.email %}
+                                <a href="mailto:{{ avi.email }}" class="text-decoration-none">
+                                    <i class="bi bi-envelope"></i> {{ avi.email }}
+                                </a>
+                            {% else %}
+                                <span class="text-muted fst-italic">Non renseigné</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <span class="text-warning">
+                                {% for i in 1..avi.note %}✏️{% endfor %}
+                            </span>
+                        </td>
+                        <td>{{ avi.commentaire|length > 80 ? avi.commentaire|slice(0, 80) ~ '...' : avi.commentaire }}</td>
+                        <td>{{ avi.dateCreation|date('d/m/Y H:i') }}</td>
+                        <td>
+                            {% if avi.hasReponse %}
+                                <span class="badge bg-info">
+                                    <i class="bi bi-reply-fill"></i> Répondu
+                                </span>
+                            {% else %}
+                                <span class="badge bg-secondary">
+                                    <i class="bi bi-reply"></i> Sans réponse
+                                </span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{{ path('admin_avisEdit', {id: avi.id}) }}"
+                               class="btn btn-sm btn-primary"
+                               title="Répondre à l'avis">
+                                <i class="bi bi-pencil"></i> Répondre
+                            </a>
+
+                            <form method="post"
+                                  action="{{ path('admin_avis_valider', {id: avi.id}) }}"
+                                  style="display: inline;"
+                                  onsubmit="return confirm('Retirer cet avis de la publication ?')">
+                                <input type="hidden" name="_token" value="{{ csrf_token('valider_' ~ avi.id) }}">
+                                <button type="submit" class="btn btn-sm btn-warning" title="Invalider">
+                                    <i class="bi bi-x-circle"></i>
+                                </button>
+                            </form>
+
+                            <form method="post"
+                                  action="{{ path('admin_avis_delete', {id: avi.id}) }}"
+                                  style="display: inline;"
+                                  onsubmit="return confirm('Supprimer cet avis ?')">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete_' ~ avi.id) }}">
+                                <button type="submit" class="btn btn-sm btn-danger" title="Supprimer">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="8" class="text-center">Aucun avis validé</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

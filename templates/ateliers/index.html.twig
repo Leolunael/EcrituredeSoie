@@ -1,0 +1,179 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Écriture de Soie{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+{% endblock %}
+
+{% block body %}
+    <a href="{{ path('app_home') }}" class="retour-button">Retour</a>
+
+    {# ========== ATELIERS PRÉSENTIELS ========== #}
+    <br><h1>Ateliers d'écriture</h1>
+    <p class="texte">L’atelier d’écriture est un laboratoire d’expériences, un lieu de partage cadré.
+        Un temps ralenti, hors du quotidien, où les propositions suggèrent, déplacent, et libèrent du syndrome de la page blanche.
+        On n’y cherche pas la performance, mais la justesse.
+
+        Ce n’est ni un cours ni une formation.
+        Il n’y a pas de jugement sur le fond ou la forme, pas d’évaluation, pas de hiérarchie des textes.
+
+        Dans Écriture de Soie, comme son nom l’indique, il y a aussi une part d’écriture de soi.
+        Et cela change la position.
+
+        On écrit depuis soi-même, avec lenteur et délicatesse.
+        Parce que l’on s’approche de ses failles, de ses forces aussi, parfois encore mal connues.
+        C’est un acte subjectif.
+        Une écriture plus près du cœur.
+
+        Ici, on écrit autrement.</p><br>
+
+    <section class="cards-container">
+    {% if ateliers|length > 0 %}
+        {% for atelier in ateliers %}
+            <div class="card">
+                <h5 class="titre">{{ atelier.titre }}</h5>
+                <div class="card-body">
+                    {% if atelier.dateAtelier %}
+                        {% set jours = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'] %}
+                        {% set jourSemaine = jours[atelier.dateAtelier|date('w')] %}
+                        <p>📅 <strong>{{ jourSemaine }} {{ atelier.dateAtelier|date('d/m/Y à H:i') }}
+                                {% if atelier.heureFin %}
+                                    - {{ atelier.heureFin|date('H:i') }}
+                                {% endif %}
+                            </strong></p>
+                    {% endif %}
+
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                        {% if atelier.lieu %}
+                            <p style="margin: 0;">📍 {{ atelier.lieu }}</p>
+                        {% else %}
+                            <p style="margin: 0;"></p>
+                        {% endif %}
+
+                        {% if atelier.placesMax %}
+                            {% set placesRestantes = atelier.placesMax - atelier.inscriptions|length %}
+                            {% if placesRestantes > 0 %}
+                                <span class="places-info places-restantes" style="margin-left: auto;">
+                                    👥 {{ placesRestantes }} place(s) restante(s)
+                                </span>
+                            {% else %}
+                                <span class="places-info atelier-complet" style="margin-left: auto;">
+                                    Complet
+                                </span>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+
+                    {% if atelier.prix %}
+                        <p style="margin-bottom: 0.5rem;">💶 {{ atelier.prix }} €</p>
+                    {% else %}
+                        <p style="margin-bottom: 0.5rem;">Gratuit</p>
+                    {% endif %}
+
+                    <br>
+
+                    <p>{{ atelier.description|u.truncate(150, '...') }}</p>
+
+                    <a href="{{ path('app_atelier_show', {id: atelier.id}) }}" class="button">Je participe</a>
+                </div>
+            </div>
+        {% endfor %}
+
+        </section>
+    {% else %}
+        <i>📅</i>
+        <h3>">Aucun atelier disponible pour le moment</h3>
+        <p>Revenez bientôt pour découvrir nos prochains ateliers !</p>
+    {% endif %}
+
+    <br>
+    <hr>
+
+    {# ========== VISIOCONFÉRENCES ========== #}
+    <br><h1>Ateliers en visio</h1>
+    <p>Participez à nos ateliers en ligne depuis chez vous</p><br>
+
+    <section class="cards-container">
+        {% if visios|length > 0 %}
+            {% for visio in visios %}
+                <div class="card">
+                    <h5 class="titre">{{ visio.titre }}</h5>
+                    <div class="card-body">
+                        {% set jours = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'] %}
+                        {% set jourSemaine = jours[visio.dateVisio|date('w')] %}
+                        <p>📅 <strong>{{ jourSemaine }} {{ visio.dateVisio|date('d/m/Y à H:i') }}</strong></p>
+
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                            <p style="margin: 0;">💶 <strong>{{ visio.prix }} €</strong></p>
+
+                            {# Affichage des places pour les visios #}
+                            {% if visio.placesMax %}
+                                {% set placesRestantes = visio.placesMax - visio.inscriptions|length %}
+                                {% if placesRestantes > 0 %}
+                                    <span class="places-info places-restantes" style="margin-left: auto;">
+                                        👥 {{ placesRestantes }} place(s) restante(s)
+                                    </span>
+                                {% else %}
+                                    <span class="places-info atelier-complet" style="margin-left: auto;">
+                                        Complet
+                                    </span>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+
+                        {% if visio.description %}
+                            <p>{{ visio.description|u.truncate(100, '...') }}</p>
+
+                        {% endif %}
+                    </div>
+                    <a href="{{ path('app_visio_show', {id: visio.id}) }}" class="button">Je participe</a>
+                </div>
+            {% endfor %}
+
+        {% else %}
+            <h3>Aucune visioconférence disponible pour le moment</h3>
+            <p>Revenez bientôt pour découvrir nos prochains ateliers en ligne !</p>
+        {% endif %}
+    </section>
+    <br>
+    <hr>
+
+    {# ========== LES LETTRES D AGNES (COURRIERS) ========== #}
+    <br><h1>Les lettres d'Agnès</h1>
+
+    <h5>Recevoir une lettre, c'est recevoir une présence</h5>
+    <p>Écriture de Soie propose d'envoyer, chaque mois, une lettre poétique à ceux qui souhaitent s'offrir une parenthèse d'écriture et de douceur.</p>
+    <p>Chaque enveloppe contient un poème, une jolie carte postale, quelques mots bienveillants, parfois une petite surprise — toujours écrits et choisis avec soin.</p>
+    <p>Il ne s'agit pas d'une correspondance, mais d'un geste d'attention, un moment pour soi glissé dans la boîte aux lettres.</p><br>
+
+    <section class="cards-container">
+        {% if lettres|length > 0 %}
+            {% for lettre in lettres %}
+                <div class="card">
+                    <h5 class="titre">{{ lettre.titre }}</h5>
+                    <div class="card-body">
+                        <p>💶 <strong>{{ lettre.prix }} €</strong></p>
+
+                        {% if lettre.description %}
+                            <p>{{ lettre.description|u.truncate(120, '...') }}</p>
+                        {% endif %}
+                    </div>
+                    <a href="{{ path('app_lettre_show', {id: lettre.id}) }}" class="button">Je participe</a>
+                </div>
+            {% endfor %}
+
+        {% else %}
+            <h3>Aucune lettre disponible pour le moment</h3>
+            <p>Revenez bientôt pour découvrir nos prochaines lettres du cœur !</p>
+        {% endif %}
+    </section>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/script.js') }}"></script>
+{% endblock %}
+

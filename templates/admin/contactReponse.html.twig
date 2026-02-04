@@ -1,0 +1,43 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Répondre au contact{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <h1 class="mb-4">Répondre au contact</h1>
+
+            <div class="card mb-4">
+                <div class="card-header bg-light">
+                    <strong>Message reçu de {{ contact.email }}</strong>
+                    <small class="float-end">{{ contact.createdAt|date('d/m/Y H:i') }}</small>
+                </div>
+                <div class="card-body">
+                    <p>{{ contact.message }}</p>
+                </div>
+            </div>
+
+            {{ form_start(form) }}
+            <div class="mb-3">
+                {{ form_label(form.reponse, 'Votre réponse') }}
+                {{ form_widget(form.reponse, {'attr': {'class': 'form-control', 'rows': 10}}) }}
+                {{ form_errors(form.reponse) }}
+            </div>
+
+            <div class="mb-3 form-check">
+                {{ form_widget(form.marquerCommeTraite, {'attr': {'class': 'form-check-input'}}) }}
+                {{ form_label(form.marquerCommeTraite, null, {'label_attr': {'class': 'form-check-label'}}) }}
+            </div>
+
+            <div class="d-flex justify-content-between">
+                <a href="{{ path('admin_contactList') }}" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left"></i> Retour
+                </a>
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-send"></i> Envoyer la réponse
+                </button>
+            </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}

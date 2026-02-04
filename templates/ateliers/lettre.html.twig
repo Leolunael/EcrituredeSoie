@@ -1,0 +1,116 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ lettre.titre }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
+{% endblock %}
+
+{% block body %}
+    <div class="container my-5">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <h1>{{ lettre.titre }}</h1>
+            </ol>
+        </nav>
+
+        <div class="row">
+            <div class="col col-lg-8">
+                <div class="card mb-4">
+                    <div class="card-header bg-primary">
+                        <h2 style="color: white; margin: 0;">
+                            💌 {{ lettre.titre }}
+                        </h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col">
+                                <p class="mb-3">
+                                    💶 <strong>Tarif :</strong> {{ lettre.prix }} €
+                                </p>
+                            </div>
+                        </div>
+
+                        {% if lettre.description %}
+                            <hr>
+                            <div>
+                                <h5>📄 Description</h5>
+                                <p>{{ lettre.description|nl2br }}</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="col col-lg-4">
+                <div class="card">
+                    <div class="card-header bg-success">
+                        <h5 style="color: white;">✍️ S'inscrire</h5>
+                    </div>
+                    <div class="card-body">
+                        {{ form_start(form) }}
+
+                        <div class="form-group">
+                            {{ form_label(form.nom) }}
+                            {{ form_widget(form.nom) }}
+                            {{ form_errors(form.nom) }}
+                        </div>
+
+                        <div class="form-group">
+                            {{ form_label(form.prenom) }}
+                            {{ form_widget(form.prenom) }}
+                            {{ form_errors(form.prenom) }}
+                        </div>
+
+                        <div class="form-group">
+                            {{ form_label(form.email) }}
+                            {{ form_widget(form.email) }}
+                            {{ form_errors(form.email) }}
+                        </div>
+
+                        <div class="form-group">
+                            {{ form_label(form.telephone) }}
+                            {{ form_widget(form.telephone) }}
+                            {{ form_errors(form.telephone) }}
+                        </div>
+
+                        <div class="form-group">
+                            {{ form_label(form.adressePostale) }}
+                            {{ form_widget(form.adressePostale) }}
+                            {{ form_errors(form.adressePostale) }}
+                            <small class="form-help">
+                                ℹ️ Votre adresse complète est indispensable pour la livraison
+                            </small>
+                        </div>
+
+                        <div class="form-group">
+                            {{ form_label(form.moyenPaiement) }}
+                            {{ form_widget(form.moyenPaiement) }}
+                            {{ form_errors(form.moyenPaiement) }}
+                        </div>
+
+                        <button type="submit" class="btn btn-success w-100 btn-lg">
+                            ✓ Confirmer mon inscription
+                        </button>
+
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+
+                <div class="card mt-3" style="border: 2px solid #dc3545;">
+                    <div class="card-body text-center">
+                        <a href="{{ path('app_ateliers') }}" class="btn btn-outline-primary">
+                            ← Voir les autres ateliers
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/scripts.js') }}"></script>
+{% endblock %}

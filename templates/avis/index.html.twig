@@ -1,0 +1,79 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ecriture de Soie{% endblock %}
+
+{% block body %}
+    <a href="{{ path('app_home') }}" class="retour-button">Retour</a>
+    <h1>Avis des participants</h1>
+
+    {% for message in app.flashes('success') %}
+        <div class="message">
+            {{ message }}
+        </div>
+    {% endfor %}
+
+    <section class="cards-container">
+        {% if avisList is empty %}
+            <p>Aucun avis pour le moment. Soyez le premier à laisser un avis</p>
+        {% else %}
+            {% for avis in avisList %}
+                <div class="card">
+                    <div class="avis">
+                        <div class="avis-header-info">
+                            <div>
+                                <div class="avis-auteur">{{ avis.nom }}</div>
+                                <div class="avis-date">{{ avis.dateCreation|date('d/m/Y') }}</div>
+                            </div>
+                            <div class="avis-note">
+                                {% for i in 1..5 %}
+                                    {% if i <= avis.note %}
+                                        ✏️
+                                    {% else %}
+                                        <span style="opacity: 0.3;">✏️</span>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="avis-commentaire">
+                            {{ avis.commentaire | nl2br}}
+                        </div>
+
+                        {# AFFICHAGE DE LA REPONSE SI ELLE EXISTE #}
+                        {% if avis.hasReponse %}
+                            <div class="avis-reponse">
+                                <div class="reponse-header">
+                                    <strong>Réponse</strong>
+                                    <span class="reponse-date">{{ avis.dateReponse|date('d/m/Y') }}</span>
+                                </div>
+                                <div class="reponse-contenu">
+                                    {{ avis.reponse }}
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </section>
+
+    <section class="card-avis">
+        <h2 class="sous-titre">Laissez votre avis</h2>
+        {{ form_start(form) }}
+        <div class="form-avis">
+            {{ form_row(form.nom) }}
+        </div>
+        <div class="form-avis">
+            {{ form_row(form.email) }}
+        </div>
+        <div class="form-avis">
+            {{ form_row(form.note) }}
+        </div>
+        <div class="form-avis">
+            {{ form_row(form.commentaire) }}
+        </div>
+        <button type="submit" class="button">Envoyer</button>
+        {{ form_end(form) }}
+    </section>
+
+{% endblock %}
+

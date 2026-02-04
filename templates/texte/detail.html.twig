@@ -1,0 +1,163 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ecriture de Soie{% endblock %}
+
+{% block body %}
+    <a href="{{ path('texte_index') }}" class="button">Retour</a>
+    <br>
+    <br>
+    <div class="cards-container">
+        <article class="card">
+            <h1 class="titre">{{ texte.titre }}</h1>
+            <br>
+
+            <div class="image">
+                {# Image à gauche #}
+                {% if texte.imageAlignment == 'left' and texte.image %}
+                    <div>
+                        <img src="{{ asset('uploads/textes/' ~ texte.image) }}"
+                             alt="{{ texte.titre }}"
+                             class="img">
+                    </div>
+                {% endif %}
+
+
+            <br>
+            <div class="card-body">
+                {{ texte.contenu|nl2br|raw }}
+                <br>
+                <br>
+                <p class="auteur">
+                    {% if texte.auteur %}
+                        {{ texte.auteur }}
+                    {% endif %}
+                </p>
+                <br>
+
+                <p class="txt">Ce texte a été écrit dans un cadre accompagné.</p>
+                <p class="txt">
+                    © Tous droits réservés. Ce texte est protégé par le droit d'auteur.
+                </p>
+            </div>
+            {# Image à droite ou position par défaut #}
+            {% if (texte.imageAlignment == 'right' or texte.imageAlignment is null) and texte.image %}
+                <div>
+                    <img src="{{ asset('uploads/textes/' ~ texte.image) }}"
+                         alt="{{ texte.titre }}"
+                         class="img">
+                </div>
+            {% endif %}
+        </article>
+
+        {% for message in app.flashes('success') %}
+            <div>
+                {{ message }}
+            </div>
+        {% endfor %}
+
+        {% for message in app.flashes('error') %}
+            <div class="message">
+                {{ message }}
+            </div>
+        {% endfor %}
+
+        {# Section commentaires #}
+        <section class="card">
+            <h3 class="com">Commentaires ({{ commentairesOrganises|length }})</h3>
+
+            {# Formulaire de commentaire principal #}
+            <div class="card-body">
+                <div>
+                    {{ form_start(form) }}
+                    {{ form_row(form.auteur) }}
+                    <div>
+                        {{ form_widget(form.contenu, {
+                            'attr': {
+                                'id': 'commentaire_contenu',
+                                'class': 'form-control comment-textarea',
+                                'maxlength': '500'
+                            }
+                        }) }}
+                        <div>
+                            <small>Minimum 2 caractères</small>
+                            <small>
+                                <span class="car">0</span> / 500 caractères
+                            </small>
+                        </div>
+                    </div>
+                    <button type="submit" class="button">Envoyer</button>
+                    {{ form_end(form) }}
+                </div>
+
+                {# Liste des commentaires #}
+                {% if commentairesOrganises is not empty %}
+                    {% for item in commentairesOrganises %}
+                        {{ _self.afficher_commentaire(item.commentaire, texte.id, item.reponses, 0) }}
+                    {% endfor %}
+                {% else %}
+                    <p>Aucun commentaire pour le moment. Soyez le premier à commenter !</p>
+                {% endif %}
+            </div>
+        </section>
+
+
+    </div>
+
+    {# Macro pour afficher un commentaire et ses réponses #}
+    {% macro afficher_commentaire(commentaire, texteId, reponses, niveau) %}
+        <article class="commentaire" id="commentaire-{{ commentaire.id }}">
+            <div>
+                <strong>{{ commentaire.auteur }}</strong>
+                <small>{{ commentaire.dateCreation|date('d/m/Y') }}</small>
+            </div>
+
+            <p>{{ commentaire.contenu|nl2br }}</p>
+
+            {# Affichage des réponses AVANT le bouton #}
+            {% if reponses is not empty %}
+                <div class="reponse">
+                    {% for item in reponses %}
+                        {{ _self.afficher_commentaire(item.commentaire, texteId, item.reponses, niveau + 1) }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            {# Bouton Répondre APRÈS les réponses #}
+            <button class="btn btn-repondre-{{ commentaire.id }}"
+                    data-commentaire-id="{{ commentaire.id }}"
+                    data-auteur="{{ commentaire.auteur }}">
+                Répondre
+            </button>
+
+            {# Formulaire de réponse #}
+            <form action="{{ path('app_commentaire_repondre', {
+                texteId: texteId,
+                commentaireId: commentaire.id
+            }) }}"
+                  method="post"
+                  id="form-reponse-{{ commentaire.id }}"
+                  style="display: none;">
+
+                <input type="text"
+                       name="auteur"
+                       placeholder="Votre nom"
+                       required>
+
+                <textarea name="contenu"
+                          rows="3"
+                          placeholder="Répondre à {{ commentaire.auteur }}..."
+                          maxlength="500"
+                          required></textarea>
+
+                <div>
+                    <small>Min. 2 caractères</small>
+                    <small><span>0</span> / 500</small>
+                </div>
+
+                <button type="submit" class="btn">Envoyer</button>
+                <button type="button" class="btn btn-annuler" data-commentaire-id="{{ commentaire.id }}">Annuler</button>
+            </form>
+        </article>
+    {% endmacro %}
+
+{% endblock %}

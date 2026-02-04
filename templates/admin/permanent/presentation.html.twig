@@ -1,0 +1,102 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Gestion Présentation Espace Permanent{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>
+                <i class="fas fa-edit"></i> Modifier la présentation de l'Espace Permanent
+            </h1>
+            <a href="{{ path('admin_permanent_dashboard') }}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Retour au dashboard permanent
+            </a>
+        </div>
+
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="fas fa-check-circle me-2"></i>{{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        {% endfor %}
+
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0"><i class="fas fa-file-alt"></i> Formulaire de modification</h5>
+                    </div>
+                    <div class="card-body">
+                        {{ form_start(form) }}
+                        <div class="mb-3">
+                            {{ form_row(form.titre) }}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_row(form.description) }}
+                        </div>
+
+                        <div class="mb-4">
+                            {{ form_row(form.avantages) }}
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-save me-2"></i> Enregistrer les modifications
+                            </button>
+                        </div>
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card shadow">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="mb-0"><i class="fas fa-eye"></i> Aperçu</h5>
+                    </div>
+                    <div class="card-body">
+                        <h6 class="text-primary">{{ presentation.titre }}</h6>
+                        <p class="small text-muted">{{ presentation.description }}</p>
+
+                        <hr>
+
+                        {% if presentation.avantages %}
+                            <p class="small mb-2"><strong>Avantages :</strong></p>
+                            <ul class="small">
+                                {% for avantage in presentation.avantages|split('\n') %}
+                                    {% if avantage|trim %}
+                                        <li>{{ avantage|trim }}</li>
+                                    {% endif %}
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+
+                        <div class="alert alert-warning small mt-3">
+                            <i class="fas fa-info-circle"></i> Dernière modification :
+                            {{ presentation.updatedAt ? presentation.updatedAt|date('d/m/Y à H:i') : 'Jamais' }}
+                        </div>
+
+                        <a href="{{ path('app_permanent_accueil') }}" class="btn btn-sm btn-outline-primary w-100 mt-2" target="_blank">
+                            <i class="fas fa-external-link-alt"></i> Voir la page publique
+                        </a>
+                    </div>
+                </div>
+
+                <div class="card shadow mt-3">
+                    <div class="card-header bg-secondary text-white">
+                        <h6 class="mb-0"><i class="fas fa-lightbulb"></i> Conseils</h6>
+                    </div>
+                    <div class="card-body small">
+                        <ul class="mb-0">
+                            <li>Utilisez un titre accrocheur</li>
+                            <li>Soyez clair et concis dans la description</li>
+                            <li>Listez les avantages concrets</li>
+                            <li>Un avantage par ligne dans le champ "Avantages"</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

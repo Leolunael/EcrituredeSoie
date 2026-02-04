@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ blog.id ? 'Modifier' : 'Nouveau' }} blog{% endblock %}
+
+{% block body %}
+    <div>
+        <div>
+            <h1>{{ blog.id ? 'Modifier' : 'Nouveau' }} Article</h1>
+
+            <div>
+                <div>
+                    {{ form_start(form) }}
+                    <div>
+                        {{ form_label(form.cle) }}
+                        {{ form_widget(form.cle) }}
+                        {{ form_errors(form.cle) }}
+                        <small>
+                            Identifiant unique pour ce blog (ex: accueil_titre, a_propos_texte)
+                        </small>
+                    </div>
+
+                    <div>
+                        {{ form_label(form.description) }}
+                        {{ form_widget(form.description) }}
+                        {{ form_errors(form.description) }}
+                        <small>
+                            Description de l'utilisation de ce texte
+                        </small>
+                    </div>
+
+                    <div>
+                        {{ form_label(form.imageFile) }}
+                        {{ form_widget(form.imageFile) }}
+                        {{ form_errors(form.imageFile) }}
+                        {% if blog.image %}
+                            <div>
+                                <small>Image actuelle :</small><br>
+                                <img src="{{ asset('uploads/blogs/' ~ blog.image) }}"
+                                     alt="Image actuelle"
+                                     style="max-width: 200px; max-height: 200px;">
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div>
+                        <a href="{{ path('blog_index') }}">
+                            <i class="bi bi-arrow-left"></i> Retour
+                        </a>
+                        <button type="submit">
+                            <i class="bi bi-save"></i> Enregistrer
+                        </button>
+                    </div>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails de la visioconférence{% endblock %}
+
+{% block body %}
+    <div class="container my-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>Détails de la visioconférence</h1>
+            <a href="{{ path('app_visio_index') }}" class="btn btn-secondary">
+                ← Retour à la liste
+            </a>
+        </div>
+
+        <div class="card">
+            <div class="card-header bg-primary">
+                <h3 class="mb-0" style="color: white;">Informations de la session</h3>
+            </div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <strong>Date :</strong>
+                        <span>{{ "now"|date('d/m/Y') }}</span>
+                    </div>
+                    <div class="col-md-6">
+                        <strong>Heure :</strong>
+                        <span>{{ "now"|date('H:i') }}</span>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <strong>Description :</strong>
+                        <div class="mt-2 p-3 bg-light rounded">
+                            <p>Contenu de la visioconférence à venir...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex gap-2">
+                    <button type="button" class="btn btn-primary">
+                        🎥 Rejoindre la session
+                    </button>
+                    <button type="button" class="btn btn-secondary">
+                        📋 Copier le lien
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ecriture de Soie{% endblock %}
+
+{% block body %}
+    <a href="{{ path('app_home') }}" class="retour-button">Retour</a>
+
+    <br><h1>Présentation</h1>
+    <section class="cards-container">
+        {% for group in groupedPresentations %}
+            <div class="card">
+                {# Afficher le titre principal une seule fois #}
+                {% if group.titre %}
+                    <h1 class="titre">{{ group.titre }}</h1>
+                {% endif %}
+
+
+                {# Afficher tous les sous-titres et contenus de ce groupe #}
+                {% for presentation in group.items %}
+                    {% if presentation.sousTitre %}
+                        <h5 class="sous-titre">{{ presentation.sousTitre }}</h5>
+                    {% endif %}
+                    <div class="card-body">
+                        {{ presentation.contenu|nl2br }}
+                    </div>
+                {% endfor %}
+
+            </div>
+        {% else %}
+            <div>
+                <p>Le contenu de cette page est en cours de préparation.</p>
+            </div>
+        {% endfor %}
+    </section>
+{% endblock %}

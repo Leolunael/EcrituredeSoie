@@ -1,0 +1,59 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Espace Permanent - Accueil{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-primary">
+                        <h2>Bienvenue dans l'Espace Permanent</h2>
+                    </div>
+                    <div class="card-body p-5">
+                        {% if app.user %}
+                            {# Si l'utilisateur est déjà connecté #}
+                            <div class="alert alert-success">
+                                <i class="fas fa-check-circle"></i>
+                                Vous êtes déjà connecté en tant que <strong>{{ app.user.nom }}</strong>
+                            </div>
+                            <div>
+                                <a href="{{ path('permanent_dashboard') }}" class="btn btn-lg w-100">
+                                    <i class="fas fa-tachometer-alt"></i> Accéder à mon tableau de bord
+                                </a>
+                            </div>
+                        {% else %}
+                            {# Si l'utilisateur n'est pas connecté #}
+                            <h3>{{ presentation.titre ?? 'Rejoignez notre communauté' }}</h3>
+
+                            <div>
+                                <p>L'Espace Permanent vous permet de :</p>
+                                <ul>
+                                    <li><i class="fas fa-check"></i> Publier des posts avec images, PDF, vidéos et musiques</li>
+                                    <li><i class="fas fa-check"></i> Commenter et échanger avec la communauté</li>
+                                    <li><i class="fas fa-check"></i> Partager vos contenus multimédias</li>
+                                    <li><i class="fas fa-check"></i> Accéder à un espace privilégié</li>
+                                </ul>
+                            </div>
+
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle"></i>
+                                <strong>Adhésion requise :</strong> L'accès à l'espace permanent nécessite une adhésion de 50€.
+                            </div>
+
+                            <div>
+                                <a href="{{ path('app_permanent_inscription') }}" class="btn w-100" style="margin-bottom: 1rem;">
+                                    <i class="fas fa-user-plus"></i> S'inscrire maintenant
+                                </a>
+
+                                <a href="{{ path('app_login') }}" class="btn btn-secondary w-100">
+                                    <i class="fas fa-sign-in-alt"></i> Se connecter
+                                </a>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,326 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Gestion des Ateliers - Administration{% endblock %}
+
+{% block body %}
+    <div class="container-fluid mt-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1><i class="bi bi-calendar-event"></i> Gestion des Ateliers</h1>
+            <div>
+                <a href="{{ path('admin_atelier_new') }}" class="btn btn-warning">
+                    <i class="bi bi-plus-circle"></i> Nouvel atelier
+                </a>
+                <a href="{{ path('admin_visio_new') }}" class="btn btn-info">
+                    <i class="bi bi-plus-circle"></i> Nouvelle visio
+                </a>
+                <a href="{{ path('admin_lettre_new') }}" class="btn btn-success">
+                    <i class="bi bi-plus-circle"></i> Nouvelle lettre
+                </a>
+                <a href="{{ path('admin_index') }}" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left"></i> Tableau de bord
+                </a>
+            </div>
+        </div>
+
+        <!-- Boutons de filtrage -->
+        <div class="btn-group mb-3" role="group">
+            <a href="{{ path('admin_gestion', {statut: 'actif'}) }}"
+               class="btn btn-{{ statut == 'actif' ? 'primary' : 'outline-primary' }}">
+                <i class="bi bi-check-circle"></i> Actifs
+            </a>
+            <a href="{{ path('admin_gestion', {statut: 'archive'}) }}"
+               class="btn btn-{{ statut == 'archive' ? 'primary' : 'outline-primary' }}">
+                <i class="bi bi-archive"></i> Archivés
+            </a>
+            <a href="{{ path('admin_gestion', {statut: 'all'}) }}"
+               class="btn btn-{{ statut == 'all' ? 'primary' : 'outline-primary' }}">
+                <i class="bi bi-list"></i> Tous
+            </a>
+        </div>
+
+        <!-- Liste des ateliers -->
+        <div class="card mb-4">
+            <div class="card-header bg-warning">
+                <h5 class="mb-0">Liste des ateliers ({{ ateliers|length }})</h5>
+            </div>
+            <div class="card-body p-0">
+                {% if ateliers|length > 0 %}
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                            <tr>
+                                <th>Titre</th>
+                                <th>Date</th>
+                                <th>Description (aperçu)</th>
+                                <th>Statut</th>
+                                <th class="text-center">Archiver</th>
+                                <th class="text-end">Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for atelier in ateliers %}
+                                <tr>
+                                    <td><strong>{{ atelier.titre }}</strong></td>
+                                    <td>
+                                        {% if atelier.dateAtelier %}
+                                            {{ atelier.dateAtelier|date('d/m/Y H:i') }}
+                                        {% else %}
+                                            <em class="text-muted">Non définie</em>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ atelier.description|u.truncate(60, '...') }}</td>
+                                    <td>
+                                        {% if atelier.isArchive %}
+                                            <span class="badge bg-secondary">
+                                                <i class="bi bi-archive"></i> Archivé
+                                            </span>
+                                        {% else %}
+                                            <span class="badge bg-success">
+                                                <i class="bi bi-check-circle"></i> Actif
+                                            </span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-center">
+                                        <form method="post" action="{{ path('admin_atelier_toggle', {id: atelier.id}) }}" style="display: inline;">
+                                            <div class="form-check form-switch d-inline-block">
+                                                <input class="form-check-input archive-toggle"
+                                                       type="checkbox"
+                                                       {% if atelier.isArchive %}checked{% endif %}
+                                                       onchange="this.form.submit()"
+                                                       title="{% if atelier.isArchive %}Désarchiver{% else %}Archiver{% endif %}">
+                                            </div>
+                                        </form>
+                                    </td>
+                                    <td class="text-end">
+                                        <div class="btn-group" role="group">
+                                            <a href="{{ path('admin_atelier_show', {id: atelier.id}) }}"
+                                               class="btn btn-sm btn-info" title="Voir">
+                                                👁️
+                                            </a>
+
+                                            <a href="{{ path('admin_atelier_edit', {id: atelier.id}) }}"
+                                               class="btn btn-sm btn-warning" title="Modifier">
+                                                ✏️
+                                            </a>
+
+                                            <form method="post"
+                                                  action="{{ path('admin_atelier_delete', {id: atelier.id}) }}"
+                                                  onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet atelier ?');"
+                                                  style="display: inline;">
+                                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ atelier.id) }}">
+                                                <button type="submit" class="btn btn-sm btn-danger" title="Supprimer">
+                                                    🗑️
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="text-center py-5">
+                        <i class="bi bi-calendar-x" style="font-size: 3rem; color: #ccc;"></i>
+                        <p class="text-muted mt-3">Aucun atelier trouvé.</p>
+                        <a href="{{ path('admin_atelier_new') }}" class="btn btn-warning mt-2">
+                            <i class="bi bi-plus-circle"></i> Créer le premier atelier
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- VISIOS -->
+        <div class="card mb-4">
+            <div class="card-header bg-info text-black">
+                <h5 class="mb-0">Liste des visios ({{ visios|length }})</h5>
+            </div>
+            <div class="card-body p-0">
+                {% if visios|length > 0 %}
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                            <tr>
+                                <th>Titre</th>
+                                <th>Date</th>
+                                <th>Description (aperçu)</th>
+                                <th>Statut</th>
+                                <th class="text-center">Archiver</th>
+                                <th class="text-end">Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for visio in visios %}
+                                <tr>
+                                    <td><strong>{{ visio.titre }}</strong></td>
+                                    <td>
+                                        {% if visio.dateVisio %}
+                                            {{ visio.dateVisio|date('d/m/Y H:i') }}
+                                        {% else %}
+                                            <em class="text-muted">Non définie</em>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ visio.description|u.truncate(60, '...') }}</td>
+                                    <td>
+                                        {% if visio.isArchive %}
+                                            <span class="badge bg-secondary">
+                                        <i class="bi bi-archive"></i> Archivé
+                                    </span>
+                                        {% else %}
+                                            <span class="badge bg-success">
+                                        <i class="bi bi-check-circle"></i> Actif
+                                    </span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-center">
+                                        <form method="post" action="{{ path('admin_visio_toggle', {id: visio.id}) }}" style="display: inline;">
+                                            <div class="form-check form-switch d-inline-block">
+                                                <input class="form-check-input archive-toggle"
+                                                       type="checkbox"
+                                                       {% if visio.isArchive %}checked{% endif %}
+                                                       onchange="this.form.submit()"
+                                                       title="{% if visio.isArchive %}Désarchiver{% else %}Archiver{% endif %}">
+                                            </div>
+                                        </form>
+                                    </td>
+                                    <td class="text-end">
+                                        <div class="btn-group" role="group">
+                                            <a href="{{ path('admin_visio_show', {id: visio.id}) }}"
+                                               class="btn btn-sm btn-info" title="Voir">
+                                                👁️
+                                            </a>
+
+                                            <a href="{{ path('admin_visio_edit', {id: visio.id}) }}"
+                                               class="btn btn-sm btn-warning" title="Modifier">
+                                                ✏️
+                                            </a>
+
+                                            <form method="post"
+                                                  action="{{ path('admin_visio_delete', {id: visio.id}) }}"
+                                                  onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette visio ?');"
+                                                  style="display: inline;">
+                                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ visio.id) }}">
+                                                <button type="submit" class="btn btn-sm btn-danger" title="Supprimer">
+                                                    🗑️
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="text-center py-5">
+                        <i class="bi bi-camera-video" style="font-size: 3rem; color: #ccc;"></i>
+                        <p class="text-muted mt-3">Aucune visio trouvée.</p>
+                        <a href="{{ path('admin_visio_new') }}" class="btn btn-info mt-2">
+                            <i class="bi bi-plus-circle"></i> Créer la première visio
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- LETTRES -->
+        <div class="card mb-4">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">Liste des lettres ({{ lettres|length }})</h5>
+            </div>
+            <div class="card-body p-0">
+                {% if lettres|length > 0 %}
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                            <tr>
+                                <th>Titre</th>
+                                <th>Description (aperçu)</th>
+                                <th>Prix</th>
+                                <th>Statut</th>
+                                <th class="text-center">Archiver</th>
+                                <th class="text-end">Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for lettre in lettres %}
+                                <tr>
+                                    <td><strong>{{ lettre.titre }}</strong></td>
+                                    <td>
+                                        {% if lettre.description %}
+                                            {{ lettre.description|u.truncate(60, '...') }}
+                                        {% else %}
+                                            <em class="text-muted">Pas de description</em>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if lettre.prix %}
+                                            {{ lettre.prix }} €
+                                        {% else %}
+                                            <em class="text-muted">Non défini</em>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if lettre.isArchive %}
+                                            <span class="badge bg-secondary">
+                                                <i class="bi bi-archive"></i> Archivé
+                                            </span>
+                                        {% else %}
+                                            <span class="badge bg-success">
+                                                <i class="bi bi-check-circle"></i> Actif
+                                            </span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-center">
+                                        <form method="post" action="{{ path('admin_lettre_toggle', {id: lettre.id}) }}" style="display: inline;">
+                                            <div class="form-check form-switch d-inline-block">
+                                                <input class="form-check-input archive-toggle"
+                                                       type="checkbox"
+                                                       {% if lettre.isArchive %}checked{% endif %}
+                                                       onchange="this.form.submit()"
+                                                       title="{% if lettre.isArchive %}Désarchiver{% else %}Archiver{% endif %}">
+                                            </div>
+                                        </form>
+                                    </td>
+                                    <td class="text-end">
+                                        <div class="btn-group" role="group">
+                                            <a href="{{ path('admin_lettre_show', {id: lettre.id}) }}"
+                                               class="btn btn-sm btn-info" title="Voir">
+                                                👁️
+                                            </a>
+
+                                            <a href="{{ path('admin_lettre_edit', {id: lettre.id}) }}"
+                                               class="btn btn-sm btn-warning" title="Modifier">
+                                                ✏️
+                                            </a>
+
+                                            <form method="post"
+                                                  action="{{ path('admin_lettre_delete', {id: lettre.id}) }}"
+                                                  onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette lettre ?');"
+                                                  style="display: inline;">
+                                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ lettre.id) }}">
+                                                <button type="submit" class="btn btn-sm btn-danger" title="Supprimer">
+                                                    🗑️
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="text-center py-5">
+                        <i class="bi bi-envelope" style="font-size: 3rem; color: #ccc;"></i>
+                        <p class="text-muted mt-3">Aucune lettre trouvée.</p>
+                        <a href="{{ path('admin_lettre_new') }}" class="btn btn-success mt-2">
+                            <i class="bi bi-plus-circle"></i> Créer la première lettre
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

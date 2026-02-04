@@ -1,0 +1,149 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Liste des contacts{% endblock %}
+
+{% block body %}
+    <div class="container-fluid mt-4">
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <h1><i class="bi bi-envelope"></i> Messages reçus</h1>
+                <a href="{{ path('admin_index') }}" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left"></i> Tableau de bord principal
+                </a>
+            </div>
+        </div>
+
+        {# Messages flash #}
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        {% endfor %}
+
+        {# Filtres et recherche #}
+        <div class="card mb-4">
+            <div class="card-body">
+                <form method="get" action="{{ path('admin_contactList') }}" class="row g-3">
+                    <div class="col-md-6">
+                        <input type="text"
+                               name="search"
+                               class="form-control"
+                               placeholder="Rechercher par nom ou email..."
+                               value="{{ search }}">
+                    </div>
+                    <div class="col-md-4">
+                        <select name="statut" class="form-select">
+                            <option value="all" {% if statut == 'all' %}selected{% endif %}>Tous les statuts</option>
+                            <option value="traite" {% if statut == 'traite' %}selected{% endif %}>Traités</option>
+                            <option value="non_traite" {% if statut == 'non_traite' %}selected{% endif %}>Non traités</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="bi bi-search"></i> Filtrer
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        {# Statistiques rapides #}
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h3 class="text-primary">{{ contacts|length }}</h3>
+                        <p class="text-muted mb-0">Total messages</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h3 class="text-success">{{ contacts|filter(c => c.traite)|length }}</h3>
+                        <p class="text-muted mb-0">Traités</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h3 class="text-warning">{{ contacts|filter(c => not c.traite)|length }}</h3>
+                        <p class="text-muted mb-0">Non traités</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {# Liste des contacts #}
+        <div class="card">
+            <div class="card-header bg-light">
+                <strong>Liste des messages ({{ contacts|length }})</strong>
+            </div>
+            <div class="card-body p-0">
+                {% if contacts is empty %}
+                    <div class="alert alert-info m-3">
+                        <i class="bi bi-info-circle"></i> Aucun message trouvé.
+                    </div>
+                {% else %}
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                            <tr>
+                                <th width="5%">#</th>
+                                <th width="20%">Nom</th>
+                                <th width="25%">Email</th>
+                                <th width="30%">Message</th>
+                                <th width="10%">Date</th>
+                                <th width="10%" class="text-center">Statut</th>
+                                <th width="10%" class="text-center">Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for contact in contacts %}
+                                <tr class="{% if not contact.traite %}table-warning{% endif %}">
+                                    <td>{{ contact.id }}</td>
+                                    <td><strong>{{ contact.name }}</strong></td>
+                                    <td>
+                                        <a href="mailto:{{ contact.email }}" class="text-decoration-none">
+                                            {{ contact.email }}
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <small class="text-muted">
+                                            {{ contact.message|length > 80 ? contact.message|slice(0, 80) ~ '...' : contact.message }}
+                                        </small>
+                                    </td>
+                                    <td>
+                                        <small>
+                                            {{ contact.createdAt|date('d/m/Y') }}<br>
+                                            <span class="text-muted">{{ contact.createdAt|date('H:i') }}</span>
+                                        </small>
+                                    </td>
+                                    <td class="text-center">
+                                            <span class="badge {% if contact.traite %}bg-success{% else %}bg-warning text-dark{% endif %}">
+                                                {% if contact.traite %}
+                                                    <i class="bi bi-check-circle"></i> Traité
+                                                {% else %}
+                                                    <i class="bi bi-clock"></i> En attente
+                                                {% endif %}
+                                            </span>
+                                    </td>
+                                    <td class="text-center">
+                                        <a href="{{ path('admin_contactDetail', {id: contact.id}) }}"
+                                           class="btn btn-sm btn-primary"
+                                           title="Voir les détails">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

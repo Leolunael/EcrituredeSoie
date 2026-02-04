@@ -1,0 +1,303 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Tableau de bord - Administration{% endblock %}
+
+{% block body %}
+    <div class="container-fluid mt-4">
+        <h1 class="mb-4"><i class="bi bi-speedometer2"></i> Tableau de bord</h1>
+
+        {# Résumé de l'activité récente #}
+        <div class="row g-4 mb-4">
+            <div class="col-12">
+                <div class="alert alert-info">
+                    <h4><i class="bi bi-bell"></i> Activité à traiter</h4>
+                    <div class="row mt-3">
+                        <div class="col-md-3">
+                            <div class="text-center">
+                                <h3 class="text-warning mb-0">{{ stats.nouveauxAvis }}</h3>
+                                <small>Avis en attente de validation</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="text-center">
+                                <h3 class="text-danger mb-0">{{ stats.nouveauxContacts }}</h3>
+                                <small>Contacts non traités</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="text-center">
+                                <h3 class="text-primary mb-0">{{ stats.totalAvisEnAttente }}</h3>
+                                <small>Total avis à valider</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="text-center">
+                                <h3 class="text-success mb-0">{{ stats.totalContactsNonTraites }}</h3>
+                                <small>Total contacts à traiter</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {# Accès rapide aux sections #}
+        <div class="row g-4 mb-4">
+            <div class="col-md-6 col-lg-3">
+                <div class="card border-primary shadow-sm h-100">
+                    <div class="card-body text-center">
+                        <i class="bi bi-star-fill text-primary" style="font-size: 2rem;"></i>
+                        <h5 class="card-title mt-2">Avis</h5>
+                        <a href="{{ path('admin_avisList') }}" class="btn btn-primary btn-sm w-100 mt-2">
+                            Gérer les avis
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+                <div class="card border-success shadow-sm h-100">
+                    <div class="card-body text-center">
+                        <i class="bi bi-envelope-fill text-success" style="font-size: 2rem;"></i>
+                        <h5 class="card-title mt-2">Contacts</h5>
+                        <a href="{{ path('admin_contactList') }}" class="btn btn-success btn-sm w-100 mt-2">
+                            Gérer les contacts
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+                <div class="card border-warning shadow-sm h-100">
+                    <div class="card-body text-center">
+                        <i class="bi bi-calendar-event text-warning" style="font-size: 2rem;"></i>
+                        <h5 class="card-title mt-2">Inscriptions</h5>
+                        <a href="{{ path('admin_gestion', {statut: 'actif'}) }}" class="btn btn-warning btn-sm w-100 mt-2">
+                            Gérer les inscriptions
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+                <div class="card border-info shadow-sm h-100">
+                    <div class="card-body text-center">
+                        <i class="bi bi-file-text-fill text-info" style="font-size: 2rem;"></i>
+                        <h5 class="card-title mt-2">Ecrits</h5>
+                        <a href="{{ path('admin_texte') }}" class="btn btn-info btn-sm w-100 mt-2">
+                            Gérer les Ecrits
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+                <div class="card border-secondary shadow-sm h-100">
+                    <div class="card-body text-center">
+                        <i class="bi bi-newspaper text-secondary" style="font-size: 2rem;"></i>
+                        <h5 class="card-title mt-2">Notes</h5>
+                        <a href="{{ path('admin_blog') }}" class="btn btn-secondary btn-sm w-100 mt-2">
+                            Gérer les notes
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+                <div class="card border-danger shadow-sm h-100">
+                    <div class="card-body text-center">
+                        <i class="bi bi-people-fill text-danger" style="font-size: 2rem;"></i>
+                        <h5 class="card-title mt-2">Utilisateurs</h5>
+                        <a href="{{ path('admin_users_index') }}" class="btn btn-danger btn-sm w-100 mt-2">
+                            Gérer les utilisateurs
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+                <div class="card border-dark shadow-sm h-100">
+                    <div class="card-body text-center">
+                        <i class="bi bi-file-earmark-text text-dark" style="font-size: 2rem;"></i>
+                        <h5 class="card-title mt-2">Association</h5>
+                        <a href="{{ path('admin_presentation_index') }}" class="btn btn-dark btn-sm w-100 mt-2">
+                            Gérer l'association
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            {# NOUVEAU : Gestion du carrousel #}
+            <div class="col-md-6 col-lg-3">
+                <div class="card border-purple shadow-sm h-100" style="border-color: #6f42c1 !important;">
+                    <div class="card-body text-center">
+                        <i class="bi bi-images text-purple" style="font-size: 2rem; color: #6f42c1;"></i>
+                        <h5 class="card-title mt-2">Carrousel Accueil</h5>
+                        <a href="{{ path('admin_information') }}" class="btn btn-sm w-100 mt-2" style="background-color: #6f42c1; color: white;">
+                            Gérer le carrousel
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            {# NOUVEAU : Gestion de l'intro #}
+            <div class="col-md-6 col-lg-3">
+                <div class="card border-purple shadow-sm h-100" style="border-color: #e83e8c !important;">
+                    <div class="card-body text-center">
+                        <i class="bi bi-images text-purple" style="font-size: 2rem; color: #e83e8c;"></i>
+                        <h5 class="card-title mt-2">Intro</h5>
+                        <a href="{{ path('admin_intro') }}" class="btn btn-sm w-100 mt-2" style="background-color: #e83e8c; color: white;">
+                            Gérer l'intro
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {# NOUVEAU : Statistiques de visites #}
+        <div class="row g-4 mb-4">
+            <div class="col-12">
+                <div class="card shadow-sm border-primary">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="mb-0"><i class="bi bi-graph-up"></i> Statistiques de fréquentation</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row text-center">
+                            <div class="col-md-2">
+                                <div class="p-3">
+                                    <h2 class="text-primary mb-0">{{ visitorStats.today }}</h2>
+                                    <small class="text-muted">Visites aujourd'hui</small>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="p-3">
+                                    <h2 class="text-success mb-0">{{ visitorStats.uniqueToday }}</h2>
+                                    <small class="text-muted">Visiteurs uniques aujourd'hui</small>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="p-3">
+                                    <h2 class="text-info mb-0">{{ visitorStats.thisWeek }}</h2>
+                                    <small class="text-muted">Visites cette semaine</small>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="p-3">
+                                    <h2 class="text-warning mb-0">{{ visitorStats.thisMonth }}</h2>
+                                    <small class="text-muted">Visites ce mois</small>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="p-3">
+                                    <h2 class="text-dark mb-0">{{ visitorStats.total }}</h2>
+                                    <small class="text-muted">Total visites</small>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="p-3">
+                                    <h2 class="text-secondary mb-0">{{ visitorStats.uniqueVisitors }}</h2>
+                                    <small class="text-muted">Visiteurs uniques (total)</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        {# Graphique des 7 derniers jours #}
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <h5>Évolution des 7 derniers jours</h5>
+                                <canvas id="visitsChart" style="max-height: 300px;"></canvas>
+                            </div>
+                        </div>
+
+                        {# Pages les plus visitées #}
+                        <div class="row mt-4">
+                            <div class="col-md-6">
+                                <h5>Pages les plus visitées</h5>
+                                <div class="list-group">
+                                    {% for page in visitorStats.topPages %}
+                                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                                            <span class="text-truncate" style="max-width: 70%;">{{ page.url }}</span>
+                                            <span class="badge bg-primary rounded-pill">{{ page.visites }}</span>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <h5>Dernières visites</h5>
+                                <div class="table-responsive">
+                                    <table class="table table-sm">
+                                        <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>IP</th>
+                                            <th>Page</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for visite in visitorStats.recentVisites|slice(0, 5) %}
+                                            <tr>
+                                                <td>{{ visite.dateVisite|date('d/m H:i') }}</td>
+                                                <td><small>{{ visite.ipAddress }}</small></td>
+                                                <td><small class="text-truncate d-inline-block" style="max-width: 200px;">{{ visite.url }}</small></td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    {# Script pour le graphique Chart.js #}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script>
+        const ctx = document.getElementById('visitsChart');
+
+        const data = {
+            labels: [
+                {% for stat in visitorStats.statsByDay %}
+                '{{ stat.date|date('d/m') }}'{% if not loop.last %},{% endif %}
+                {% endfor %}
+            ],
+            datasets: [{
+                label: 'Visites par jour',
+                data: [
+                    {% for stat in visitorStats.statsByDay %}
+                    {{ stat.visites }}{% if not loop.last %},{% endif %}
+                    {% endfor %}
+                ],
+                borderColor: 'rgb(75, 192, 192)',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                tension: 0.3,
+                fill: true
+            }]
+        };
+
+        new Chart(ctx, {
+            type: 'line',
+            data: data,
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top',
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+{% endblock %}

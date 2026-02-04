@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion Visioconférence{% endblock %}
+
+{% block body %}
+    <div class="container my-5">
+        <h1 class="text-center mb-4">Bienvenue sur la gestion de visioconférence</h1>
+
+        <div class="card">
+            <div class="card-body">
+                <p>Cette page vous permet de gérer vos visioconférences.</p>
+
+                <div class="alert alert-info">
+                    <strong>Information :</strong> Les fonctionnalités de visioconférence sont disponibles pour tous les utilisateurs connectés.
+                </div>
+
+                <h2>Détails techniques</h2>
+                <ul>
+                    <li>Contrôleur : <code>src/Controller/VisioController.php</code></li>
+                    <li>Template : <code>templates/visio/index.html.twig</code></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+{% endblock %}

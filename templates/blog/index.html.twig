@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ecriture de Soie{% endblock %}
+
+{% block body %}
+    <a href="{{ path('app_home') }}" class="retour-button">Retour</a>
+    <h1>Toutes les notes</h1>
+
+    {% if blogs is empty %}
+        <div>Aucun article publié pour le moment.</div>
+    {% else %}
+        <section class="cards-container">
+            {% for blog in blogs %}
+                <div class="card">
+                    {# Image à gauche
+                    {% if blog.imageAlignment == 'left' and blog.image %}
+                        <div>
+                            <img src="{{ asset('uploads/blogs/' ~ blog.image) }}" class="img" alt="{{ blog.titre }}">
+                        </div>
+                    {% endif %} #}
+
+                    {# Contenu #}
+                    <div>
+                        <h3 class="titre">{{ blog.titre }}</h3>
+                        <br>
+                        <p class="card-body">
+                            {{ blog.contenu|length > 250 ?
+                            (blog.contenu|nl2br|slice(0, 250) ~ '...')|raw :
+                            blog.contenu|nl2br|raw }}
+                        </p>
+                        <br>
+                        <p class="txt3">Agnès</p>
+                        <br>
+                        <p class="txt2">
+                            {{ blog.dateCreation|date('d/m/Y') }}
+                        </p>
+                        <br>
+                        <a href="{{ path('app_blog_detail', {id: blog.id}) }}" class="button">
+                            Lire
+                        </a>
+                    </div>
+
+                    {# Image à droite ou position par défaut
+                    {% if (blog.imageAlignment == 'right' or blog.imageAlignment is null) and blog.image %}
+                        <div>
+                            <img src="{{ asset('uploads/blogs/' ~ blog.image) }}" class="img" alt="{{ blog.titre }}">
+                        </div>
+                    {% endif %} #}
+                </div>
+            {% endfor %}
+        </section>
+    {% endif %}
+
+{% endblock %}

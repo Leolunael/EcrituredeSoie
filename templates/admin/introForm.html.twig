@@ -1,0 +1,38 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Ecriture de Soie{% endblock %}
+
+{% block body %}
+    <a href="{{ path('admin_intro') }}" class="btn btn-secondary">
+        <i class="bi bi-arrow-left"></i> Retour à la liste
+    </a>
+    <div class="container mt-5">
+        <h1>{{ intro.id ? 'Modifier' : 'Nouvelle' }} intro</h1>
+
+        {{ form_start(form) }}
+        <div class="mb-3">
+            {{ form_row(form.titre) }}
+        </div>
+        <div class="mb-3">
+            {{ form_row(form.contenu) }}
+        </div>
+        <div class="mb-3">
+            {{ form_row(form.imageFile) }}
+            {% if intro.image %}
+                <div class="mt-2">
+                    <img src="{{ asset('uploads/informations/' ~ intro.image) }}"
+                         alt="Image actuelle"
+                         style="max-width: 200px;">
+                    <p class="text-muted">Image actuelle</p>
+                </div>
+            {% endif %}
+        </div>
+        <div class="mb-3 form-check">
+            {{ form_row(form.actif) }}
+        </div>
+
+        <button type="submit" class="btn btn-success">Enregistrer</button>
+        <a href="{{ path('admin_intro') }}" class="btn btn-secondary">Annuler</a>
+        {{ form_end(form) }}
+    </div>
+{% endblock %}

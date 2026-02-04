@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ecriture de Soie{% endblock %}
+
+{% block body %}
+    <a href="{{ path('user_dashboard') }}" class="retour-button">Retour</a>
+    <br>
+    <br>
+
+    <div class="cards-container">
+        <div class="card">
+
+            <h4 class="titre">
+                {% if type == 'Atelier' %}
+                    <i></i> Inscription à l'atelier
+                {% elseif type == 'Visio' %}
+                    <i></i> Inscription à la visio
+                {% elseif type == 'Lettre' %}
+                    <i></i> Inscription à la lettre
+                {% else %}
+                    <i></i> Détails de l'inscription
+                {% endif %}
+            </h4>
+
+            {# Informations sur l'événement #}
+        <section class="details">
+            {% if evenement %}
+
+                <p><strong>Titre :</strong> {{ evenement.titre ?? evenement.nom ?? 'Non spécifié' }}</p>
+
+                {# Date selon le type #}
+                {% if type == 'Atelier' and evenement.dateAtelier is defined %}
+                    <p><strong>Date :</strong> {{ evenement.dateAtelier|date('d/m/Y à H:i') }}</p>
+
+                    {% if evenement.lieu %}
+                        <p><strong>Lieu :</strong> {{ evenement.lieu }}</p>
+                    {% endif %}
+
+                {% elseif type == 'Visio' and evenement.dateVisio is defined %}
+                    <p><strong>Date :</strong> {{ evenement.dateVisio|date('d/m/Y à H:i') }}</p>
+                    <p><strong>Format :</strong> En ligne (visioconférence)</p>
+                {% elseif evenement.date is defined %}
+                    <p><strong>Date :</strong> {{ evenement.date|date('d/m/Y') }}</p>
+                {% endif %}
+
+                {% if evenement.prix is defined %}
+                    <p><strong>Prix :</strong> {{ evenement.prix }} euros</p>
+                {% endif %}
+
+                {% if evenement.description %}
+                    <p><strong>Description :</strong> {{ evenement.description }}</p>
+                {% endif %}
+
+                {% if evenement.informations %}
+                    <p><strong>Informations :</strong> {{ evenement.informations }}</p>
+                {% endif %}
+
+            {% endif %}
+        </section>
+
+        </div>
+{% endblock %}

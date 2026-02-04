@@ -1,0 +1,83 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détail du message{% endblock %}
+
+{% block body %}
+    <div class="cards-container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>Détail du message</h1>
+            <a href="{{ path('app_admin_messages') }}" class="btn btn-secondary">
+                ← Retour aux messages
+            </a>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <div>
+                    <h5>{{ form.subject ?? 'Sans sujet' }}</h5>
+                </div>
+                <div>
+                    {% if not message.lu %}
+                        <span class="badge bg-primary">Non lu</span>
+                    {% endif %}
+                    {% if not message.traite %}
+                        <span class="badge bg-warning text-dark">À traiter</span>
+                    {% else %}
+                        <span class="badge bg-success">Traité</span>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <strong>De :</strong> {{ form.name }}
+                    </div>
+                    <div class="col-md-6">
+                        <strong>Email :</strong>
+                        <a href="mailto:{{ form.email }}">{{ form.email }}</a>
+                    </div>
+                    <div class="col-md-6">
+                        <strong>Téléphone :</strong>
+                        <a href="tel:{{ form.telephone }}">{{ form.telephone }}</a>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <strong>Date :</strong> {{ message.dateEnvoi|date('d/m/Y à H:i') }}
+                    </div>
+                </div>
+                <hr>
+                <div class="mb-3">
+                    <strong>Message :</strong>
+                    <div class="mt-2 p-3 bg-light rounded">
+                        {{ form.message|nl2br }}
+                    </div>
+                </div>
+
+                <div class="d-flex gap-2">
+                    <a href="{{ path('app_admin_message_marquer_traite', {id: message.id}) }}"
+                       class="btn {% if message.traite %}btn-warning{% else %}btn-success{% endif %}">
+                        {% if message.traite %}
+                            ↩️ Marquer comme non traité
+                        {% else %}
+                            ✅ Marquer comme traité
+                        {% endif %}
+                    </a>
+
+                    <a href="mailto:{{ form.email }}?subject=Re: {{ form.subject|url_encode }}"
+                       class="btn btn-primary">
+                        📧 Répondre par email
+                    </a>
+
+                    <form action="{{ path('app_admin_message_supprimer', {id: message.id}) }}"
+                          method="post"
+                          style="display: inline;">
+                        <button type="submit" class="btn btn-danger">
+                            🗑️ Supprimer
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

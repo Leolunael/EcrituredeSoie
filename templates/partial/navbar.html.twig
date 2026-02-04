@@ -1,0 +1,106 @@
+<nav class="navbar">
+    <div class="nav-container">
+        <img src="{{ asset('uploads/images/Logo.png') }}" alt="Logo" class="navbar-logo">
+
+        <div class="burger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+
+        <ul class="nav-menu">
+            <li class="menu nav-item"><a href="{{ path('app_home') }}">Accueil</a></li>
+            <li class="menu nav-item"><a href="{{ path('presentation_index') }}">Association</a></li>
+            <li class="menu nav-item"><a href="{{ path('app_ateliers') }}">Inscription</a></li>
+            <li class="menu nav-item"><a href="{{ path('texte_index') }}">Ecrits</a></li>
+            <li class="menu nav-item"><a href="{{ path('app_avis') }}">Avis</a></li>
+            <li class="menu nav-item"><a href="{{ path('app_contact') }}">Contact</a></li>
+            <li class="menu nav-item"><a href="{{ path('blog_index') }}">Notes</a></li>
+
+            {% if app.user %}
+                {# Ces éléments apparaissent uniquement en mobile dans le menu hamburger #}
+                <li class="menu user-item mobile-only">
+                    <a href="{{ path('user_dashboard') }}">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                        <span>{{ app.user.prenom ?? app.user.email }}</span>
+                    </a>
+                </li>
+
+                {% if is_granted('ROLE_ADMIN') %}
+                    <li class="menu user-item mobile-only">
+                        <a href="{{ path('admin_index') }}">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                                <path d="M2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                            </svg>
+                            <span>Administration</span>
+                        </a>
+                    </li>
+                {% endif %}
+
+                <li class="menu user-item mobile-only">
+                    <a href="{{ path('app_logout') }}">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                            <polyline points="16 17 21 12 16 7"></polyline>
+                            <line x1="21" y1="12" x2="9" y2="12"></line>
+                        </svg>
+                        <span>Déconnexion</span>
+                    </a>
+                </li>
+            {% else %}
+                <li class="menu user-item mobile-only">
+                    <a href="{{ path('app_login') }}">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+                            <polyline points="10 17 15 12 10 7"></polyline>
+                            <line x1="15" y1="12" x2="3" y2="12"></line>
+                        </svg>
+                        <span>Connexion</span>
+                    </a>
+                </li>
+            {% endif %}
+        </ul>
+
+        {# Icônes utilisateur visibles uniquement en desktop #}
+        <div class="user-icons">
+            {% if app.user %}
+                <a href="{{ path('user_dashboard') }}" title="{{ app.user.prenom ?? app.user.email }}" class="user-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                </a>
+
+                {% if is_granted('ROLE_ADMIN') %}
+                    <a href="{{ path('admin_index') }}" title="Administration" class="user-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                            <path d="M2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                        </svg>
+                    </a>
+                {% endif %}
+
+                <a href="{{ path('app_logout') }}" title="Déconnexion" class="user-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                        <polyline points="16 17 21 12 16 7"></polyline>
+                        <line x1="21" y1="12" x2="9" y2="12"></line>
+                    </svg>
+                </a>
+            {% else %}
+                <a href="{{ path('app_login') }}" title="Connexion" class="user-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+                        <polyline points="10 17 15 12 10 7"></polyline>
+                        <line x1="15" y1="12" x2="3" y2="12"></line>
+                    </svg>
+                </a>
+            {% endif %}
+        </div>
+    </div>
+</nav>
+

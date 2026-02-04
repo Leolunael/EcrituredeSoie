@@ -1,0 +1,103 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Gestion des textes{% endblock %}
+
+{% block body %}
+    <div class="container mt-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            {#  <a href="{{ path('admin_index') }}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Retour au Dashboard
+            </a>#}
+            <h1>Gestion des textes</h1>
+            <div style="width: 180px;"></div> {# Espaceur pour centrer le titre #}
+            <a href="{{ path('admin_index') }}" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Tableau de bord principal
+            </a>
+        </div>
+
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        {% endfor %}
+
+        {% if textes|length > 0 %}
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead>
+                    <tr>
+                        <th style="padding-right: 50px;">Titre</th>
+                        <th style="padding-right: 50px;">Date création</th>
+                        <th style="padding-right: 50px;">Date modification</th>
+                        <th style="padding-right: 50px;">À la une</th>
+                        <th style="padding-right: 50px;">Commentaires</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for texte in textes %}
+                        <tr>
+                            <td style="padding-right: 50px;">{{ texte.titre }}</td>
+                            <td style="padding-right: 50px;">{{ texte.dateCreation|date('d/m/Y H:i') }}</td>
+                            <td style="padding-right: 50px;">
+                                {% if texte.dateModification %}
+                                    {{ texte.dateModification|date('d/m/Y H:i') }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td style="padding-right: 50px;">
+                                {% if texte.aLaUne %}
+                                    <span class="badge bg-success">Oui</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">Non</span>
+                                {% endif %}
+                            </td>
+                            <td style="padding-right: 50px;">
+                                <a href="{{ path('app_admin_commentaires') }}" class="btn btn-sm btn-secondary">
+                                    Commentaires
+                                </a>
+                            </td>
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <a href="{{ path('app_admin_texte_modifier', {id: texte.id}) }}"
+                                       class="btn btn-sm btn-warning" title="Modifier">
+                                        ✏️
+                                    </a>
+
+                                    {% if not texte.aLaUne %}
+                                        <a href="{{ path('app_admin_texte_mettre_a_la_une', {id: texte.id}) }}"
+                                           class="btn btn-sm btn-info" title="Mettre à la une">
+                                            ⭐
+                                        </a>
+                                    {% endif %}
+
+                                    <form method="post"
+                                          action="{{ path('app_admin_texte_supprimer', {id: texte.id}) }}"
+                                          style="display: inline;"
+                                          onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce texte ?');">
+                                        <button type="submit" class="btn btn-sm btn-danger" title="Supprimer">
+                                            🗑️
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="text-center mt-4">
+                <a href="{{ path('app_admin_texte_nouveau') }}" class="btn btn-primary btn-lg">
+                    <i class="fas fa-plus"></i> Nouveau texte
+                </a>
+            </div>
+        {% else %}
+            <div class="alert alert-info">
+                Aucun texte trouvé. <a href="{{ path('app_admin_texte_nouveau') }}">Créer le premier texte</a>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

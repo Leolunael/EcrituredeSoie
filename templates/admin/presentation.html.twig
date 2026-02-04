@@ -1,0 +1,101 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Gestion des Contenus - Administration{% endblock %}
+
+{% block body %}
+    <div class="container-fluid mt-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1><i class="bi bi-file-text"></i> Gestion des Contenus</h1>
+            <div>
+                <a href="{{ path('admin_presentation_new') }}" class="btn btn-primary">
+                    <i class="bi bi-plus-circle"></i> Nouveau contenu
+                </a>
+                <a href="{{ path('admin_index') }}" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left"></i> Tableau de bord
+                </a>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Liste des contenus ({{ presentations|length }})</h5>
+            </div>
+            <div class="card-body p-0">
+                {% if presentations|length > 0 %}
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                            <tr>
+                                <th>Ordre</th>
+                                <th>Titre</th>
+                                <th>Sous-titre</th>
+                                <th>Contenu (aperçu)</th>
+                                <th>Dernière modification</th>
+                                <th class="text-center">Statut</th>
+                                <th class="text-center">Actif/Inactif</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for presentation in presentations %}
+                                <tr class="{% if not presentation.actif %}table-secondary{% endif %}">
+                                    <td><strong>{{ presentation.ordre }}</strong></td>
+                                    <td><strong>{{ presentation.titre }}</strong></td>
+                                    <td>{{ presentation.contenu|striptags|u.truncate(80, '...') }}</td>
+                                    <td class="text-center">
+                                        {% if presentation.actif %}
+                                            <span class="badge bg-success">
+                                            <i class="bi bi-check-circle"></i> Actif
+                                        </span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">
+                                            <i class="bi bi-x-circle"></i> Inactif
+                                        </span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-center">
+                                        <form method="post" action="{{ path('admin_presentation_toggle', {id: presentation.id}) }}" style="display: inline;">
+                                            <div class="form-check form-switch d-inline-block">
+                                                <input class="form-check-input"
+                                                       type="checkbox"
+                                                       {% if presentation.actif %}checked{% endif %}
+                                                       onchange="this.form.submit()"
+                                                       title="{% if presentation.actif %}Désactiver{% else %}Activer{% endif %}">
+                                            </div>
+                                        </form>
+                                    </td>
+                                    <td class="text-end">
+                                        <div class="btn-group" role="group">
+                                            <a href="{{ path('admin_presentation_edit', {id: presentation.id}) }}"
+                                               class="btn btn-sm btn-warning" title="Modifier">
+                                                ✏️
+                                            </a>
+
+                                            <form method="post"
+                                                  action="{{ path('admin_presentation_delete', {id: presentation.id}) }}"
+                                                  onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce contenu ?');"
+                                                  style="display: inline;">
+                                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ presentation.id) }}">
+                                                <button type="submit" class="btn btn-sm btn-danger" title="Supprimer">
+                                                    🗑️
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="text-center py-5">
+                        <i class="bi bi-file-text-x" style="font-size: 3rem; color: #ccc;"></i>
+                        <p class="text-muted mt-3">Aucun contenu trouvé.</p>
+                        <a href="{{ path('admin_presentation_new') }}" class="btn btn-primary mt-2">
+                            <i class="bi bi-plus-circle"></i> Créer le premier contenu
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

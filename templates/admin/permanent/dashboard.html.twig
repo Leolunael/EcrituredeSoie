@@ -1,0 +1,335 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Tableau de bord Permanents{% endblock %}
+
+{% block body %}
+    <div class="container-fluid mt-4">
+        <h1 class="mb-4"><i class="fas fa-chart-line me-2"></i> Tableau de bord - Permanents</h1>
+        <a href="{{ path('admin_index') }}" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Tableau de bord principal
+        </a>
+        <h2>Bienvenue {{ permanent.email }}</h2>
+        <p>Vous êtes connecté en tant que permanent.</p>
+
+        {# Cartes de statistiques #}
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card text-white bg-primary shadow">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="text-uppercase mb-1">Total Permanents</h6>
+                                <h2 class="mb-0">{{ stats.total }}</h2>
+                            </div>
+                            <div class="fs-1">
+                                <i class="fas fa-users"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-primary bg-opacity-75">
+                        <small class="text-white">Gestion des permanents</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card text-white bg-success shadow">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="text-uppercase mb-1">Permanents actifs</h6>
+                                <h2 class="mb-0">{{ stats.actifs }}</h2>
+                            </div>
+                            <div class="fs-1">
+                                <i class="fas fa-user-check"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-success bg-opacity-75">
+                        <small>{{ (stats.total > 0 ? ((stats.actifs / stats.total) * 100) : 0)|number_format(1) }}% du total</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card text-white bg-warning shadow">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="text-uppercase mb-1">Paiements en attente</h6>
+                                <h2 class="mb-0">{{ stats.paiementsEnAttente }}</h2>
+                            </div>
+                            <div class="fs-1">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-warning bg-opacity-75">
+                        <small>Nécessite un suivi</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card text-white bg-info shadow">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="text-uppercase mb-1">Total Posts</h6>
+                                <h2 class="mb-0">{{ stats.totalPosts|default(0) }}</h2>
+                            </div>
+                            <div class="fs-1">
+                                <i class="fas fa-newspaper"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-info bg-opacity-75">
+                        <a href="{{ path('admin_post_index') }}" class="text-white text-decoration-none">
+                            Gérer les posts <i class="fas fa-arrow-circle-right ms-1"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {# Section Gestion des Permanents #}
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0"><i class="fas fa-users-cog me-2"></i> Gestion des Permanents</h5>
+                        {% if is_granted('ROLE_SUPER_ADMIN') %}
+                            <button class="btn btn-light btn-sm">
+                                <i class="fas fa-plus me-1"></i> Ajouter un permanent
+                            </button>
+                        {% endif %}
+                    </div>
+                    <div class="card-body p-0">
+                        {% if recentInscriptions is empty %}
+                            <div class="p-4 text-center text-muted">
+                                Aucune inscription récente
+                            </div>
+                        {% else %}
+                            <div class="table-responsive">
+                                <table class="table table-hover mb-0">
+                                    <thead class="table-light">
+                                    <tr>
+                                        <th>Nom complet</th>
+                                        <th>Email</th>
+                                        <th>Date inscription</th>
+                                        <th>Paiement</th>
+                                        <th>Statut</th>
+                                        <th class="text-center">Actions</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for perm in recentInscriptions %}
+                                        <tr>
+                                            <td>
+                                                <i class="fas fa-user me-2 text-muted"></i>
+                                                <strong>{{ perm.nomComplet }}</strong>
+                                            </td>
+                                            <td>{{ perm.email }}</td>
+                                            <td>{{ perm.dateInscription|date('d/m/Y H:i') }}</td>
+                                            <td>
+                                                {% if perm.paiementEffectue %}
+                                                    <span class="badge bg-success">
+                                                        <i class="fas fa-check me-1"></i> Payé
+                                                    </span>
+                                                {% else %}
+                                                    <span class="badge bg-warning">
+                                                        <i class="fas fa-clock me-1"></i> En attente
+                                                    </span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if perm.actif %}
+                                                    <span class="badge bg-success">
+                                                        <i class="fas fa-check-circle me-1"></i> Actif
+                                                    </span>
+                                                {% else %}
+                                                    <span class="badge bg-secondary">
+                                                        <i class="fas fa-ban me-1"></i> Inactif
+                                                    </span>
+                                                {% endif %}
+                                            </td>
+                                            <td class="text-center">
+                                                <a href="{{ path('admin_permanent_show', {id: perm.id}) }}"
+                                                   class="btn btn-sm btn-outline-primary"
+                                                   title="Voir">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="card-footer bg-light">
+                        <button class="btn btn-primary" disabled>
+                            <i class="fas fa-users me-1"></i> Voir tous les permanents
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {# Section Gestion des Posts #}
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <div class="card shadow">
+                    <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0"><i class="fas fa-newspaper me-2"></i> Gestion des Posts</h5>
+                        <a href="{{ path('admin_post_new') }}" class="btn btn-light btn-sm">
+                            <i class="fas fa-plus me-1"></i> Créer un post
+                        </a>
+                    </div>
+                    <div class="card-body p-0">
+                        {% if recentPosts is defined and recentPosts is not empty %}
+                            <div class="table-responsive">
+                                <table class="table table-hover mb-0">
+                                    <thead class="table-light">
+                                    <tr>
+                                        <th>Titre</th>
+                                        <th>Auteur</th>
+                                        <th>Date création</th>
+                                        <th>Statut</th>
+                                        <th class="text-center">Actions</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for post in recentPosts %}
+                                        <tr>
+                                            <td>
+                                                <i class="fas fa-file-alt me-2 text-muted"></i>
+                                                <strong>{{ post.titre }}</strong>
+                                            </td>
+                                            <td>{{ post.auteur|default('Non défini') }}</td>
+                                            <td>{{ post.dateCreation|date('d/m/Y H:i') }}</td>
+                                            <td>
+                                                {% if post.publie is defined and post.publie %}
+                                                    <span class="badge bg-success">
+                                                        <i class="fas fa-globe me-1"></i> Publié
+                                                    </span>
+                                                {% else %}
+                                                    <span class="badge bg-secondary">
+                                                        <i class="fas fa-eye-slash me-1"></i> Brouillon
+                                                    </span>
+                                                {% endif %}
+                                            </td>
+                                            <td class="text-center">
+                                                <button class="btn btn-sm btn-outline-primary" disabled title="Voir">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        {% else %}
+                            <div class="p-4 text-center text-muted">
+                                <i class="fas fa-inbox fa-3x mb-3 d-block"></i>
+                                <p>Aucun post récent</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="card-footer bg-light">
+                        <a href="{{ path('admin_post_index') }}" class="btn btn-info">
+                            <i class="fas fa-newspaper me-1"></i> Voir tous les posts
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {# Section Gestion de la présentation #}
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="fas fa-file-alt"></i> Présentation Espace Atelier Permanent
+                    </h5>
+                    <p>Modifier le contenu de la page d'accueil publique</p>
+                    <a href="{{ path('admin_permanent_presentation') }}" class="btn btn-primary">
+                        <i class="fas fa-edit"></i> Gérer la présentation
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        {# Statistiques supplémentaires #}
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card shadow">
+                    <div class="card-header bg-light">
+                        <h5 class="mb-0"><i class="fas fa-chart-pie me-2"></i> Répartition des permanents</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Actifs</span>
+                            <strong class="text-success">{{ stats.actifs }} ({{ (stats.total > 0 ? ((stats.actifs / stats.total) * 100) : 0)|number_format(1) }}%)</strong>
+                        </div>
+                        <div class="progress mb-3" style="height: 25px;">
+                            <div class="progress-bar bg-success" role="progressbar"
+                                 style="width: {{ (stats.total > 0 ? ((stats.actifs / stats.total) * 100) : 0) }}%"
+                                 aria-valuenow="{{ stats.actifs }}"
+                                 aria-valuemin="0"
+                                 aria-valuemax="{{ stats.total }}">
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Inactifs</span>
+                            <strong class="text-secondary">{{ stats.total - stats.actifs }} ({{ (stats.total > 0 ? (((stats.total - stats.actifs) / stats.total) * 100) : 0)|number_format(1) }}%)</strong>
+                        </div>
+                        <div class="progress" style="height: 25px;">
+                            <div class="progress-bar bg-secondary" role="progressbar"
+                                 style="width: {{ (stats.total > 0 ? (((stats.total - stats.actifs) / stats.total) * 100) : 0) }}%"
+                                 aria-valuenow="{{ stats.total - stats.actifs }}"
+                                 aria-valuemin="0"
+                                 aria-valuemax="{{ stats.total }}">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card shadow">
+                    <div class="card-header bg-light">
+                        <h5 class="mb-0"><i class="fas fa-euro-sign me-2"></i> Statistiques paiements</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Paiements effectués</span>
+                            <strong class="text-success">{{ stats.total - stats.paiementsEnAttente }}</strong>
+                        </div>
+                        <div class="progress mb-3" style="height: 25px;">
+                            <div class="progress-bar bg-success" role="progressbar"
+                                 style="width: {{ (stats.total > 0 ? (((stats.total - stats.paiementsEnAttente) / stats.total) * 100) : 0) }}%"
+                                 aria-valuenow="{{ stats.total - stats.paiementsEnAttente }}"
+                                 aria-valuemin="0"
+                                 aria-valuemax="{{ stats.total }}">
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Paiements en attente</span>
+                            <strong class="text-warning">{{ stats.paiementsEnAttente }}</strong>
+                        </div>
+                        <div class="progress" style="height: 25px;">
+                            <div class="progress-bar bg-warning" role="progressbar"
+                                 style="width: {{ (stats.total > 0 ? ((stats.paiementsEnAttente / stats.total) * 100) : 0) }}%"
+                                 aria-valuenow="{{ stats.paiementsEnAttente }}"
+                                 aria-valuemin="0"
+                                 aria-valuemax="{{ stats.total }}">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
