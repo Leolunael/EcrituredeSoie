@@ -20,10 +20,17 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header bg-primary text-white">
-                        <h5 class="mb-0">Informations de l'atelier</h5>
+                        <h5 class="mb-0">Informations de la visio</h5>
                     </div>
                     <div class="card-body">
-                        <p><strong>Date :</strong> {{ visio.dateVisio|date('d/m/Y à H:i') }}</p>
+                        <p><strong>Date :</strong> {{ visio.dateVisio|date('d/m/Y') }}
+                            {% if visio.heureDebut %}
+                                de {{ visio.heureDebut|date('H\\hi') }}
+                            {% endif %}
+                            {% if visio.heureFin %}
+                                à {{ visio.heureFin|date('H\\hi') }}
+                            {% endif %}
+                        </p>
                         <p><strong>Description :</strong> {{ visio.description }}</p>
                         <p><strong>Nombre d'inscrits :</strong> {{ visio.inscriptions|length }}</p>
                     </div>
@@ -98,14 +105,4 @@
         </div>
     </div>
 
-    <style>
-        @media print {
-            .no-print {
-                display: none !important;
-            }
-            .btn {
-                display: none !important;
-            }
-        }
-    </style>
 {% endblock %}

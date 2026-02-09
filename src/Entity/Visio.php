@@ -26,13 +26,16 @@ class Visio
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $informations = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    // ✅ CORRIGÉ : Type DATE_MUTABLE pour stocker uniquement la date
+    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $dateVisio = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    // ✅ CORRIGÉ : Type TIME_MUTABLE pour stocker uniquement l'heure
+    #[ORM\Column(type: Types::TIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $heureDebut = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    // ✅ CORRIGÉ : Type TIME_MUTABLE pour stocker uniquement l'heure
+    #[ORM\Column(type: Types::TIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $heureFin = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 6, scale: 2)]
@@ -52,6 +55,7 @@ class Visio
 
     public function __construct()
     {
+        $this->isArchive = false;
         $this->inscriptions = new ArrayCollection();
     }
 
@@ -98,7 +102,7 @@ class Visio
         return $this->dateVisio;
     }
 
-    public function setDateVisio(\DateTimeInterface $dateVisio): static
+    public function setDateVisio(?\DateTimeInterface $dateVisio): self
     {
         $this->dateVisio = $dateVisio;
         return $this;
@@ -159,6 +163,11 @@ class Visio
         return $this;
     }
 
+    public function getIsArchive(): bool
+    {
+        return $this->isArchive;
+    }
+
     /**
      * @return Collection<int, InscriptionVisio>
      */
@@ -197,7 +206,6 @@ class Visio
         return $this;
     }
 
-    // Méthode pour vérifier si c'est complet
     public function isComplet(): bool
     {
         if ($this->placesMax === null) {
@@ -205,5 +213,4 @@ class Visio
         }
         return $this->inscriptions->count() >= $this->placesMax;
     }
-
 }

@@ -6,7 +6,7 @@
     <div class="container-fluid mt-4">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h1><i class="bi bi-pencil"></i> Modifier l'inscription</h1>
-            <a href="{{ path('admin_atelier_show', {id: inscription.atelier.id}) }}" class="btn btn-secondary">
+            <a href="{{ path('admin_vollon_show', {id: inscription.vollon.id}) }}" class="btn btn-secondary">
                 <i class="bi bi-arrow-left"></i> Retour à l'atelier
             </a>
         </div>
@@ -15,11 +15,11 @@
             <div class="col-lg-8">
                 <div class="card mb-3">
                     <div class="card-header bg-info text-white">
-                        <h5 class="mb-0">Atelier : {{ inscription.atelier.titre }}</h5>
+                        <h5 class="mb-0">Atelier : {{ inscription.vollon.titre }}</h5>
                     </div>
                     <div class="card-body">
-                        <p><strong>Date :</strong> {{ inscription.atelier.dateAtelier|date('d/m/Y H:i') }}</p>
-                        <p><strong>Lieu :</strong> {{ inscription.atelier.lieu }}</p>
+                        <p><strong>Date :</strong> {{ inscription.vollon.dateVollon|date('d/m/Y H:i') }}</p>
+                        <p><strong>Lieu :</strong> {{ inscription.vollon.lieu }}</p>
                     </div>
                 </div>
 
@@ -53,7 +53,7 @@
                         </div>
 
                         <div class="d-flex justify-content-between mt-4">
-                            <a href="{{ path('admin_atelier_show', {id: inscription.atelier.id}) }}" class="btn btn-secondary">
+                            <a href="{{ path('admin_vollon_show', {id: inscription.vollon.id}) }}" class="btn btn-secondary">
                                 <i class="bi bi-x-circle"></i> Annuler
                             </a>
                             <button type="submit" class="btn btn-primary">

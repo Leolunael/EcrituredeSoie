@@ -5,8 +5,8 @@
 {% block body %}
     <div class="container-fluid mt-4">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1><i class="bi bi-pencil"></i> Modifier l'atelier</h1>
-            <a href="{{ path('admin_atelier_list') }}" class="btn btn-secondary">
+            <h1><i class="bi bi-plus-circle"></i> Créer un nouvel atelier</h1>
+            <a href="{{ path('admin_gestion') }}" class="btn btn-secondary">
                 <i class="bi bi-arrow-left"></i> Retour à la liste
             </a>
         </div>
@@ -15,7 +15,7 @@
             <div class="col-lg-10">
                 <div class="card">
                     <div class="card-header bg-warning">
-                        <h5 class="mb-0">{{ atelier.titre }}</h5>
+                        <h5 class="mb-0">Informations de l'atelier</h5>
                     </div>
                     <div class="card-body">
                         {{ form_start(form) }}
@@ -32,26 +32,21 @@
                             <label class="form-label">Date et horaires</label>
                             <div class="row">
                                 <div class="col-md-4">
-                                    <input type="date" id="date_input_edit" class="form-control" required>
+                                    {{ form_widget(form.dateVollon, {'attr': {'class': 'form-control'}}) }}
                                     <small class="form-text text-muted">Date</small>
+                                    {{ form_errors(form.dateVollon) }}
                                 </div>
                                 <div class="col-md-4">
-                                    <input type="time" id="heure_debut_input_edit" class="form-control" required>
+                                    {{ form_widget(form.heureDebut, {'attr': {'class': 'form-control'}}) }}
                                     <small class="form-text text-muted">Heure de début</small>
+                                    {{ form_errors(form.heureDebut) }}
                                 </div>
                                 <div class="col-md-4">
-                                    <input type="time" id="heure_fin_input_edit" class="form-control">
+                                    {{ form_widget(form.heureFin, {'attr': {'class': 'form-control'}}) }}
                                     <small class="form-text text-muted">Heure de fin</small>
+                                    {{ form_errors(form.heureFin) }}
                                 </div>
                             </div>
-                            <div style="display: none;">
-                                {{ form_widget(form.dateAtelier, {'attr': {'id': 'dateAtelier_hidden_edit'}}) }}
-                                {{ form_widget(form.heureDebut, {'attr': {'id': 'heureDebut_hidden_edit'}}) }}
-                                {{ form_widget(form.heureFin, {'attr': {'id': 'heureFin_hidden_edit'}}) }}
-                            </div>
-                            {{ form_errors(form.dateAtelier) }}
-                            {{ form_errors(form.heureDebut) }}
-                            {{ form_errors(form.heureFin) }}
                         </div>
 
                         <div class="row">
@@ -82,11 +77,11 @@
                         </div>
 
                         <div class="d-flex justify-content-between mt-4">
-                            <a href="{{ path('admin_atelier_list') }}" class="btn btn-secondary">
+                            <a href="{{ path('admin_gestion') }}" class="btn btn-secondary">
                                 <i class="bi bi-x-circle"></i> Annuler
                             </a>
                             <button type="submit" class="btn btn-warning">
-                                <i class="bi bi-check-circle"></i> Enregistrer les modifications
+                                <i class="bi bi-check-circle"></i> Créer l'atelier
                             </button>
                         </div>
                         {{ form_end(form) }}
@@ -95,5 +90,4 @@
             </div>
         </div>
     </div>
-
 {% endblock %}

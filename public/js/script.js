@@ -140,6 +140,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // ========== NAVIGATION ACTIVE ==========
     initActiveNav();
+
+    // ========== SYNCHRONISATION DATE/HEURE ATELIER ==========
+    initDateTimeSync();
 });
 
 // ========== FONCTION: CARROUSEL ==========
@@ -675,42 +678,91 @@ function showNotification(message, type = 'info') {
         notification.style.transform = 'translateX(400px)';
         setTimeout(() => notification.remove(), 300);
     }, 4000);
+}
 
-    document.addEventListener('DOMContentLoaded', function() {
-        const dateInput = document.getElementById('date_input');
-        const heureDebutInput = document.getElementById('heure_debut_input');
-        const heureFinInput = document.getElementById('heure_fin_input');
-        const dateAtelierHidden = document.getElementById('dateAtelier_hidden');
-        const heureFinHidden = document.getElementById('heureFin_hidden');
+// ========== FONCTION: SYNCHRONISATION DATE/HEURE ATELIER ==========
+function initDateTimeSync() {
+    const dateInput = document.getElementById('date_input');
+    const heureDebutInput = document.getElementById('heure_debut_input');
+    const heureFinInput = document.getElementById('heure_fin_input');
 
-        // Fonction pour combiner date et heure
-        function updateHiddenFields() {
-            if (dateInput.value && heureDebutInput.value) {
-                const dateTime = dateInput.value + 'T' + heureDebutInput.value;
-                dateAtelierHidden.value = dateTime;
-            }
+    const dateAtelierHidden = document.getElementById('dateAtelier_hidden');
+    const heureDebutHidden = document.getElementById('heureDebut_hidden');
+    const heureFinHidden = document.getElementById('heureFin_hidden');
 
-            if (dateInput.value && heureFinInput.value) {
-                const dateTimeFin = dateInput.value + 'T' + heureFinInput.value;
-                heureFinHidden.value = dateTimeFin;
-            }
+    // Si les éléments n'existent pas, on sort
+    if (!dateInput || !heureDebutInput || !heureFinInput) {
+        return;
+    }
+
+    console.log('🔍 Initialisation de la synchronisation date/heure');
+    console.log('📅 dateInput:', dateInput);
+    console.log('⏰ heureDebutInput:', heureDebutInput);
+    console.log('⏰ heureFinInput:', heureFinInput);
+    console.log('🔒 dateAtelierHidden:', dateAtelierHidden);
+    console.log('🔒 heureDebutHidden:', heureDebutHidden);
+    console.log('🔒 heureFinHidden:', heureFinHidden);
+
+    // Fonction pour synchroniser la date
+    function syncDate() {
+        if (dateInput && dateInput.value && dateAtelierHidden) {
+            dateAtelierHidden.value = dateInput.value;
+            console.log('✅ Date synchronisée:', dateInput.value);
         }
+    }
 
-        // Initialiser les champs si on édite un atelier existant
-        if (dateAtelierHidden.value) {
-            const dt = new Date(dateAtelierHidden.value);
-            dateInput.value = dt.toISOString().split('T')[0];
-            heureDebutInput.value = dt.toTimeString().slice(0, 5);
+    // Fonction pour synchroniser l'heure de début
+    function syncHeureDebut() {
+        if (heureDebutInput && heureDebutInput.value && heureDebutHidden) {
+            heureDebutHidden.value = heureDebutInput.value;
+            console.log('✅ Heure début synchronisée:', heureDebutInput.value);
         }
+    }
 
-        if (heureFinHidden.value) {
-            const dtFin = new Date(heureFinHidden.value);
-            heureFinInput.value = dtFin.toTimeString().slice(0, 5);
+    // Fonction pour synchroniser l'heure de fin
+    function syncHeureFin() {
+        if (heureFinInput && heureFinInput.value && heureFinHidden) {
+            heureFinHidden.value = heureFinInput.value;
+            console.log('✅ Heure fin synchronisée:', heureFinInput.value);
         }
+    }
 
-        // Mettre à jour les champs cachés quand on modifie les champs visibles
-        dateInput.addEventListener('change', updateHiddenFields);
-        heureDebutInput.addEventListener('change', updateHiddenFields);
-        heureFinInput.addEventListener('change', updateHiddenFields);
-    });
+    // Charger les valeurs existantes (pour l'édition)
+    if (dateAtelierHidden && dateAtelierHidden.value) {
+        dateInput.value = dateAtelierHidden.value;
+    }
+    if (heureDebutHidden && heureDebutHidden.value) {
+        heureDebutInput.value = heureDebutHidden.value;
+    }
+    if (heureFinHidden && heureFinHidden.value) {
+        heureFinInput.value = heureFinHidden.value;
+    }
+
+    // Écouter les changements sur les champs visibles
+    if (dateInput) {
+        dateInput.addEventListener('change', syncDate);
+        dateInput.addEventListener('input', syncDate);
+    }
+
+    if (heureDebutInput) {
+        heureDebutInput.addEventListener('change', syncHeureDebut);
+        heureDebutInput.addEventListener('input', syncHeureDebut);
+    }
+
+    if (heureFinInput) {
+        heureFinInput.addEventListener('change', syncHeureFin);
+        heureFinInput.addEventListener('input', syncHeureFin);
+    }
+
+    // Synchroniser avant la soumission du formulaire
+    const form = document.querySelector('form[name="atelier"]');
+    if (form) {
+        console.log('📝 Formulaire trouvé, ajout du listener submit');
+        form.addEventListener('submit', function(e) {
+            console.log('🚀 Soumission du formulaire - synchronisation...');
+            syncDate();
+            syncHeureDebut();
+            syncHeureFin();
+        });
+    }
 }

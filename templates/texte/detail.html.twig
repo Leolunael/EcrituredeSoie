@@ -11,15 +11,16 @@
             <h1 class="titre">{{ texte.titre }}</h1>
             <br>
 
+            {# Image à gauche
             <div class="image">
-                {# Image à gauche #}
+
                 {% if texte.imageAlignment == 'left' and texte.image %}
                     <div>
                         <img src="{{ asset('uploads/textes/' ~ texte.image) }}"
                              alt="{{ texte.titre }}"
                              class="img">
                     </div>
-                {% endif %}
+                {% endif %}#}
 
 
             <br>
@@ -27,7 +28,7 @@
                 {{ texte.contenu|nl2br|raw }}
                 <br>
                 <br>
-                <p class="auteur">
+                <p>
                     {% if texte.auteur %}
                         {{ texte.auteur }}
                     {% endif %}
@@ -39,14 +40,14 @@
                     © Tous droits réservés. Ce texte est protégé par le droit d'auteur.
                 </p>
             </div>
-            {# Image à droite ou position par défaut #}
+            {# Image à droite ou position par défaut
             {% if (texte.imageAlignment == 'right' or texte.imageAlignment is null) and texte.image %}
                 <div>
                     <img src="{{ asset('uploads/textes/' ~ texte.image) }}"
                          alt="{{ texte.titre }}"
                          class="img">
                 </div>
-            {% endif %}
+            {% endif %}#}
         </article>
 
         {% for message in app.flashes('success') %}

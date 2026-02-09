@@ -1,6 +1,6 @@
 {% extends 'admin/base.html.twig' %}
 
-{% block title %}Créer une nouvelle visio - Administration{% endblock %}
+{% block title %}Ecriture de Soie{% endblock %}
 
 {% block body %}
     <div class="container-fluid mt-4">
@@ -14,8 +14,8 @@
         <div class="row">
             <div class="col-lg-10">
                 <div class="card">
-                    <div class="card-header bg-info text-white">
-                        <h5 class="mb-0">Nouvelle visio</h5>
+                    <div class="card-header bg-warning">
+                        <h5 class="mb-0">Informations de la visio</h5>
                     </div>
                     <div class="card-body">
                         {{ form_start(form) }}
@@ -29,28 +29,26 @@
                             </div>
                         </div>
 
+                        {# ✅ SIMPLIFIÉ : Utilisation directe des champs Symfony #}
                         <div class="mb-3">
                             <label class="form-label">Date et horaires</label>
                             <div class="row">
                                 <div class="col-md-4">
-                                    <input type="date" id="date_input" class="form-control" required>
+                                    {{ form_widget(form.dateVisio, {'attr': {'class': 'form-control'}}) }}
                                     <small class="form-text text-muted">Date</small>
+                                    {{ form_errors(form.dateVisio) }}
                                 </div>
                                 <div class="col-md-4">
-                                    <input type="time" id="heure_debut_input" class="form-control" required>
+                                    {{ form_widget(form.heureDebut, {'attr': {'class': 'form-control'}}) }}
                                     <small class="form-text text-muted">Heure de début</small>
+                                    {{ form_errors(form.heureDebut) }}
                                 </div>
                                 <div class="col-md-4">
-                                    <input type="time" id="heure_fin_input" class="form-control">
+                                    {{ form_widget(form.heureFin, {'attr': {'class': 'form-control'}}) }}
                                     <small class="form-text text-muted">Heure de fin</small>
+                                    {{ form_errors(form.heureFin) }}
                                 </div>
                             </div>
-                            <div style="display: none;">
-                                {{ form_widget(form.dateVisio, {'attr': {'id': 'dateVisio_hidden'}}) }}
-                                {{ form_widget(form.heureFin, {'attr': {'id': 'heureFin_hidden'}}) }}
-                            </div>
-                            {{ form_errors(form.dateVisio) }}
-                            {{ form_errors(form.heureFin) }}
                         </div>
 
                         <div class="row">
@@ -78,7 +76,7 @@
                             <a href="{{ path('admin_gestion') }}" class="btn btn-secondary">
                                 <i class="bi bi-x-circle"></i> Annuler
                             </a>
-                            <button type="submit" class="btn btn-info">
+                            <button type="submit" class="btn btn-warning">
                                 <i class="bi bi-check-circle"></i> Créer la visio
                             </button>
                         </div>

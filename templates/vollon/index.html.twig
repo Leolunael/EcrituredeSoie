@@ -8,8 +8,8 @@
 {% endblock %}
 
 {% block body %}
-    <a href="{{ path('app_visio') }}" type="submit" class="button">Retour</a>
-    <h1>{{ visio.titre }}</h1>
+    <a href="{{ path('app_vollons') }}" type="submit" class="button">Retour</a>
+    <h1>{{ vollon.titre }}</h1>
 
     <!-- Messages flash -->
     {% for message in app.flashes('success') %}
@@ -22,32 +22,36 @@
             <h5 class="titre">Informations pratiques</h5>
 
             <div class="card-body">
-                {% if visio.dateVisio %}
+                {% if vollon.dateVollon %}
                     <p>
-                        📅 <strong>Date :</strong> {{ visio.dateVisio|date('d/m/Y') }}
-                        De {{ visio.heureDebut ? visio.heureDebut|date('H\\hi') : 'NULL' }}
-                        à {{ visio.heureFin ? visio.heureFin|date('H\\hi') : 'NULL' }}
+                        📅 <strong>Date :</strong> {{ vollon.dateAtelier|date('d/m/Y') }}
+                        De {{ vollon.heureDebut ? vollon.heureDebut|date('H\\hi') : 'NULL' }}
+                        à {{ vollon.heureFin ? vollon.heureFin|date('H\\hi') : 'NULL' }}
                     </p>
                 {% endif %}
 
 
-                {% if visio.prix %}
-                    <p>💶 <strong>Prix :</strong> {{ visio.prix }} €</p>
+                {% if vollon.lieu %}
+                    <p style="margin-bottom: 0.75rem;">📍 <strong>Lieu :</strong> {{ vollon.lieu }}</p>
+                {% endif %}
+
+                {% if vollon.prix %}
+                    <p>💶 <strong>Prix :</strong> {{ vollon.prix }} €</p>
                 {% endif %}
 
                 <br>
 
                 <!-- Description -->
-                {% if visio.description %}
+                {% if vollon.description %}
                     <h5 class="card">Description</h5>
-                    <p>{{ visio.description|nl2br }}</p>
+                    <p>{{ vollon.description|nl2br }}</p>
                 {% endif %}
 
 
                 <!-- Informations complémentaires -->
-                {% if visio.informations %}
+                {% if vollon.informations %}
                     <h5 class="card">Informations complémentaires</h5>
-                    <p>{{ visio.informations|nl2br }}</p>
+                    <p>{{ vollon.informations|nl2br }}</p>
                 {% endif %}
             </div>
         </div>
@@ -96,7 +100,7 @@
                     </div>
 
                     {# Le lien HelloAsso, caché par défaut #}
-                    {% if visio.lienHelloAsso %}
+                    {% if atelier.lienHelloAsso %}
                         <div id="helloasso-link" {# style="display: none;" #}>
                             <strong>Pour finaliser votre paiement par CB :</strong><br>
                             Après validation du formulaire, vous serez redirigé vers HelloAsso pour effectuer le paiement.

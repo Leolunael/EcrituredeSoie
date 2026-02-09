@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use App\Repository\AtelierRepository;
 use App\Repository\LettreRepository;
 use App\Repository\VisioRepository;
+use App\Repository\VollonRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,6 +18,7 @@ class AdminGestionController extends AbstractController
         Request $request,
         AtelierRepository $atelierRepo,
         VisioRepository $visioRepo,
+        VollonRepository $vollonRepo,
         LettreRepository $lettreRepo
     ): Response
     {
@@ -40,6 +42,15 @@ class AdminGestionController extends AbstractController
             $visios = $visioRepo->findBy([], ['dateVisio' => 'DESC']);
         }
 
+        // Charger Vollon
+        if ($statut === 'actif') {
+            $vollons = $vollonRepo->findBy(['isArchive' => false], ['dateVollon' => 'DESC']);
+        } elseif ($statut === 'archive') {
+            $vollons = $vollonRepo->findBy(['isArchive' => true], ['dateVollon' => 'DESC']);
+        } else {
+            $vollons = $vollonRepo->findBy([], ['dateVollon' => 'DESC']);
+        }
+
         // Charger les lettres
         if ($statut === 'actif') {
             $lettres = $lettreRepo->findBy(['isArchive' => false], ['id' => 'DESC']);
@@ -52,6 +63,7 @@ class AdminGestionController extends AbstractController
         return $this->render('admin/AdminAtelier.html.twig', [
             'ateliers' => $ateliers,
             'visios' => $visios,
+            'vollons' => $vollons,
             'lettres' => $lettres,
             'statut' => $statut
         ]);

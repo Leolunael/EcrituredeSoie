@@ -2,14 +2,15 @@
 
 namespace App\Entity;
 
-use App\Repository\AtelierRepository;
+
+use App\Repository\VollonRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
-#[ORM\Entity(repositoryClass: AtelierRepository::class)]
-class Atelier
+#[ORM\Entity(repositoryClass: VollonRepository::class)]
+class Vollon
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -26,7 +27,7 @@ class Atelier
     private ?string $prix = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $dateAtelier = null;
+    private ?\DateTimeInterface $dateVollon = null;
 
     #[ORM\Column(type: Types::TIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $heureDebut = null;
@@ -55,7 +56,7 @@ class Atelier
     #[ORM\Column(length: 500, nullable: true)]
     private ?string $lienHelloAsso = null;
 
-    #[ORM\OneToMany(targetEntity: InscriptionAtelier::class, mappedBy: 'atelier', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: InscriptionVollon::class, mappedBy: 'vollon', orphanRemoval: true)]
     private Collection $inscriptions;
 
     public function __construct()
@@ -104,14 +105,14 @@ class Atelier
         return $this;
     }
 
-    public function getDateAtelier(): ?\DateTimeInterface
+    public function getDateVollon(): ?\DateTimeInterface
     {
-        return $this->dateAtelier;
+        return $this->dateVollon;
     }
 
-    public function setDateAtelier(?\DateTimeInterface $dateAtelier): self
+    public function setDateVollon(?\DateTimeInterface $dateVollon): self
     {
-        $this->dateAtelier = $dateAtelier;
+        $this->dateVollon = $dateVollon;
         return $this;
     }
 
@@ -220,27 +221,27 @@ class Atelier
     }
 
     /**
-     * @return Collection<int, InscriptionAtelier>
+     * @return Collection<int, InscriptionVollon>
      */
     public function getInscriptions(): Collection
     {
         return $this->inscriptions;
     }
 
-    public function addInscription(InscriptionAtelier $inscription): static
+    public function addInscription(InscriptionVollon $inscription): static
     {
         if (!$this->inscriptions->contains($inscription)) {
             $this->inscriptions->add($inscription);
-            $inscription->setAtelier($this);
+            $inscription->setVollon($this);
         }
         return $this;
     }
 
-    public function removeInscription(InscriptionAtelier $inscription): static
+    public function removeInscription(InscriptionVollon $inscription): static
     {
         if ($this->inscriptions->removeElement($inscription)) {
-            if ($inscription->getAtelier() === $this) {
-                $inscription->setAtelier(null);
+            if ($inscription->getVollon() === $this) {
+                $inscription->setVollon(null);
             }
         }
         return $this;

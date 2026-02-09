@@ -1,11 +1,11 @@
 {% extends 'admin/base.html.twig' %}
 
-{% block title %}Modifier {{ visio.titre }} - Administration{% endblock %}
+{% block title %}Modifier Visio - Administration{% endblock %}
 
 {% block body %}
     <div class="container-fluid mt-4">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1><i class="bi bi-pencil"></i> Modifier l'atelier</h1>
+            <h1><i class="bi bi-pencil-square"></i> Modifier la visio</h1>
             <a href="{{ path('admin_gestion') }}" class="btn btn-secondary">
                 <i class="bi bi-arrow-left"></i> Retour à la liste
             </a>
@@ -15,10 +15,11 @@
             <div class="col-lg-10">
                 <div class="card">
                     <div class="card-header bg-warning">
-                        <h5 class="mb-0">{{ visio.titre }}</h5>
+                        <h5 class="mb-0">Informations de la visio</h5>
                     </div>
                     <div class="card-body">
                         {{ form_start(form) }}
+
                         <div class="row">
                             <div class="col-md-8 mb-3">
                                 {{ form_row(form.titre) }}
@@ -28,14 +29,33 @@
                             </div>
                         </div>
 
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                {{ form_row(form.dateVisio) }}
+                        {# ✅ SIMPLIFIÉ : Utilisation directe des champs Symfony #}
+                        <div class="mb-3">
+                            <label class="form-label">Date et horaires</label>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    {{ form_widget(form.dateVisio, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">Date</small>
+                                    {{ form_errors(form.dateVisio) }}
+                                </div>
+                                <div class="col-md-4">
+                                    {{ form_widget(form.heureDebut, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">Heure de début</small>
+                                    {{ form_errors(form.heureDebut) }}
+                                </div>
+                                <div class="col-md-4">
+                                    {{ form_widget(form.heureFin, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">Heure de fin</small>
+                                    {{ form_errors(form.heureFin) }}
+                                </div>
                             </div>
                         </div>
 
                         <div class="row">
-                            <div class="col-md-4 mb-3">
+                            <div class="col-md-6 mb-3">
+                                {{ form_row(form.placesMax) }}
+                            </div>
+                            <div class="col-md-6 mb-3">
                                 {{ form_row(form.prix) }}
                             </div>
                         </div>
@@ -60,6 +80,7 @@
                                 <i class="bi bi-check-circle"></i> Enregistrer les modifications
                             </button>
                         </div>
+
                         {{ form_end(form) }}
                     </div>
                 </div>

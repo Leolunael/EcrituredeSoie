@@ -5,12 +5,12 @@
 {% block body %}
     <div class="container-fluid mt-4">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1><i class="bi bi-calendar-event"></i> {{ atelier.titre }}</h1>
+            <h1><i class="bi bi-calendar-event"></i> {{ vollon.titre }}</h1>
             <div>
                 <button onclick="window.print()" class="btn btn-success me-2">
                     <i class="bi bi-printer"></i> Imprimer
                 </button>
-                <a href="{{ path('admin_atelier_list') }}" class="btn btn-secondary">
+                <a href="{{ path('admin_vollon_list') }}" class="btn btn-secondary">
                     <i class="bi bi-arrow-left"></i> Retour à la liste
                 </a>
             </div>
@@ -23,16 +23,16 @@
                         <h5 class="mb-0">Informations de l'atelier</h5>
                     </div>
                     <div class="card-body">
-                        <p><strong>Date :</strong> {{ atelier.dateAtelier|date('d/m/Y') }}
-                            {% if atelier.heureDebut %}
-                                de {{ atelier.heureDebut|date('H\\hi') }}
+                        <p><strong>Date :</strong> {{ atelier.dateVollon|date('d/m/Y') }}
+                            {% if vollon.heureDebut %}
+                                de {{ vollon.heureDebut|date('H\\hi') }}
                             {% endif %}
-                            {% if atelier.heureFin %}
-                                à {{ atelier.heureFin|date('H\\hi') }}
+                            {% if vollon.heureFin %}
+                                à {{ vollon.heureFin|date('H\\hi') }}
                             {% endif %}
                         </p>
-                        <p><strong>Description :</strong> {{ atelier.description }}</p>
-                        <p><strong>Nombre d'inscrits :</strong> {{ atelier.inscriptions|length }}</p>
+                        <p><strong>Description :</strong> {{ vollon.description }}</p>
+                        <p><strong>Nombre d'inscrits :</strong> {{ vollon.inscriptions|length }}</p>
                     </div>
                 </div>
             </div>
@@ -47,7 +47,7 @@
                         </h5>
                     </div>
                     <div class="card-body">
-                        {% if atelier.inscriptions is empty %}
+                        {% if vollon.inscriptions is empty %}
                             <p class="text-muted">Aucun inscrit pour le moment.</p>
                         {% else %}
                             <div class="table-responsive">
@@ -63,7 +63,7 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    {% for inscription in atelier.inscriptions %}
+                                    {% for inscription in vollon.inscriptions %}
                                         <tr>
                                             <td>{{ inscription.name }}</td>
                                             <td>{{ inscription.prenom }}</td>

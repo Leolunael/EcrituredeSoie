@@ -2,18 +2,18 @@
 
 namespace App\Controller;
 
-use App\Entity\Atelier;
-use App\Entity\Visio;
-use App\Entity\Lettre;
 use App\Entity\InscriptionAtelier;
-use App\Entity\InscriptionVisio;
 use App\Entity\InscriptionLettre;
+use App\Entity\InscriptionVisio;
+use App\Entity\InscriptionVollon;
 use App\Form\InscriptionAtelierType;
-use App\Form\InscriptionVisioType;
 use App\Form\InscriptionLettreType;
+use App\Form\InscriptionVisioType;
+use App\Form\InscriptionVollonType;
 use App\Repository\AtelierRepository;
-use App\Repository\VisioRepository;
 use App\Repository\LettreRepository;
+use App\Repository\VisioRepository;
+use App\Repository\VollonRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,6 +28,7 @@ class AteliersController extends AbstractController
     public function list(
         AtelierRepository $atelierRepo,
         VisioRepository $visioRepo,
+        VollonRepository $vollonRepo,
         LettreRepository $lettreRepo
     ): Response {
         $ateliers = $atelierRepo->findBy(
@@ -40,6 +41,11 @@ class AteliersController extends AbstractController
             ['dateVisio' => 'ASC']
         );
 
+        $vollons = $vollonRepo->findBy(
+            ['isArchive' => false],
+            ['dateVollon' => 'ASC']
+        );
+
         $lettres = $lettreRepo->findBy(
             ['isArchive' => false]
         );
@@ -47,6 +53,7 @@ class AteliersController extends AbstractController
         return $this->render('ateliers/index.html.twig', [
             'ateliers' => $ateliers,
             'visios' => $visios,
+            'vollons' => $vollons,
             'lettres' => $lettres,
         ]);
     }
@@ -129,6 +136,7 @@ class AteliersController extends AbstractController
     public function listVisios(
         AtelierRepository $atelierRepo,
         VisioRepository $visioRepo,
+        VollonRepository $vollonRepo,
         LettreRepository $lettreRepo
     ): Response {
         // Charger tous les éléments pour éviter les erreurs dans le template
@@ -142,6 +150,11 @@ class AteliersController extends AbstractController
             ['dateVisio' => 'ASC']
         );
 
+        $vollons = $vollonRepo->findBy(
+            ['isArchive' => false],
+            ['dateVollon' => 'ASC']
+        );
+
         $lettres = $lettreRepo->findBy(
             ['isArchive' => false]
         );
@@ -149,6 +162,7 @@ class AteliersController extends AbstractController
         return $this->render('ateliers/index.html.twig', [
             'ateliers' => $ateliers,
             'visios' => $visios,
+            'vollons' => $vollons,
             'lettres' => $lettres,
         ]);
     }
@@ -223,12 +237,13 @@ class AteliersController extends AbstractController
         ]);
     }
 
-    // ==================== COURRIERS ====================
+    // ==================== VOLLON ====================
 
-    #[Route('/lettres', name: 'app_lettre')]
-    public function listLettres(
+    #[Route('/vollon', name: 'app_vollon')]
+    public function listVollon(
         AtelierRepository $atelierRepo,
         VisioRepository $visioRepo,
+        VollonRepository $vollonRepo,
         LettreRepository $lettreRepo
     ): Response {
         // Charger tous les éléments pour éviter les erreurs dans le template
@@ -242,6 +257,11 @@ class AteliersController extends AbstractController
             ['dateVisio' => 'ASC']
         );
 
+        $vollons = $vollonRepo->findBy(
+            ['isArchive' => false],
+            ['dateVollon' => 'ASC']
+        );
+
         $lettres = $lettreRepo->findBy(
             ['isArchive' => false]
         );
@@ -249,6 +269,114 @@ class AteliersController extends AbstractController
         return $this->render('ateliers/index.html.twig', [
             'ateliers' => $ateliers,
             'visios' => $visios,
+            'vollons' => $vollons,
+            'lettres' => $lettres,
+        ]);
+    }
+
+    #[Route('/vollon/{id}', name: 'app_vollon_show', requirements: ['id' => '\d+'])]
+    public function showVollon(
+        int $id,
+        Request $request,
+        VollonRepository $vollonRepo,
+        EntityManagerInterface $em
+    ): Response {
+        $vollon = $vollonRepo->find($id);
+
+        if (!$vollon) {
+            throw $this->createNotFoundException('Cet atelier n\'existe pas.');
+        }
+
+        if ($vollon->isArchive()) {
+            throw $this->createNotFoundException('Cet atelier n\'est plus disponible.');
+        }
+
+        $inscription = new InscriptionVollon();
+        $inscription->setVollon($vollon);
+
+        // Si l'utilisateur est connecté, pré-remplir les informations
+        if ($this->getUser()) {
+            $user = $this->getUser();
+            // ✅ CHANGÉ: setUser() → setUserFromInterface()
+            $inscription->setUserFromInterface($user);
+
+            if (method_exists($user, 'getName')) {
+                $inscription->setName($user->getName());
+            }
+            if (method_exists($user, 'getPrenom')) {
+                $inscription->setPrenom($user->getPrenom());
+            }
+            $inscription->setEmail($user->getEmail());
+        }
+
+        $form = $this->createForm(InscriptionVollonType::class, $inscription);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $inscription->setDateInscription(new \DateTime());
+            $inscription->setVollon($vollon);
+
+            // Associer l'utilisateur si connecté
+            if ($this->getUser()) {
+                // ✅ CHANGÉ: setUser() → setUserFromInterface()
+                $inscription->setUserFromInterface($this->getUser());
+            }
+
+            $em->persist($inscription);
+            $em->flush();
+
+            $this->addFlash('success', 'Votre inscription à Vollon a bien été enregistrée !');
+
+            if ($inscription->getMoyenPaiement() === 'cb' && $vollon->getLienHelloAsso()) {
+                return $this->redirect($vollon->getLienHelloAsso());
+            }
+
+            return $this->redirectToRoute('app_vollon_show', [
+                'id' => $vollon->getId(),
+                'inscrit' => true
+            ]);
+        }
+
+        return $this->render('ateliers/vollon.html.twig', [
+            'vollon' => $vollon,
+            'form' => $form,
+            'inscrit' => $request->query->get('inscrit', false)
+        ]);
+    }
+
+    // ==================== COURRIERS ====================
+
+    #[Route('/lettres', name: 'app_lettre')]
+    public function listLettres(
+        AtelierRepository $atelierRepo,
+        VisioRepository $visioRepo,
+        VollonRepository $vollonRepo,
+        LettreRepository $lettreRepo
+    ): Response {
+        // Charger tous les éléments pour éviter les erreurs dans le template
+        $ateliers = $atelierRepo->findBy(
+            ['isArchive' => false],
+            ['dateAtelier' => 'ASC']
+        );
+
+        $visios = $visioRepo->findBy(
+            ['isArchive' => false],
+            ['dateVisio' => 'ASC']
+        );
+
+        $vollons = $vollonRepo->findBy(
+            ['isArchive' => false],
+            ['dateVollon' => 'ASC']
+        );
+
+        $lettres = $lettreRepo->findBy(
+            ['isArchive' => false]
+        );
+
+        return $this->render('ateliers/index.html.twig', [
+            'ateliers' => $ateliers,
+            'visios' => $visios,
+            'vollons' => $vollons,
             'lettres' => $lettres,
         ]);
     }

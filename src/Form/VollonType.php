@@ -2,7 +2,7 @@
 
 namespace App\Form;
 
-use App\Entity\Atelier;
+use App\Entity\Vollon;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -15,7 +15,7 @@ use Symfony\Component\Form\Extension\Core\Type\TimeType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class AtelierType extends AbstractType
+class VollonType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -24,7 +24,7 @@ class AtelierType extends AbstractType
                 'label' => 'Titre de l\'atelier',
                 'attr' => ['class' => 'form-control', 'placeholder' => 'Ex: Atelier d\'écriture créative']
             ])
-            ->add('dateAtelier', DateType::class, [
+            ->add('dateVollon', DateType::class, [
                 'label' => 'Date',
                 'widget' => 'single_text',
                 'attr' => ['class' => 'form-control inline-datetime-field'],
@@ -104,7 +104,7 @@ class AtelierType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Atelier::class,
+            'data_class' => Vollon::class,
         ]);
     }
 }

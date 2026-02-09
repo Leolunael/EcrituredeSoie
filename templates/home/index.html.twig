@@ -74,7 +74,7 @@
                         <div class="carousel-text">
                             <h3>{{ information.titre }}</h3>
                             {% if information.contenu %}
-                                <p>{{ information.contenu|nl2br|raw }}</p>
+                                <p class="texte">{{ information.contenu|nl2br|raw }}</p>
                             {% endif %}
                         </div>
                         {% if (information.imagePosition == 'droite' or information.imagePosition is null) and information.image %}

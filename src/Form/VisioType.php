@@ -6,7 +6,6 @@ use App\Entity\Visio;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
-use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -52,7 +51,7 @@ class VisioType extends AbstractType
                 'attr' => [
                     'class' => 'form-control',
                     'placeholder' => 'Ex: 15',
-                    'min' => 1
+                    'min' => 0
                 ],
                 'required' => false,
                 'help' => 'Laissez vide pour un nombre de places illimité'

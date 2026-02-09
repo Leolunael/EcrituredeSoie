@@ -3,7 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Visio;
-use App\Form\VisioType;
+use App\Form\AdminVisioType;  // ✅ CHANGÉ : Utiliser AdminVisioType au lieu de VisioType
 use App\Repository\VisioRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -22,11 +22,11 @@ class AdminVisioController extends AbstractController
         $statut = $request->query->get('statut', 'all');
 
         if ($statut === 'actif') {
-            $visios = $visioRepo->findBy(['isArchive' => false], ['id' => 'DESC']);
+            $visios = $visioRepo->findBy(['isArchive' => false], ['dateVisio' => 'DESC']);
         } elseif ($statut === 'archive') {
-            $visios = $visioRepo->findBy(['isArchive' => true], ['id' => 'DESC']);
+            $visios = $visioRepo->findBy(['isArchive' => true], ['dateVisio' => 'DESC']);
         } else {
-            $visios = $visioRepo->findBy([], ['id' => 'DESC']);
+            $visios = $visioRepo->findBy([], ['dateVisio' => 'DESC']);
         }
 
         return $this->render('admin/AdminAtelier.html.twig', [
@@ -41,7 +41,7 @@ class AdminVisioController extends AbstractController
     public function new(Request $request, EntityManagerInterface $em): Response
     {
         $visio = new Visio();
-        $form = $this->createForm(VisioType::class, $visio);
+        $form = $this->createForm(AdminVisioType::class, $visio);  // ✅ CHANGÉ
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -62,7 +62,7 @@ class AdminVisioController extends AbstractController
     #[Route('/{id}/modifier', name: 'admin_visio_edit', requirements: ['id' => '\d+'])]
     public function edit(Request $request, Visio $visio, EntityManagerInterface $em): Response
     {
-        $form = $this->createForm(VisioType::class, $visio);
+        $form = $this->createForm(AdminVisioType::class, $visio);  // ✅ CHANGÉ
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -122,7 +122,7 @@ class AdminVisioController extends AbstractController
             $visio->setIsArchive(true);
             $em->flush();
 
-            $this->addFlash('success', 'Lettre archivée avec succès');
+            $this->addFlash('success', 'Visio archivée avec succès');
         }
 
         return $this->redirectToRoute('admin_visio_show', ['id' => $visio->getId()]);
