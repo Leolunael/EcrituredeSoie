@@ -69,14 +69,6 @@ class User implements AppUserInterface, PasswordAuthenticatedUserInterface
     )]
     private Collection $inscriptionsLettres;
 
-    // ✅ NOUVEAU : Indique si cet utilisateur est actuellement un permanent actif
-    #[ORM\Column(type: 'boolean', options: ['default' => false])]
-    private bool $isPermanent = false;
-
-    // ✅ NOUVEAU : Référence vers l'ID MongoDB du Permanent (si existe)
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private ?string $mongodbId = null;
-
     public function __construct()
     {
         $this->inscriptionsAteliers = new ArrayCollection();
@@ -141,10 +133,6 @@ class User implements AppUserInterface, PasswordAuthenticatedUserInterface
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
         $roles[] = 'ROLE_USER';
-
-        if ($this->isPermanent) {
-            $roles[] = 'ROLE_PERMANENT';
-        }
 
         return array_unique($roles);
     }
@@ -367,25 +355,4 @@ class User implements AppUserInterface, PasswordAuthenticatedUserInterface
         return $inscriptions;
     }
 
-    public function isPermanent(): bool
-    {
-        return $this->isPermanent;
-    }
-
-    public function setIsPermanent(bool $isPermanent): self
-    {
-        $this->isPermanent = $isPermanent;
-        return $this;
-    }
-
-    public function getMongodbId(): ?string
-    {
-        return $this->mongodbId;
-    }
-
-    public function setMongodbId(?string $mongodbId): self
-    {
-        $this->mongodbId = $mongodbId;
-        return $this;
-    }
 }

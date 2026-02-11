@@ -15,15 +15,6 @@ class InscriptionAtelier
     #[ORM\Column]
     private ?int $id = null;
 
-    // Type d'utilisateur: 'user', 'permanent', 'admin'
-    #[ORM\Column(type: 'string', length: 50, nullable: true)]
-    private ?string $userType = null;
-
-    // ID externe pour les permanents/admins (MongoDB, etc.)
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private ?string $externalUserId = null;
-
-    // Données dupliquées pour faciliter l'affichage (dénormalisation)
     #[ORM\Column(length: 100)]
     private ?string $name = null;
 
@@ -63,82 +54,6 @@ class InscriptionAtelier
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getUserType(): ?string
-    {
-        return $this->userType;
-    }
-
-    public function setUserType(?string $userType): static
-    {
-        $this->userType = $userType;
-        return $this;
-    }
-
-    public function getExternalUserId(): ?string
-    {
-        return $this->externalUserId;
-    }
-
-    public function setExternalUserId(?string $externalUserId): static
-    {
-        $this->externalUserId = $externalUserId;
-        return $this;
-    }
-
-    /**
-     * Récupère l'ID de l'utilisateur (MySQL User.id ou MongoDB Permanent.id)
-     */
-    public function getUserId(): ?string
-    {
-        if ($this->user !== null) {
-            return (string) $this->user->getId();
-        }
-        return $this->externalUserId;
-    }
-
-    /**
-     * Méthode helper pour setter n'importe quel type d'utilisateur
-     * Accepte User (MySQL) ou Permanent (MongoDB)
-     */
-    public function setUserFromInterface(?UserInterface $userInterface): static
-    {
-        if ($userInterface === null) {
-            $this->user = null;
-            $this->externalUserId = null;
-            $this->userType = null;
-            return $this;
-        }
-
-        // Déterminer le type d'utilisateur
-        if ($userInterface instanceof \App\Entity\User) {
-            $this->userType = 'user';
-            $this->user = $userInterface; // Relation MySQL
-            $this->externalUserId = null;
-        } elseif ($userInterface instanceof \App\Document\Permanent) {
-            $this->userType = 'permanent';
-            $this->user = null; // Pas de relation MySQL
-            $this->externalUserId = (string) $userInterface->getId();
-        } elseif ($userInterface instanceof \App\Entity\Admin) {
-            $this->userType = 'admin';
-            $this->user = null;
-            $this->externalUserId = (string) $userInterface->getId();
-        } else {
-            $this->userType = 'unknown';
-        }
-
-        // Copier les données pour l'affichage
-        $this->name = $userInterface->getNom();
-        $this->prenom = $userInterface->getPrenom();
-        $this->email = $userInterface->getEmail();
-
-        // Telephone si disponible
-        if (method_exists($userInterface, 'getTelephone')) {
-            $this->telephone = $userInterface->getTelephone();
-        }
-
-        return $this;
     }
 
     public function getName(): ?string
