@@ -403,17 +403,28 @@ class AteliersController extends AbstractController
 
         // Si l'utilisateur est connecté, pré-remplir les informations
         if ($this->getUser()) {
-            $user = $this->getUser();
-            // ✅ CHANGÉ: setUser() → setUserFromInterface()
-            $inscription->setUserFromInterface($user);
+            $currentUser = $this->getUser();
 
-            if (method_exists($user, 'getNom')) {
-                $inscription->setNom($user->getNom()); // ✅ Attention: setNom() pas setName() pour Lettre
+            // Vérifier si c'est un User ou un Admin et appeler la bonne méthode
+            if ($currentUser instanceof \App\Entity\User) {
+                $inscription->setUser($currentUser);
+            } elseif ($currentUser instanceof \App\Entity\Admin) {
+                $inscription->setAdmin($currentUser);
             }
-            if (method_exists($user, 'getPrenom')) {
-                $inscription->setPrenom($user->getPrenom());
+
+            // Pré-remplir les autres champs (fonctionne pour User ET Admin)
+            if (method_exists($currentUser, 'getNom')) {
+                $inscription->setNom($currentUser->getNom());
             }
-            $inscription->setEmail($user->getEmail());
+            if (method_exists($currentUser, 'getPrenom')) {
+                $inscription->setPrenom($currentUser->getPrenom());
+            }
+            if (method_exists($currentUser, 'getEmail')) {
+                $inscription->setEmail($currentUser->getEmail());
+            }
+            if (method_exists($currentUser, 'getTelephone')) {
+                $inscription->setTelephone($currentUser->getTelephone());
+            }
         }
 
         $form = $this->createForm(InscriptionLettreType::class, $inscription);

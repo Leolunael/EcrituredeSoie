@@ -2,12 +2,11 @@
 
 namespace App\Entity;
 
-use App\Repository\InscriptionLettreRepository;
-use Doctrine\DBAL\Types\Types;
+use App\Entity\User;
+use App\Entity\Admin;
 use Doctrine\ORM\Mapping as ORM;
-use App\Security\UserInterface;
 
-#[ORM\Entity(repositoryClass: InscriptionLettreRepository::class)]
+#[ORM\Entity]
 class InscriptionLettre
 {
     #[ORM\Id]
@@ -15,45 +14,74 @@ class InscriptionLettre
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 100)]
+    // ✅ Relation avec User
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?User $user = null;
+
+    // ✅ Relation avec Admin
+    #[ORM\ManyToOne(targetEntity: Admin::class)]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?Admin $admin = null;
+
+    // Autres propriétés...
+    #[ORM\Column(length: 255)]
     private ?string $nom = null;
 
-    #[ORM\Column(length: 100)]
+    #[ORM\Column(length: 255)]
     private ?string $prenom = null;
 
-    #[ORM\Column(length: 180)]
+    #[ORM\Column(length: 255)]
     private ?string $email = null;
 
     #[ORM\Column(length: 20, nullable: true)]
     private ?string $telephone = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $adressePostale = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    // ✅ AJOUTEZ AUSSI CES PROPRIÉTÉS si elles sont utilisées
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private ?\DateTimeInterface $dateInscription = null;
 
-    #[ORM\Column(type: 'string', length: 50)]
+    #[ORM\Column(length: 100, nullable: true)]
     private ?string $moyenPaiement = null;
 
-    // Relation avec Lettre (IMPORTANTE : c'est ça qui permet plusieurs inscriptions)
-    #[ORM\ManyToOne(targetEntity: Lettre::class, inversedBy: 'inscriptions')]
-    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: Lettre::class)]
+    #[ORM\JoinColumn(nullable: true)]
     private ?Lettre $lettre = null;
-
-    // Relation optionnelle avec User MySQL (null si c'est un Permanent)
-    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'inscriptionsLettres')]
-    #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
-    private ?User $user = null;
-
-    public function __construct()
-    {
-        $this->dateInscription = new \DateTime();
-    }
 
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
+        return $this;
+    }
+
+    public function getAdmin(): ?Admin
+    {
+        return $this->admin;
+    }
+
+    public function setAdmin(?Admin $admin): static
+    {
+        $this->admin = $admin;
+        return $this;
+    }
+
+    // ✅ Méthode utilitaire pour récupérer User OU Admin
+    public function getInscripteur(): User|Admin|null
+    {
+        return $this->user ?? $this->admin;
     }
 
     public function getNom(): ?string
@@ -144,30 +172,4 @@ class InscriptionLettre
         return $this;
     }
 
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
-
-    public function setUser(?User $user): static
-    {
-        $this->user = $user;
-        return $this;
-    }
-
-    /**
-     * Vérifie si l'inscription appartient à un utilisateur permanent
-     */
-    public function isPermanent(): bool
-    {
-        return $this->userType === 'permanent';
-    }
-
-    /**
-     * Récupère le nom complet pour l'affichage
-     */
-    public function getNomComplet(): string
-    {
-        return $this->prenom . ' ' . $this->nom;
-    }
 }

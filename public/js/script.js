@@ -540,20 +540,15 @@ function initScrollAnimations() {
         });
     }, observerOptions);
 
-    const elementsToAnimate = document.querySelectorAll('.card, .avis-card, .formulaire-avis');
+    const elementsToAnimate = document.querySelectorAll('.avis-card, .formulaire-avis');
     elementsToAnimate.forEach((element, index) => {
-        const rect = element.getBoundingClientRect();
-        const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
 
-        if (isVisible) {
+
             element.style.opacity = '1';
             element.style.transform = 'translateY(0)';
-        } else {
-            element.style.opacity = '0';
-            element.style.transform = 'translateY(20px)';
+
             element.style.transition = `opacity 0.5s ease ${index * 0.1}s, transform 0.5s ease ${index * 0.1}s`;
-            observer.observe(element);
-        }
+
     });
 }
 

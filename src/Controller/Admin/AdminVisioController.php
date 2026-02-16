@@ -33,6 +33,7 @@ class AdminVisioController extends AbstractController
             'ateliers' => [],
             'visios' => $visios,
             'lettres' => [],
+            'vollons' => [],
             'statut' => $statut
         ]);
     }

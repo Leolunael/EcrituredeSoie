@@ -16,6 +16,9 @@
                 <a href="{{ path('admin_lettre_new') }}" class="btn btn-success">
                     <i class="bi bi-plus-circle"></i> Nouvelle lettre
                 </a>
+                <a href="{{ path('admin_vollon_new') }}" class="btn btn-danger">
+                    <i class="bi bi-plus-circle"></i> Nouveau Vollon
+                </a>
                 <a href="{{ path('admin_index') }}" class="btn btn-secondary">
                     <i class="bi bi-arrow-left"></i> Tableau de bord
                 </a>
@@ -246,7 +249,7 @@
 
         <!-- Liste Vollon -->
         <div class="card mb-4">
-            <div class="card-header bg-warning">
+            <div class="card-header bg-danger text-black">
                 <h5 class="mb-0">Liste des ateliers Vollon ({{ vollons|length }})</h5>
             </div>
             <div class="card-body p-0">
@@ -351,7 +354,7 @@
 
         <!-- LETTRES -->
         <div class="card mb-4">
-            <div class="card-header bg-success text-white">
+            <div class="card-header bg-success text-black">
                 <h5 class="mb-0">Liste des lettres ({{ lettres|length }})</h5>
             </div>
             <div class="card-body p-0">
