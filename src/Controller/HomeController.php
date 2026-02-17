@@ -20,7 +20,7 @@ use Doctrine\ODM\MongoDB\DocumentManager;
 
 final class HomeController extends AbstractController
 {
-    #[Route('/home', name: 'app_home')]
+    #[Route('/', name: 'app_home')]
     public function index(EntityManagerInterface $em, UserPasswordHasherInterface $hasher, DocumentManager $dm): Response
     {
 
