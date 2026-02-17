@@ -17,3 +17,8 @@
 /public/uploads/textes/
 /public/uploads/blogs/
 ###< Photo ###
+
+###> docker ###
+.env.prod
+.env.prod.local
+###< docker ###

@@ -12,7 +12,7 @@
         "doctrine/doctrine-migrations-bundle": "^3.7",
         "doctrine/mongodb-odm-bundle": "^5.5.1",
         "doctrine/orm": "^3.5.7",
-        "intervention/image": "^3.11",
+        "intervention/image": "^3.11.5",
         "phpdocumentor/reflection-docblock": "^5.6.4",
         "phpstan/phpdoc-parser": "^2.3",
         "symfony/asset": "7.3.*",
@@ -49,8 +49,7 @@
         "symfonycasts/verify-email-bundle": "^1.17.4",
         "twig/extra-bundle": "^2.12|^3.22.1",
         "twig/string-extra": "^3.22.1",
-        "twig/twig": "^2.12|^3.22",
-        "ext-http": "*"
+        "twig/twig": "^2.12|^3.22"
     },
     "config": {
         "allow-plugins": {

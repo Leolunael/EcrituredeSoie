@@ -1,0 +1,12 @@
+.git
+.env.local
+.env.test
+node_modules/
+var/cache/*
+var/log/*
+vendor/
+.idea/
+.vscode/
+*.log
+.DS_Store
+Thumbs.db
