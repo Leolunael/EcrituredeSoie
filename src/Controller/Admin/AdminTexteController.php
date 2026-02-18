@@ -26,7 +26,7 @@ class AdminTexteController extends AbstractController
             ->getQuery()
             ->execute();
 
-        return $this->render('admin/Texte.html.twig', [
+        return $this->render('admin/texte.html.twig', [
             'textes' => $textes,
         ]);
     }
@@ -58,7 +58,7 @@ class AdminTexteController extends AbstractController
 
                 } catch (\Exception $e) {
                     $this->addFlash('error', 'Erreur lors du traitement de l\'image : ' . $e->getMessage());
-                    return $this->render('admin/TextForm.html.twig', [
+                    return $this->render('admin/textForm.html.twig', [
                         'form' => $form->createView(),
                         'texte' => $texte,
                     ]);
@@ -94,7 +94,7 @@ class AdminTexteController extends AbstractController
             return $this->redirectToRoute('admin_texte');
         }
 
-        return $this->render('admin/TextForm.html.twig', [
+        return $this->render('admin/textForm.html.twig', [
             'form' => $form->createView(),
             'texte' => $texte,
         ]);
@@ -139,7 +139,7 @@ class AdminTexteController extends AbstractController
 
                 } catch (\Exception $e) {
                     $this->addFlash('error', 'Erreur lors du traitement de l\'image : ' . $e->getMessage());
-                    return $this->render('admin/TextForm.html.twig', [
+                    return $this->render('admin/textForm.html.twig', [
                         'form' => $form->createView(),
                         'texte' => $texte,
                     ]);
@@ -166,7 +166,7 @@ class AdminTexteController extends AbstractController
             return $this->redirectToRoute('admin_texte');
         }
 
-        return $this->render('admin/TextForm.html.twig', [
+        return $this->render('admin/textForm.html.twig', [
             'form' => $form->createView(),
             'texte' => $texte,
         ]);
@@ -229,7 +229,7 @@ class AdminTexteController extends AbstractController
             ->getQuery()
             ->execute();
 
-        return $this->render('admin/TextCommentaire.html.twig', [
+        return $this->render('admin/textCommentaire.html.twig', [
             'commentaires' => $commentaires,
             'texte' => null,
         ]);

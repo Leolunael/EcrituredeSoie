@@ -29,7 +29,7 @@ class AdminAtelierController extends AbstractController
             $ateliers = $atelierRepo->findBy([], ['dateAtelier' => 'DESC']);
         }
 
-        return $this->render('admin/AdminAtelier.html.twig', [
+        return $this->render('admin/adminAtelier.html.twig', [
             'ateliers' => $ateliers,
             'visios' => [],
             'lettres' => [],

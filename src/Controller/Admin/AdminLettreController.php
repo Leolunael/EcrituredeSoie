@@ -29,7 +29,7 @@ class AdminLettreController extends AbstractController
             $lettres = $lettreRepo->findBy([], ['id' => 'DESC']);
         }
 
-        return $this->render('admin/AdminAtelier.html.twig', [
+        return $this->render('admin/adminAtelier.html.twig', [
             'ateliers' => [],
             'visios' => [],
             'lettres' => $lettres,

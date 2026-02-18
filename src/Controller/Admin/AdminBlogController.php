@@ -226,7 +226,7 @@ class AdminBlogController extends AbstractController
             ->getQuery()
             ->execute();
 
-        return $this->render('admin/BlogCom.html.twig', [
+        return $this->render('admin/blogCom.html.twig', [
             'commentaires' => $commentaires,
             'blog' => null,
         ]);

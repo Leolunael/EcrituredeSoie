@@ -29,7 +29,7 @@ class AdminVollonController extends AbstractController
             $vollons = $vollonRepo->findBy([], ['dateVollon' => 'DESC']);
         }
 
-        return $this->render('admin/AdminAtelier.html.twig', [
+        return $this->render('admin/adminAtelier.html.twig', [
             'ateliers' => [],
             'vollons' => $vollons,
             'visios' => [],

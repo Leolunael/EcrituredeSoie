@@ -27,7 +27,7 @@ class ContactController extends AbstractController
             // Création de l'email
             $email = (new Email())
                 ->from($contact->getEmail())
-                ->to('ecrituredesoie@gmail.com')
+                ->to('contact@ecrituredesoie.fr')
                 ->subject('Nouveau message de contact : ' . $contact->getSubject())
                 ->html(
                     '<h2>Nouveau message de contact</h2>' .
