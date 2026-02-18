@@ -1,40 +1,27 @@
-version: '3.8'
-
-services:
-    app:
-        build:
-            context: .
-            dockerfile: Dockerfile
-        container_name: ecrituredesoie_app
-        ports:
-            - "80:80"
-            - "443:443"
-        volumes:
-            - ./var:/var/www/html/var
-            - ./.env.prod:/var/www/html/.env.local
-            - /etc/letsencrypt:/etc/letsencrypt:ro
-        environment:
-            - APP_ENV=prod
-        networks:
-            - ecrituredesoie_network
-        restart: unless-stopped
-        depends_on:
-            - db
-            - mongodb
-
-    db:
-        image: mysql:8.0
-        container_name: ecrituredesoie_db
-        environment:
-            MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
-            MYSQL_DATABASE: ${DB_NAME}
-            MYSQL_USER: ${DB_USER}
-            MYSQL_PASSWORD: ${DB_PASSWORD}
-        volumes:
-            - db_data:/var/lib/mysql
-        networks:
-            - ecrituredesoie_network
-        restart: unless-stopped
+app:
+    build:
+        context: .
+        dockerfile: Dockerfile
+    container_name: ecrituredesoie_app
+    ports:
+        - "80:80"
+        - "443:443"
+    volumes:
+        - ./var:/var/www/html/var
+        - ./.env.prod:/var/www/html/.env.local
+        - /etc/letsencrypt:/etc/letsencrypt:ro
+    environment:
+        - APP_ENV=prod
+    networks:
+        - ecrituredesoie_network
+    restart: unless-stopped
+    depends_on:
+        - db
+        - mongodb
+    command: >
+        bash -c "chown -R www-data:www-data /var/www/html/var &&
+                 chmod -R 775 /var/www/html/var &&
+                 /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf"
 
     mongodb:
         image: mongo:7.0
@@ -48,15 +35,3 @@ services:
         networks:
             - ecrituredesoie_network
         restart: unless-stopped
-        command: >
-            bash -c "chown -R www-data:www-data /var/www/html/var &&
-                     chmod -R 775 /var/www/html/var &&
-                     /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf"
-
-volumes:
-    db_data:
-    mongo_data:
-
-networks:
-    ecrituredesoie_network:
-        driver: bridge
