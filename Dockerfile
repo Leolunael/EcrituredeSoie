@@ -46,7 +46,10 @@ COPY . .
 RUN composer install --no-dev --optimize-autoloader --ignore-platform-req=ext-http --no-scripts
 
 # Permissions
-RUN chown -R www-data:www-data /var/www/html/var
+RUN mkdir -p /var/www/html/var/cache \
+    && mkdir -p /var/www/html/var/log \
+    && chown -R www-data:www-data /var/www/html/var \
+    && chmod -R 775 /var/www/html/var
 
 # Nettoyer le cache en mode production
 RUN php bin/console cache:clear --env=prod --no-debug || true
