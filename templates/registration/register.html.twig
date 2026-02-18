@@ -15,7 +15,7 @@
         {{ form_errors(registrationForm) }}
 
 
-        <form class="card-body">
+        <div class="card-body">
             {{ form_start(registrationForm) }}
             <div>
                 {{ form_label(registrationForm.nom, 'Nom', {'label_attr': {'class': 'form-label'}}) }}
@@ -69,7 +69,7 @@
                 <p class="texte">Vous avez déjà un compte ?</p>
                 <a href="{{ path('app_login') }}" class="bouton">Se connecter</a>
             </div>
-        </form>
+        </div>
     </div>
 
 {% endblock %}
