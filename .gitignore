@@ -21,4 +21,10 @@
 ###> docker ###
 .env.prod
 .env.prod.local
+.env.docker
 ###< docker ###
+
+###>compose ###
+/compose.yaml
+/compose.override.yaml
+###<compose ###
