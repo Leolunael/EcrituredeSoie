@@ -1353,7 +1353,7 @@ textarea {
    IMAGE
    ================================ */
 .img {
-    width: 100%;
+    width: 50%;
     height: auto;
     display: block;
     margin-left: 1rem;
@@ -1367,7 +1367,6 @@ textarea {
     align-items: flex-start;
     padding-left: 1rem;
     padding-right: 3rem;
-    margin-top: 3rem;
 }
 
 
