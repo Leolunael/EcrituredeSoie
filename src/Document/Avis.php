@@ -14,7 +14,7 @@ class Avis
     private ?string $nom = null;
 
     #[MongoDB\Field(type: 'string')]
-    private ?string $email;
+    private ?string $email = null;
 
     #[MongoDB\Field(type: 'int')]
     private ?int $note = null;
@@ -65,7 +65,7 @@ class Avis
         return $this->email;
     }
 
-    public function setEmail(string $email): self
+    public function setEmail(?string $email): self
     {
         $this->email = $email;
         return $this;
