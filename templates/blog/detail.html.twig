@@ -12,41 +12,39 @@
             <br>
 
 
-            <div>
-                {# Image à gauche #}
-                {% if (blog.imageAlignment == 'left' or blog.imageAlignment is null) and blog.image %}
-                    <div class="image-container">
-                        <img src="{{ asset('uploads/blogs/' ~ blog.image) }}"
-                             alt="{{ blog.titre }}"
-                             class="img">
-                    </div>
-                {% endif %}
 
-                {# Contenu texte #}
-                <div class="card-body">
-                    {{ blog.contenu|nl2br|raw }}
-                    <br>
-                    <br>
-                    <p>Agnès</p>
-                    <br>
-                    <p class="txt">
-                        {{ blog.dateCreation|date('d/m/Y') }}
-                    </p>
-                    <p class="txt">
-                        © Tous droits réservés. Ce texte est protégé par le droit d'auteur.
-                    </p>
-                    <br>
-                </div>
+            {# Image à gauche #}
+            {% if (blog.imageAlignment == 'left' or blog.imageAlignment is null) and blog.image %}
+                <img src="{{ asset('uploads/blogs/' ~ blog.image) }}"
+                     alt="{{ blog.titre }}"
+                     class="image">
+            {% endif %}
 
-                {# Image à droite ou position par défaut #}
-                {% if (blog.imageAlignment == 'right' or blog.imageAlignment is null) and blog.image %}
-                    <div class="image-container">
-                        <img src="{{ asset('uploads/blogs/' ~ blog.image) }}"
-                             alt="{{ blog.titre }}"
-                             class="img">
-                    </div>
-                {% endif %}
+            {# Contenu texte #}
+            <div class="card-body">
+                {{ blog.contenu|nl2br|raw }}
+                <br>
+                <br>
+                <p>Agnès</p>
+                <br>
+                <p class="txt">
+                    {{ blog.dateCreation|date('d/m/Y') }}
+                </p>
+                <p class="txt">
+                    © Tous droits réservés. Ce texte est protégé par le droit d'auteur.
+                </p>
+                <br>
             </div>
+
+            {# Image à droite ou position par défaut #}
+            {% if (blog.imageAlignment == 'right' or blog.imageAlignment is null) and blog.image %}
+                <img src="{{ asset('uploads/blogs/' ~ blog.image) }}"
+                 alt="{{ blog.titre }}"
+                 class="image">
+
+
+            {% endif %}
+
         </article>
 
 

@@ -1361,20 +1361,14 @@ textarea {
     margin-bottom: 1rem;
 }
 
-.image-container {
-    align-self: center;
-    flex-shrink: 0;
+.image {
+    display: flex;
+    gap: 3rem;
+    align-items: flex-start;
+    padding-left: 1rem;
+    padding-right: 3rem;
+    margin-top: 3rem;
 }
-
-
-/*.image {*/
-/*    display: flex;*/
-/*    gap: 3rem;*/
-/*    align-items: center;*/
-/*    padding-left: 1rem;*/
-/*    padding-right: 3rem;*/
-/*    margin-top: 3rem;*/
-/*}*/
 
 
 /* ================================
