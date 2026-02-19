@@ -17,8 +17,7 @@
                 {% if blog.imageAlignment == 'left' and blog.image %}
                     <div>
                         <img src="{{ asset('uploads/blogs/' ~ blog.image) }}"
-                             alt="{{ blog.titre }}"
-                             class="img">
+                             alt="{{ blog.titre }}">
                     </div>
                 {% endif %}
 
@@ -42,8 +41,7 @@
                 {% if (blog.imageAlignment == 'right' or blog.imageAlignment is null) and blog.image %}
                     <div>
                         <img src="{{ asset('uploads/blogs/' ~ blog.image) }}"
-                             alt="{{ blog.titre }}"
-                             class="img">
+                             alt="{{ blog.titre }}">
                     </div>
                 {% endif %}
             </div>

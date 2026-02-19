@@ -1365,9 +1365,10 @@ textarea {
 .image {
     display: flex;
     gap: 3rem;
-    align-items: center;
+    align-items: flex-start;
     padding-left: 1rem;
     padding-right: 3rem;
+
 }
 
 
