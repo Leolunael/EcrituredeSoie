@@ -1360,6 +1360,7 @@ textarea {
     margin-right: 1rem;
     margin-bottom: 1rem;
     margin-top: 6rem;
+    border-radius: 0.5rem;
 }
 
 .image {
@@ -1368,7 +1369,6 @@ textarea {
     align-items: flex-start;
     padding-left: 1rem;
     padding-right: 3rem;
-    border-radius: 0.5rem;
 }
 
 
