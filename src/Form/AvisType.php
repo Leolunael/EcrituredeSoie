@@ -10,6 +10,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Email;
 
 
 class AvisType extends AbstractType
@@ -26,9 +28,13 @@ class AvisType extends AbstractType
             ])
             ->add('email', EmailType::class, [
                 'label' => 'Adresse email',
-                'required' => false,
+                'required' => true,
                 'attr' => [
                     'placeholder' => 'votre@email.com'
+                ],
+                'constraints' => [
+                    new NotBlank(['message' => 'L\'email est obligatoire']),
+                    new Email(['message' => 'L\'email n\'est pas valide']),
                 ]
             ])
             ->add('note', ChoiceType::class, [
