@@ -54,7 +54,7 @@ security:
             logout:
                 path: app_logout
                 # where to redirect after logout
-                target: app_login
+                target: app_home
                 invalidate_session: true
 
             remember_me:
