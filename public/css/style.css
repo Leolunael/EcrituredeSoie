@@ -1361,11 +1361,16 @@ textarea {
     margin-bottom: 1rem;
 }
 
+.image-container {
+    display: flex;
+    align-items: center;
+    align-self: center;
+}
 
 .image {
     display: flex;
     gap: 3rem;
-    align-items: flex-start;
+    align-items: center;
     padding-left: 1rem;
     padding-right: 3rem;
     margin-top: 3rem;

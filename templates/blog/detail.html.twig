@@ -14,10 +14,11 @@
 
             <div class="image">
                 {# Image à gauche #}
-                {% if blog.imageAlignment == 'left' and blog.image %}
-                    <div>
+                {% if (blog.imageAlignment == 'left' or blog.imageAlignment is null) and blog.image %}
+                    <div class="image-container">
                         <img src="{{ asset('uploads/blogs/' ~ blog.image) }}"
-                             alt="{{ blog.titre }}">
+                             alt="{{ blog.titre }}"
+                             class="img">
                     </div>
                 {% endif %}
 
@@ -39,9 +40,10 @@
 
                 {# Image à droite ou position par défaut #}
                 {% if (blog.imageAlignment == 'right' or blog.imageAlignment is null) and blog.image %}
-                    <div>
+                    <div class="image-container">
                         <img src="{{ asset('uploads/blogs/' ~ blog.image) }}"
-                             alt="{{ blog.titre }}">
+                             alt="{{ blog.titre }}"
+                             class="img">
                     </div>
                 {% endif %}
             </div>
