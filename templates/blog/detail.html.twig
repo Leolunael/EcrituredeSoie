@@ -20,7 +20,9 @@
                          alt="{{ blog.titre }}"
                          class="img">
                 {% endif %}
+            </div>
 
+            <div>
                 {# Contenu texte #}
                 <div class="card-body">
                     {{ blog.contenu|nl2br|raw }}
@@ -32,7 +34,9 @@
                     <p class="txt">© Tous droits réservés. Ce texte est protégé par le droit d'auteur.</p>
                     <br>
                 </div>
+            </div>
 
+            <div class="image">
                 {# Image à droite #}
                 {% if (blog.imageAlignment == 'right' or blog.imageAlignment is null) and blog.image %}
                     <img src="{{ asset('uploads/blogs/' ~ blog.image) }}"
