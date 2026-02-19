@@ -1494,6 +1494,39 @@ textarea {
         flex-direction: column;
         gap: 0.5rem;
     }
+
+    .card,
+    .card-avis,
+    .card-connexion {
+        width: 100% !important;
+    }
+
+    .card-body {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    .card-avis {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    .txt2,
+    .txt3,
+    .auteur,
+    .details {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    .places-restantes,
+    .atelier-complet {
+        margin-right: 0;
+    }
+
+    .row {
+        padding-left: 0;
+    }
 }
 
 @media (max-width: 30rem) {
@@ -1559,6 +1592,19 @@ textarea {
 
     .image {
         flex-direction: column;
+    }
+
+    @media (min-width: 769px) and (max-width: 1024px) {
+        .card,
+        .card-avis,
+        .card-connexion {
+            width: 100% !important;
+        }
+
+        .card-body {
+            padding-left: 2rem;
+            padding-right: 2rem;
+        }
     }
 
 
