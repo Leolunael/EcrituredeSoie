@@ -11,6 +11,7 @@ services:
             - ./var:/var/www/html/var
             - ./.env.prod:/var/www/html/.env.local
             - /etc/letsencrypt:/etc/letsencrypt:ro
+            - ./public/uploads:/var/www/html/public/uploads
         environment:
             - APP_ENV=prod
         networks:
