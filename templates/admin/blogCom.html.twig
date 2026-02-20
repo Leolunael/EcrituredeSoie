@@ -64,7 +64,7 @@
                                 <td>
                                     {# Valider #}
                                     <form method="post"
-                                          action="{{ path('app_admin_blogCommentaire_valider', {id: commentaire.id}) }}"
+                                          action="{{ path('app_admin_blogCommentaires_valider', {id: commentaire.id}) }}"
                                           style="display:inline"
                                           onsubmit="return confirm('Valider ce commentaire ?')">
                                         <input type="hidden" name="_token"
@@ -138,7 +138,7 @@
                             <td>
                                 {# Invalider (toggle) #}
                                 <form method="post"
-                                      action="{{ path('app_admin_blogCommentaire_valider', {id: commentaire.id}) }}"
+                                      action="{{ path('app_admin_blogCommentaires_valider', {id: commentaire.id}) }}"
                                       style="display:inline"
                                       onsubmit="return confirm('Retirer ce commentaire de la publication ?')">
                                     <input type="hidden" name="_token"
