@@ -13,38 +13,39 @@
 
 
 
-            <div class="image">
+            <div class="carousel-content
+                {% if blog.image %}
+                    {% if blog.imageAlignment == 'left' %}image-left{% endif %}
+                {% else %}
+                    no-image
+                {% endif %}">
+
                 {# Image à gauche #}
-                {% if blog.imageAlignment == 'left' and blog.image %}
-                    <img src="{{ asset('uploads/blogs/' ~ blog.image) }}"
-                         alt="{{ blog.titre }}"
-                         class="img">
+                {% if blog.image and blog.imageAlignment == 'left' %}
+                    <div class="carousel-image-container">
+                        <img src="{{ asset('uploads/blogs/' ~ blog.image) }}"
+                             alt="{{ blog.titre }}">
+                    </div>
                 {% endif %}
 
-
-
                 {# Contenu texte #}
-                <div class="card-body">
+                <div class="carousel-text">
                     {{ blog.contenu|nl2br|raw }}
-                    <br>
                     <br>
                     <p>Agnès</p>
                     <br>
                     <p class="txt">{{ blog.dateCreation|date('d/m/Y') }}</p>
                     <p class="txt">© Tous droits réservés. Ce texte est protégé par le droit d'auteur.</p>
-                    <br>
                 </div>
 
-
-
                 {# Image à droite #}
-                {% if (blog.imageAlignment == 'right' or blog.imageAlignment is null) and blog.image %}
-                    <img src="{{ asset('uploads/blogs/' ~ blog.image) }}"
-                         alt="{{ blog.titre }}"
-                         class="img">
+                {% if blog.image and (blog.imageAlignment == 'right' or blog.imageAlignment is null) %}
+                    <div class="carousel-image-container">
+                        <img src="{{ asset('uploads/blogs/' ~ blog.image) }}"
+                             alt="{{ blog.titre }}">
+                    </div>
                 {% endif %}
             </div>
-
         </article>
 
 
