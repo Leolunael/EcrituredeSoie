@@ -235,6 +235,25 @@ class AdminTexteController extends AbstractController
         ]);
     }
 
+    #[Route('/admin/commentaire/{id}/valider', name: 'app_admin_commentaire_valider', methods: ['POST'])]
+    public function valider(Commentaire $commentaire, DocumentManager $dm, Request $request): Response
+    {
+        if (!$this->isCsrfTokenValid('valider_' . $commentaire->getId(), $request->request->get('_token'))) {
+            throw $this->createAccessDeniedException('Token CSRF invalide.');
+        }
+
+        $commentaire->setApprouve(!$commentaire->isApprouve());
+        $dm->flush();
+
+        $message = $commentaire->isApprouve()
+            ? 'Commentaire validé et publié.'
+            : 'Commentaire retiré de la publication.';
+
+        $this->addFlash('success', $message);
+
+        return $this->redirectToRoute('app_admin_commentaires');
+    }
+
     #[Route('/commentaires/{id}/supprimer', name: 'app_admin_commentaire_supprimer', methods: ['POST'])]
     public function supprimerCommentaire(string $id, DocumentManager $dm): Response
     {

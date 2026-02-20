@@ -31,4 +31,12 @@ class TexteRepository
     {
         return $this->repository->findBy($criteria, $orderBy, $limit, $offset);
     }
+
+    public function findApprouvesByTexte(string $texteId): array
+    {
+        return $this->repository->findBy(
+            ['texte' => $texteId, 'approuve' => true],
+            ['dateCreation' => 'ASC']
+        );
+    }
 }

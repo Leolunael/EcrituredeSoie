@@ -1,14 +1,12 @@
 {% extends 'admin/base.html.twig' %}
 
-{% block title %}Administration - Commentaires{% endblock %}
+{% block title %}Ecriture de Soie{% endblock %}
 
 {% block body %}
     <div class="container mt-5">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h1>Gestion des commentaires</h1>
-            <a href="{{ path('admin_blog') }}" class="btn btn-secondary">
-                ← Retour aux textes
-            </a>
+            <a href="{{ path('admin_blog') }}" class="btn btn-secondary">Retour</a>
         </div>
 
         {% for message in app.flashes('success') %}
@@ -18,14 +16,93 @@
             </div>
         {% endfor %}
 
-        {% if commentaires is empty %}
-            <div class="alert alert-info">
-                Aucun commentaire pour le moment.
+        {# ── EN ATTENTE ── #}
+        {% set enAttente = commentaires|filter(c => not c.approuve) %}
+        {% if enAttente|length > 0 %}
+            <div class="card mb-4 border-warning">
+                <div class="card-header bg-warning text-dark">
+                    <h5 class="mb-0">
+                        <i class="bi bi-exclamation-triangle"></i>
+                        Commentaires en attente de validation ({{ enAttente|length }})
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th>Type</th>
+                            <th>Auteur</th>
+                            <th>Commentaire</th>
+                            <th>Date</th>
+                            <th>Texte associé</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for commentaire in enAttente %}
+                            <tr class="table-warning">
+                                <td>
+                                    {% if commentaire.isReponse %}
+                                        <span class="badge bg-info">Réponse</span>
+                                    {% else %}
+                                        <span class="badge bg-primary">Commentaire</span>
+                                    {% endif %}
+                                </td>
+                                <td><strong>{{ commentaire.auteur }}</strong></td>
+                                <td>
+                                    {{ commentaire.contenu|length > 100
+                                    ? commentaire.contenu|slice(0, 100) ~ '...'
+                                    : commentaire.contenu }}
+                                </td>
+                                <td><small>{{ commentaire.dateCreation|date('d/m/Y H:i') }}</small></td>
+                                <td>
+                                    <a href="{{ path('app_blog_detail', {id: commentaire.blogId}) }}"
+                                       target="_blank" class="btn btn-sm btn-outline-primary">
+                                        Voir le texte
+                                    </a>
+                                </td>
+                                <td>
+                                    {# Valider #}
+                                    <form method="post"
+                                          action="{{ path('app_admin_blogCommentaire_valider', {id: commentaire.id}) }}"
+                                          style="display:inline"
+                                          onsubmit="return confirm('Valider ce commentaire ?')">
+                                        <input type="hidden" name="_token"
+                                               value="{{ csrf_token('valider_' ~ commentaire.id) }}">
+                                        <button type="submit" class="btn btn-sm btn-success">
+                                            <i class="bi bi-check-circle"></i> Valider
+                                        </button>
+                                    </form>
+                                    {# Supprimer #}
+                                    <form method="post"
+                                          action="{{ path('app_admin_blogCommentaire_supprimer', {id: commentaire.id}) }}"
+                                          style="display:inline"
+                                          onsubmit="return confirm('Supprimer ce commentaire ?{% if not commentaire.isReponse %} Cela supprimera aussi toutes les réponses.{% endif %}')">
+                                        <button type="submit" class="btn btn-sm btn-danger">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             </div>
-        {% else %}
-            <div class="table-responsive">
-                <table class="table table-striped">
-                    <thead class="table-dark">
+        {% endif %}
+
+        {# ── VALIDÉS ── #}
+        {% set valides = commentaires|filter(c => c.approuve) %}
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">
+                    <i class="bi bi-check-circle"></i>
+                    Commentaires validés ({{ valides|length }})
+                </h5>
+            </div>
+            <div class="card-body">
+                <table class="table table-hover">
+                    <thead>
                     <tr>
                         <th>Type</th>
                         <th>Auteur</th>
@@ -36,7 +113,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    {% for commentaire in commentaires %}
+                    {% for commentaire in valides %}
                         <tr>
                             <td>
                                 {% if commentaire.isReponse %}
@@ -45,45 +122,52 @@
                                     <span class="badge bg-primary">Commentaire</span>
                                 {% endif %}
                             </td>
+                            <td><strong>{{ commentaire.auteur }}</strong></td>
                             <td>
-                                <strong>{{ commentaire.auteur }}</strong>
+                                {{ commentaire.contenu|length > 100
+                                ? commentaire.contenu|slice(0, 100) ~ '...'
+                                : commentaire.contenu }}
                             </td>
-                            <td>
-                                <div style="max-width: 300px; overflow: hidden; text-overflow: ellipsis;">
-                                    {{ commentaire.contenu|length > 100 ?
-                                    commentaire.contenu|slice(0, 100) ~ '...' :
-                                    commentaire.contenu }}
-                                </div>
-                            </td>
-                            <td>
-                                <small>{{ commentaire.dateCreation|date('d/m/Y H:i') }}</small>
-                            </td>
+                            <td><small>{{ commentaire.dateCreation|date('d/m/Y H:i') }}</small></td>
                             <td>
                                 <a href="{{ path('app_blog_detail', {id: commentaire.blogId}) }}"
-                                   target="_blank"
-                                   class="btn btn-sm btn-outline-primary">
+                                   target="_blank" class="btn btn-sm btn-outline-primary">
                                     Voir le texte
                                 </a>
                             </td>
                             <td>
-                                <form action="{{ path('app_admin_blogCommentaire_supprimer', {id: commentaire.id}) }}"
-                                      method="post"
-                                      onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce commentaire ?{% if not commentaire.isReponse %} Cela supprimera aussi toutes les réponses associées.{% endif %}')"
-                                      style="display: inline;">
+                                {# Invalider (toggle) #}
+                                <form method="post"
+                                      action="{{ path('app_admin_blogCommentaire_valider', {id: commentaire.id}) }}"
+                                      style="display:inline"
+                                      onsubmit="return confirm('Retirer ce commentaire de la publication ?')">
+                                    <input type="hidden" name="_token"
+                                           value="{{ csrf_token('valider_' ~ commentaire.id) }}">
+                                    <button type="submit" class="btn btn-sm btn-warning" title="Invalider">
+                                        <i class="bi bi-x-circle"></i>
+                                    </button>
+                                </form>
+                                {# Supprimer #}
+                                <form method="post"
+                                      action="{{ path('app_admin_blogCommentaire_supprimer', {id: commentaire.id}) }}"
+                                      style="display:inline"
+                                      onsubmit="return confirm('Supprimer ce commentaire ?{% if not commentaire.isReponse %} Cela supprimera aussi toutes les réponses.{% endif %}')">
                                     <button type="submit" class="btn btn-sm btn-danger">
-                                        🗑️ Supprimer
+                                        <i class="bi bi-trash"></i>
                                     </button>
                                 </form>
                             </td>
                         </tr>
+                    {% else %}
+                        <tr><td colspan="6" class="text-center">Aucun commentaire validé</td></tr>
                     {% endfor %}
                     </tbody>
                 </table>
             </div>
+        </div>
 
-            <div class="alert alert-warning mt-4">
-                <strong>⚠️ Attention :</strong> La suppression d'un commentaire principal supprimera également toutes ses réponses.
-            </div>
-        {% endif %}
+        <div class="alert alert-warning mt-4">
+            <strong>⚠️ Attention :</strong> La suppression d'un commentaire principal supprimera également toutes ses réponses.
+        </div>
     </div>
 {% endblock %}

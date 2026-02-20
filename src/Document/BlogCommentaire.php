@@ -32,7 +32,7 @@ class BlogCommentaire
     private ?string $commentaireParentId = null;
 
     #[MongoDB\Field(type: 'bool')]
-    private bool $approuve = true;
+    private bool $approuve = false;
 
     public function __construct()
     {
@@ -104,7 +104,7 @@ class BlogCommentaire
         return $this->approuve;
     }
 
-    public function setApprouve(bool $approuve): self
+    public function setApprouve(bool $approuve): static
     {
         $this->approuve = $approuve;
         return $this;

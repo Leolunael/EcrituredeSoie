@@ -31,4 +31,12 @@ class BlogRepository
     {
         return $this->repository->findBy($criteria, $orderBy, $limit, $offset);
     }
+
+    public function findApprouvesByBlog(string $blogId): array
+    {
+        return $this->repository->findBy(
+            ['blog' => $blogId, 'approuve' => true],
+            ['dateCreation' => 'ASC']
+        );
+    }
 }
