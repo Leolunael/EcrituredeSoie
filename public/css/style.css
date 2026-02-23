@@ -334,7 +334,12 @@ p, li, a, span, label, input, textarea, button {
 
 .form-documents {
     font-size: 1.20rem;
-    color: #ffffff;
+    color: #392e5f;
+}
+
+.form-doc {
+    font-size: 1.20rem;
+    color: #392e5f;
     text-decoration: underline;
 }
 
