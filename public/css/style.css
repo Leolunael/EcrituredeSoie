@@ -344,9 +344,10 @@ p, li, a, span, label, input, textarea, button {
 }
 
 .footer-legal {
-    font-size: 1.20rem;
+    font-size: 1rem;
     color: #ffffff;
     text-decoration: underline;
+    gap: 1rem;
 }
 
 
