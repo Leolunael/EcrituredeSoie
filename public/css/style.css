@@ -347,7 +347,9 @@ p, li, a, span, label, input, textarea, button {
     font-size: 1rem;
     color: #ffffff;
     text-decoration: underline;
-    gap: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
 }
 
 
