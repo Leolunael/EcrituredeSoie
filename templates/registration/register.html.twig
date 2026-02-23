@@ -59,6 +59,37 @@
                     {{ form_errors(registrationForm.plainPassword) }}
                 </div>
 
+            {# Téléchargement des documents #}
+            <div class="form-documents">
+                <p>⚠️ Avant de vous inscrire, merci de télécharger et lire les documents suivants :</p>
+                <ul>
+                    <li><a href="{{ asset('uploads/Documents légaux/CGV.pdf') }}" target="_blank">Conditions Générales de Vente (CGV)</a></li>
+                    <li><a href="{{ asset('uploads/Documents légaux/CGU.pdf') }}" target="_blank">Conditions Générales d'Utilisation (CGU)</a></li>
+                    <li><a href="{{ asset('uploads/Documents légaux/Politique-de-confidentialite.pdf') }}" target="_blank">Politique de confidentialité</a></li>
+                    <li><a href="{{ asset('uploads/Documents légaux/AUTORISATIONS.pdf') }}" target="_blank">Politique de confidentialité</a></li>
+                </ul>
+            </div>
+
+            {# Case CGV #}
+            <div class="form-check">
+                {{ form_widget(inscriptionForm.agreeTerms, {'attr': {'class': 'form-check-input'}}) }}
+                <label class="form-check-label">
+                    Je reconnais avoir pris connaissance des
+                    <a href="{{ asset('uploads/Documents légaux/CGV.pdf') }}" target="_blank">CGV</a>
+                    et les accepter.
+                </label>
+                {{ form_errors(inscriptionForm.agreeTerms) }}
+            </div>
+
+            {# Case majorité #}
+            <div class="form-check">
+                {{ form_widget(inscriptionForm.ageMajeur, {'attr': {'class': 'form-check-input'}}) }}
+                <label class="form-check-label">
+                    J'ai plus de 18 ans.
+                </label>
+                {{ form_errors(inscriptionForm.ageMajeur) }}
+            </div>
+
                 <br>
 
             <button type="submit" class="bouton">Créer mon compte</button>

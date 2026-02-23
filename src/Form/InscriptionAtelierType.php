@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\InscriptionAtelier;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\TelType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -56,6 +57,27 @@ class InscriptionAtelierType extends AbstractType
                 'multiple' => false,
                 'required' => true,
                 'attr' => ['class' => 'moyen-paiement']
+            ])
+
+            ->add('agreeTerms', CheckboxType::class, [
+                'label' => false,
+                'mapped' => false,
+                'required' => true,
+                'constraints' => [
+                    new \Symfony\Component\Validator\Constraints\IsTrue([
+                        'message' => 'Vous devez accepter les CGV pour continuer.',
+                    ]),
+                ],
+            ])
+            ->add('ageMajeur', CheckboxType::class, [
+                'label' => false,
+                'mapped' => false,
+                'required' => true,
+                'constraints' => [
+                    new \Symfony\Component\Validator\Constraints\IsTrue([
+                        'message' => 'Vous devez avoir plus de 18 ans pour vous inscrire.',
+                    ]),
+                ],
             ])
         ;
     }
