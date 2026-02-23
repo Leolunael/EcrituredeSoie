@@ -107,6 +107,26 @@
                     </div>
                 {% endif %}
 
+                    {# Case CGV #}
+                    <div class="form-check">
+                        {{ form_widget(registrationForm.agreeTerms, {'attr': {'class': 'form-check-input'}}) }}
+                        <label class="form-check-label">
+                            Je reconnais avoir pris connaissance des
+                            <a href="{{ asset('uploads/Documents légaux/CGV.pdf') }}" target="_blank">CGV</a>
+                            et les accepter.
+                        </label>
+                        {{ form_errors(registrationForm.agreeTerms) }}
+                    </div>
+
+                    {# Case majorité #}
+                    <div class="form-check">
+                        {{ form_widget(registrationForm.ageMajeur, {'attr': {'class': 'form-check-input'}}) }}
+                        <label class="form-check-label">
+                            J'ai plus de 18 ans.
+                        </label>
+                        {{ form_errors(registrationForm.ageMajeur) }}
+                    </div>
+
                     <button type="submit" class="button">Valider</button>
                     {{ form_end(form) }}
                 {% endif %}
