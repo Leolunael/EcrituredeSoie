@@ -430,7 +430,7 @@ p, li, a, span, label, input, textarea, button {
 
 .bouton {
     display: block;
-    margin: 1rem auto;
+    margin: 0.5rem auto 2rem auto;
     padding: 0.5rem 1rem;
     background-color: #392e5f;
     color: white;
@@ -1233,8 +1233,8 @@ textarea {
     background-color: #d9d6e1;
     padding: 2rem;
     border-radius: 0.5rem;
-    margin: 2rem 0;
-    overflow: hidden;
+    margin: 0.5rem 0;
+    overflow: visible;
 }
 
 .carousel-inner {
