@@ -23,7 +23,7 @@
                         <h5 class="mb-0">Informations de l'atelier</h5>
                     </div>
                     <div class="card-body">
-                        <p><strong>Date :</strong> {{ atelier.dateVollon|date('d/m/Y') }}
+                        <p><strong>Date :</strong> {{ vollon.dateVollon|date('d/m/Y') }}
                             {% if vollon.heureDebut %}
                                 de {{ vollon.heureDebut|date('H\\hi') }}
                             {% endif %}
