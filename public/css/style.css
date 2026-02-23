@@ -338,6 +338,12 @@ p, li, a, span, label, input, textarea, button {
     text-decoration: underline;
 }
 
+.footer-legal {
+    font-size: 1.20rem;
+    color: #ffffff;
+    text-decoration: underline;
+}
+
 
 /* ================================
    CONTENEUR PRINCIPAL
