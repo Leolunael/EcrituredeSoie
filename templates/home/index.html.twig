@@ -112,150 +112,109 @@
 
     {# Carrousel Texte à la une #}
     {% if textesALaUne|length > 0 %}
-        <div  class="titre">ECRITS À LA UNE</div>
-
-        <div class="carousel" data-autoplay="true">
-            <div class="carousel-inner">
-                {% for key, texte in textesALaUne %}
-                    <div class="carousel-item {% if key == 0 %}active{% endif %}">
-                        <div class="carousel-content
-                            {% if texte.image %}
-                                {% if texte.imageAlignment == 'left' %}image-left{% endif %}
-                            {% else %}
-                                no-image
-                            {% endif %}">
-
-                            {% if texte.image and texte.imageAlignment == 'left' %}
-                                <div class="carousel-image-container">
-                                    <img src="{{ asset('uploads/textes/' ~ texte.image) }}"
-                                         alt="{{ texte.titre }}">
-                                </div>
-                            {% endif %}
-
-                            <div class="carousel-text">
-                                <h2>{{ texte.titre }}</h2>
-                                <div>
-                                    {{ texte.contenu|striptags|nl2br|slice(0, 200)|raw }}...
-                                </div>
-                                <br>
-                                <p>
-                                    {% if texte.auteur %}
-                                        {{ texte.auteur }}
-                                    {% endif %}
-                                </p>
-                                <br>
-                                <br>
-                                <a href="{{ path('app_texte_detail', {id: texte.id}) }}" class="button">
-                                    Lire
-                                </a>
-                            </div>
-
-                            {% if texte.image and (texte.imageAlignment == 'right' or texte.imageAlignment is null) %}
-                                <div class="carousel-image-container">
-                                    <img src="{{ asset('uploads/textes/' ~ texte.image) }}"
-                                         alt="{{ texte.titre }}">
-                                </div>
-                            {% endif %}
-                        </div>
-                    </div>
-                {% endfor %}
-            </div>
-
-            {% if textesALaUne|length > 1 %}
-                <button class="carousel-control-prev" type="button">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" viewBox="0 0 16 16">
-                        <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
-                    </svg>
-                </button>
-                <button class="carousel-control-next" type="button">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" viewBox="0 0 16 16">
-                        <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.6 0 0 1 0-.708z"/>
-                    </svg>
-                </button>
-
-                <div class="carousel-indicators">
+        <div class="une-section">
+            <div class="titre">ECRITS À LA UNE</div>
+            <div class="carousel" data-autoplay="true">
+                <div class="carousel-inner">
                     {% for key, texte in textesALaUne %}
-                        <button type="button" class="{% if key == 0 %}active{% endif %}"></button>
+                        <div class="carousel-item {% if key == 0 %}active{% endif %}">
+                            <div class="carousel-content {% if texte.image %}{% if texte.imageAlignment == 'left' %}image-left{% endif %}{% else %}no-image{% endif %}">
+                                {% if texte.image and texte.imageAlignment == 'left' %}
+                                    <div class="carousel-image-container">
+                                        <img src="{{ asset('uploads/textes/' ~ texte.image) }}" alt="{{ texte.titre }}">
+                                    </div>
+                                {% endif %}
+                                <div class="carousel-text">
+                                    <h2>{{ texte.titre }}</h2>
+                                    <div>{{ texte.contenu|striptags|nl2br|slice(0, 200)|raw }}...</div>
+                                    <br>
+                                    <p>{% if texte.auteur %}{{ texte.auteur }}{% endif %}</p>
+                                    <br>
+                                    <a href="{{ path('app_texte_detail', {id: texte.id}) }}" class="button">Lire</a>
+                                </div>
+                                {% if texte.image and (texte.imageAlignment == 'right' or texte.imageAlignment is null) %}
+                                    <div class="carousel-image-container">
+                                        <img src="{{ asset('uploads/textes/' ~ texte.image) }}" alt="{{ texte.titre }}">
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
                     {% endfor %}
                 </div>
-            {% endif %}
+                {% if textesALaUne|length > 1 %}
+                    <button class="carousel-control-prev" type="button">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
+                        </svg>
+                    </button>
+                    <button class="carousel-control-next" type="button">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.6 0 0 1 0-.708z"/>
+                        </svg>
+                    </button>
+                    <div class="carousel-indicators">
+                        {% for key, texte in textesALaUne %}
+                            <button type="button" class="{% if key == 0 %}active{% endif %}"></button>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+            <a href="{{ path('texte_index') }}" class="bouton">Voir tous les écrits</a>
         </div>
-
-        <a href="{{ path('texte_index') }}" class="bouton">Voir tous les écrits</a>
     {% endif %}
-    <br>
 
     {# Carrousel Blog à la une #}
     {% if blogsALaUne|length > 0 %}
-        <div  class="titre">NOTES À LA UNE</div>
-
-        <div class="carousel" data-autoplay="true">
-            <div class="carousel-inner">
-                {% for key, blog in blogsALaUne %}
-                    <div class="carousel-item {% if key == 0 %}active{% endif %}">
-                        <div class="carousel-content
-                            {% if blog.image %}
-                                {% if blog.imageAlignment == 'left' %}image-left{% endif %}
-                            {% else %}
-                                no-image
-                            {% endif %}">
-
-                            {% if blog.image and blog.imageAlignment == 'left' %}
-                                <div class="carousel-image-container">
-                                    <img src="{{ asset('uploads/blogs/' ~ blog.image) }}"
-                                         alt="{{ blog.titre }}">
-                                </div>
-                            {% endif %}
-
-                            <div class="carousel-text">
-                                <h2>{{ blog.titre }}</h2>
-
-                                <div>
-                                    {{ blog.contenu|striptags|nl2br|slice(0, 200)|raw }}...
-                                </div>
-                                <br>
-                                <p class="text-muted">
-                                    {{ blog.dateCreation|date('d/m/Y') }}
-                                </p>
-                                <br>
-                                <a href="{{ path('app_blog_detail', {id: blog.id}) }}" class="button">
-                                    Lire
-                                </a>
-                            </div>
-
-                            {% if blog.image and (blog.imageAlignment == 'right' or blog.imageAlignment is null) %}
-                                <div class="carousel-image-container">
-                                    <img src="{{ asset('uploads/blogs/' ~ blog.image) }}"
-                                         alt="{{ blog.titre }}">
-                                </div>
-                            {% endif %}
-                        </div>
-                    </div>
-                {% endfor %}
-            </div>
-
-            {% if blogsALaUne|length > 1 %}
-                <button class="carousel-control-prev" type="button">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" viewBox="0 0 16 16">
-                        <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
-                    </svg>
-                </button>
-                <button class="carousel-control-next" type="button">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" viewBox="0 0 16 16">
-                        <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.6 0 0 1 0 .708l-6 6a.5.6 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.6 0 0 1 0-.708z"/>
-                    </svg>
-                </button>
-
-                <div class="carousel-indicators">
+        <div class="une-section">
+            <div class="titre">NOTES À LA UNE</div>
+            <div class="carousel" data-autoplay="true">
+                <div class="carousel-inner">
                     {% for key, blog in blogsALaUne %}
-                        <button type="button" class="{% if key == 0 %}active{% endif %}"></button>
+                        <div class="carousel-item {% if key == 0 %}active{% endif %}">
+                            <div class="carousel-content {% if blog.image %}{% if blog.imageAlignment == 'left' %}image-left{% endif %}{% else %}no-image{% endif %}">
+                                {% if blog.image and blog.imageAlignment == 'left' %}
+                                    <div class="carousel-image-container">
+                                        <img src="{{ asset('uploads/blogs/' ~ blog.image) }}" alt="{{ blog.titre }}">
+                                    </div>
+                                {% endif %}
+                                <div class="carousel-text">
+                                    <h2>{{ blog.titre }}</h2>
+                                    <div>{{ blog.contenu|striptags|nl2br|slice(0, 200)|raw }}...</div>
+                                    <br>
+                                    <p class="text-muted">{{ blog.dateCreation|date('d/m/Y') }}</p>
+                                    <br>
+                                    <a href="{{ path('app_blog_detail', {id: blog.id}) }}" class="button">Lire</a>
+                                </div>
+                                {% if blog.image and (blog.imageAlignment == 'right' or blog.imageAlignment is null) %}
+                                    <div class="carousel-image-container">
+                                        <img src="{{ asset('uploads/blogs/' ~ blog.image) }}" alt="{{ blog.titre }}">
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
                     {% endfor %}
                 </div>
-            {% endif %}
+                {% if blogsALaUne|length > 1 %}
+                    <button class="carousel-control-prev" type="button">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
+                        </svg>
+                    </button>
+                    <button class="carousel-control-next" type="button">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.6 0 0 1 0 .708l-6 6a.5.6 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.6 0 0 1 0-.708z"/>
+                        </svg>
+                    </button>
+                    <div class="carousel-indicators">
+                        {% for key, blog in blogsALaUne %}
+                            <button type="button" class="{% if key == 0 %}active{% endif %}"></button>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+            <a href="{{ path('blog_index') }}" class="bouton">Voir toutes les notes</a>
         </div>
     {% endif %}
-
-        <a href="{{ path('blog_index') }}" class="bouton">Voir toutes les notes</a>
 
 
 {% endblock %}
