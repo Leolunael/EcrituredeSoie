@@ -332,6 +332,12 @@ p, li, a, span, label, input, textarea, button {
     transform: translateY(-3px);
 }
 
+.form-documents {
+    font-size: 1.20rem;
+    color: #ffffff;
+    text-decoration: underline;
+}
+
 
 /* ================================
    CONTENEUR PRINCIPAL
