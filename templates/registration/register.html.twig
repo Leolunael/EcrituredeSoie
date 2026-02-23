@@ -7,7 +7,7 @@
     <br>
     <div class="container">
         <h1>Inscription</h1>
-        <div class="card-connexion">
+        <div class="cards-container">
         {% for flash_error in app.flashes('verify_email_error') %}
             <div>{{ flash_error }}</div>
         {% endfor %}
@@ -66,7 +66,7 @@
                     <li><a href="{{ asset('uploads/Documents légaux/CGV.pdf') }}" target="_blank" class="form-doc">Conditions Générales de Vente (CGV)</a></li>
                     <li><a href="{{ asset('uploads/Documents légaux/CGU.pdf') }}" target="_blank" class="form-doc">Conditions Générales d'Utilisation (CGU)</a></li>
                     <li><a href="{{ asset('uploads/Documents légaux/Politique-de-confidentialite.pdf') }}" target="_blank" class="form-doc">Politique de confidentialité</a></li>
-                    <li><a href="{{ asset('uploads/Documents légaux/AUTORISATIONS.pdf') }}" target="_blank" class="form-doc">Politique de confidentialité</a></li>
+                    <li><a href="{{ asset('uploads/Documents légaux/AUTORISATIONS.pdf') }}" target="_blank" class="form-doc">Les demandes d'autorisations</a></li>
                 </ul>
             </div>
 
