@@ -351,6 +351,7 @@ p, li, a, span, label, input, textarea, button {
     font-size: 1.20rem;
     color: #392e5f;
     text-decoration: underline;
+    padding-left: 2rem;
 }
 
 .footer-legal {
