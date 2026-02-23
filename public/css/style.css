@@ -271,7 +271,7 @@ p, li, a, span, label, input, textarea, button {
 .footer-content {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-end;
     flex-wrap: wrap;
     gap: 2rem;
 }
@@ -349,7 +349,10 @@ p, li, a, span, label, input, textarea, button {
     text-decoration: underline;
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+}
+
+.footer-legal:hover {
+    color: #c72c48;
 }
 
 
@@ -778,6 +781,7 @@ tr:hover {
     background-color: #392e5f;
     padding: 0.75rem;
     color: white;
+    margin: 0 2rem;
 }
 
 .une-section {
