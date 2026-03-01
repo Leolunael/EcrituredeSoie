@@ -15,9 +15,13 @@ class Contact
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'Le nom est obligatoire')]
+    #[Assert\Length(max: 255)]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'L\'email est obligatoire')]
+    #[Assert\Email(message: 'L\'email n\'est pas valide')]
     private ?string $email = null;
 
     #[ORM\Column(length: 20, nullable: true)]
@@ -27,6 +31,7 @@ class Contact
     private ?string $subject = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Assert\NotBlank(message: 'Le message est obligatoire')]
     private ?string $message = null;
 
     #[ORM\Column]

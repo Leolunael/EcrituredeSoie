@@ -69,11 +69,18 @@ class User implements AppUserInterface, PasswordAuthenticatedUserInterface
     )]
     private Collection $inscriptionsLettres;
 
+    #[ORM\OneToMany(
+        targetEntity: InscriptionVollon::class,
+        mappedBy: 'user'
+    )]
+    private Collection $inscriptionsVollon;
+
     public function __construct()
     {
         $this->inscriptionsAteliers = new ArrayCollection();
         $this->inscriptionsVisios = new ArrayCollection();
         $this->inscriptionsLettres = new ArrayCollection();
+        $this->inscriptionsVollon = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -316,6 +323,16 @@ class User implements AppUserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    public function removeInscriptionsVollon(InscriptionVollon $inscriptionsVollon): static
+    {
+        if ($this->inscriptionsVollon->removeElement($inscriptionsVollon)) {
+            if ($inscriptionsVollon->getUser() === $this) {
+                $inscriptionsVollon->setUser(null);
+            }
+        }
+        return $this;
+    }
+
     /**
      * Récupère toutes les inscriptions de l'utilisateur
      */
@@ -342,6 +359,14 @@ class User implements AppUserInterface, PasswordAuthenticatedUserInterface
         foreach ($this->inscriptionsLettres as $inscription) {
             $inscriptions[] = [
                 'type' => 'Lettre',
+                'inscription' => $inscription,
+                'date' => $inscription->getDateInscription(),
+            ];
+        }
+
+        foreach ($this->inscriptionsVollon as $inscription) {
+            $inscriptions[] = [
+                'type' => 'Vollon',
                 'inscription' => $inscription,
                 'date' => $inscription->getDateInscription(),
             ];

@@ -8,12 +8,16 @@ use Symfony\Component\Routing\Attribute\Route;
 
 final class UserController extends AbstractController
 {
-    #[Route('/user', name: 'app_user')]
-    public function index(): Response
+    public function testPageUserRedirigeVersLoginSiNonConnecte(): void
     {
-        $this->denyAccessUnlessGranted('ROLE_USER');
-        return $this->render('user/index.html.twig', [
-            'controller_name' => 'UserController',
-        ]);
+        $client = static::createClient();
+        $client->request('GET', '/user');
+
+        $this->assertResponseRedirects();
+
+        // Affichez l'URL réelle pour déboguer
+        dump($client->getResponse()->headers->get('Location'));
+
+        $this->assertResponseHeaderSame('Location', '/');
     }
 }

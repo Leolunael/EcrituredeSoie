@@ -4,13 +4,19 @@ namespace App\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-final class UserControllerTest extends WebTestCase
+class UserControllerTest extends WebTestCase
 {
-    public function testIndex(): void
+    // On teste qu'un utilisateur NON connecté est redirigé vers la page de connexion
+    // denyAccessUnlessGranted doit bloquer l'accès aux anonymes
+    public function testPageUserRedirigeVersLoginSiNonConnecte(): void
     {
         $client = static::createClient();
         $client->request('GET', '/user');
 
-        self::assertResponseIsSuccessful();
+        // Un utilisateur non connecté doit être redirigé (code 302)
+        $this->assertResponseRedirects();
+
+        // La redirection doit pointer vers la page de login
+        $this->assertResponseHeaderSame('Location', '/login');
     }
 }
