@@ -121,8 +121,6 @@ class ResetPasswordController extends AbstractController
             /** @var string $plainPassword */
             $plainPassword = $form->get('plainPassword')->getData();
 
-            dump('Mot de passe en clair: ' . $plainPassword);
-
             // Encoder (hasher) le mot de passe en clair et le définir
             $hashedPassword = $passwordHasher->hashPassword($user, $plainPassword);
 

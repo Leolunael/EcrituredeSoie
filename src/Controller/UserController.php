@@ -15,9 +15,6 @@ final class UserController extends AbstractController
 
         $this->assertResponseRedirects();
 
-        // Affichez l'URL réelle pour déboguer
-        dump($client->getResponse()->headers->get('Location'));
-
         $this->assertResponseHeaderSame('Location', '/');
     }
 }
