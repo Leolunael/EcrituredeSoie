@@ -83,8 +83,12 @@ class AteliersController extends AbstractController
         // Si l'utilisateur est connecté, pré-remplir les informations
         if ($this->getUser()) {
             $user = $this->getUser();
-            // ✅ CHANGÉ: setUser() → setUserFromInterface()
-            $inscription->setUserFromInterface($user);
+
+            if ($user instanceof \App\Entity\User) {
+                $inscription->setUser($user);
+            } elseif ($user instanceof \App\Entity\Admin) {
+                $inscription->setAdmin($user);
+            }
 
             if (method_exists($user, 'getNom')) {
                 $inscription->setName($user->getNom());
@@ -104,8 +108,12 @@ class AteliersController extends AbstractController
 
             // Associer l'utilisateur si connecté
             if ($this->getUser()) {
-                // ✅ CHANGÉ: setUser() → setUserFromInterface()
-                $inscription->setUserFromInterface($this->getUser());
+                $currentUser = $this->getUser();
+                if ($currentUser instanceof \App\Entity\User) {
+                    $inscription->setUser($currentUser);
+                } elseif ($currentUser instanceof \App\Entity\Admin) {
+                    $inscription->setAdmin($currentUser);
+                }
             }
 
             $em->persist($inscription);
@@ -190,8 +198,12 @@ class AteliersController extends AbstractController
         // Si l'utilisateur est connecté, pré-remplir les informations
         if ($this->getUser()) {
             $user = $this->getUser();
-            // ✅ CHANGÉ: setUser() → setUserFromInterface()
-            $inscription->setUserFromInterface($user);
+
+            if ($user instanceof \App\Entity\User) {
+                $inscription->setUser($user);
+            } elseif ($user instanceof \App\Entity\Admin) {
+                $inscription->setAdmin($user);
+            }
 
             if (method_exists($user, 'getNom')) {
                 $inscription->setName($user->getNom());
@@ -211,8 +223,12 @@ class AteliersController extends AbstractController
 
             // Associer l'utilisateur si connecté
             if ($this->getUser()) {
-                // ✅ CHANGÉ: setUser() → setUserFromInterface()
-                $inscription->setUserFromInterface($this->getUser());
+                $currentUser = $this->getUser();
+                if ($currentUser instanceof \App\Entity\User) {
+                    $inscription->setUser($currentUser);
+                } elseif ($currentUser instanceof \App\Entity\Admin) {
+                    $inscription->setAdmin($currentUser);
+                }
             }
 
             $em->persist($inscription);
@@ -297,8 +313,12 @@ class AteliersController extends AbstractController
         // Si l'utilisateur est connecté, pré-remplir les informations
         if ($this->getUser()) {
             $user = $this->getUser();
-            // ✅ CHANGÉ: setUser() → setUserFromInterface()
-            $inscription->setUserFromInterface($user);
+
+            if ($user instanceof \App\Entity\User) {
+                $inscription->setUser($user);
+            } elseif ($user instanceof \App\Entity\Admin) {
+                $inscription->setAdmin($user);
+            }
 
             if (method_exists($user, 'getName')) {
                 $inscription->setName($user->getName());
@@ -318,8 +338,12 @@ class AteliersController extends AbstractController
 
             // Associer l'utilisateur si connecté
             if ($this->getUser()) {
-                // ✅ CHANGÉ: setUser() → setUserFromInterface()
-                $inscription->setUserFromInterface($this->getUser());
+                $currentUser = $this->getUser();
+                if ($currentUser instanceof \App\Entity\User) {
+                    $inscription->setUser($currentUser);
+                } elseif ($currentUser instanceof \App\Entity\Admin) {
+                    $inscription->setAdmin($currentUser);
+                }
             }
 
             $em->persist($inscription);
@@ -435,8 +459,12 @@ class AteliersController extends AbstractController
 
             // Associer l'utilisateur si connecté
             if ($this->getUser()) {
-                // ✅ CHANGÉ: setUser() → setUserFromInterface()
-                $inscription->setUserFromInterface($this->getUser());
+                $currentUser = $this->getUser();
+                if ($currentUser instanceof \App\Entity\User) {
+                    $inscription->setUser($currentUser);
+                } elseif ($currentUser instanceof \App\Entity\Admin) {
+                    $inscription->setAdmin($currentUser);
+                }
             }
 
             $em->persist($inscription);
