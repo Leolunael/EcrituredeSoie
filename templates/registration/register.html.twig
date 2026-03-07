@@ -66,6 +66,16 @@
                     <a href="{{ asset('uploads/Documents légaux/AUTORISATIONS.pdf') }}" target="_blank" class="form-doc">Les autorisations</a>
             </div>
 
+            <div class="form-check">
+                {{ form_widget(registrationForm.agreeTerms, {'attr': {'class': 'form-check-input'}}) }}
+                <label class="form-check-label">
+                    Je reconnais avoir pris connaissance de la
+                    <a href="{{ asset('uploads/Documents légaux/Politique-de-confidentialite.pdf') }}" target="_blank">Politique de confidentialité</a>
+                    et les accepter.
+                </label>
+                {{ form_errors(registrationForm.agreeTerms) }}
+            </div>
+
                 <br>
 
             <button type="submit" class="bouton">Créer mon compte</button>

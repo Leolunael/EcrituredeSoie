@@ -1,21 +1,6 @@
 /* ================================
    VARIABLES ET RESET
    ================================ */
-:root {
-    /*--primary-color: #B8356B;*/
-    --secondary-color: #7B6B9E;
-    --carousel-bg: #7B6B9E;
-    --text-color: #000000;
-    --bg-color: #ffffff;
-    --gray-light: #f5f5f5;
-    --gray-medium: #888;
-    --gray-dark: #333;
-    --shadow: 0 0.13rem 0.63rem rgba(0, 0, 0, 0.1);
-    --shadow-hover: 0 0.25rem 1rem rgba(0, 0, 0, 0.15);
-    --border-radius: 0.5rem;
-    --transition: all 0.3s ease;
-}
-
 * {
     margin: 0;
     padding: 0;
@@ -31,13 +16,6 @@
     font-weight: normal;
     font-style: normal;
 }
-
-/*@font-face {*/
-/*    font-family: 'Atkinson Hyperlegible';*/
-/*    src: url('../fonts/AtkinsonHyperlegible-Bold.ttf') format('truetype');*/
-/*    font-weight: bold;*/
-/*    font-style: normal;*/
-/*}*/
 
 @font-face {
     font-family: 'Atkinson Hyperlegible';
@@ -227,14 +205,13 @@ p, li, a, span, label, input, textarea, button {
 
 .burger span {
     width: 1.5rem;
-    height: 2px;
+    height: 0.13rem;
     background-color: #392e5f;
     transition: all 0.3s ease;
-    border-radius: 2px;
+    border-radius: 0.13rem;
     display: block;
 }
 
-/* Animation du burger en X */
 .burger.active span:nth-child(1) {
     transform: rotate(45deg) translate(0.5rem, 0.5rem);
 }
@@ -263,7 +240,7 @@ p, li, a, span, label, input, textarea, button {
 }
 
 .footer-container {
-    max-width: 1200px;
+    max-width: 75rem;
     margin: 0 auto;
     padding: 0 1rem;
 }
@@ -278,7 +255,7 @@ p, li, a, span, label, input, textarea, button {
 
 .footer-section {
     flex: 1;
-    min-width: 200px;
+    min-width: 12.5rem;
 }
 
 .copyright {
@@ -327,8 +304,8 @@ p, li, a, span, label, input, textarea, button {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 40px;
-    height: 40px;
+    width: 2.5rem;
+    height: 2.5rem;
     background-color: rgba(255, 255, 255, 0.1);
     border-radius: 50%;
     color: #ffffff;
@@ -619,7 +596,6 @@ label input[type="radio"] {
     color: #392e5f;
     text-align: left;
     gap: 3rem;
-    /*margin: 0 auto;*/
     margin-bottom: 2rem;
 }
 
@@ -691,7 +667,7 @@ label input[type="radio"] {
     display: flex;
     align-items: stretch;
     gap: 0;
-    min-height: 350px;
+    min-height: 21.88rem;
 }
 
 /* Par défaut, image à droite */
@@ -708,7 +684,7 @@ label input[type="radio"] {
     flex: 0 0 40%;
     max-width: 40%;
     height: 100%;
-    min-height: 350px;
+    min-height: 21.88rem;
     overflow: hidden;
     background-color: #f8f9fa;
 }
@@ -806,7 +782,7 @@ tr:hover {
 .alert {
     padding: 1rem 1.5rem;
     margin-bottom: 1rem;
-    border-radius: var(--border-radius);
+    border-radius: 0.5rem;
     position: relative;
 }
 
@@ -936,15 +912,15 @@ textarea {
 .form-check {
     display: flex;
     align-items: center;
-    gap: 10px;
-    margin-bottom: 10px;
+    gap: 0.63rem;
+    margin-bottom: 0.63rem;
 }
 
 /* ================================
    PRESENTATION
    ================================ */
 .presentations-container {
-    max-width: 900px;
+    max-width: 56.25rem;
     margin: 0 auto;
 }
 
@@ -955,7 +931,7 @@ textarea {
 
 /* Séparation uniquement entre les groupes */
 .presentation-group:not(:last-child) {
-    border-bottom: 2px solid #ccc;
+    border-bottom: .13rem solid #ccc;
 }
 
 .presentation-group h1 {
@@ -1241,7 +1217,7 @@ textarea {
 .carousel-inner {
     position: relative;
     width: 100%;
-    min-height: 400px;
+    min-height: 25rem;
 }
 
 .carousel-item {
@@ -1627,7 +1603,7 @@ textarea {
    RESPONSIVE - Tablettes/Mobile
    ============================================ */
 
-@media (min-width: 769px) and (max-width: 1024px) {
+@media (min-width: 48.06rem) and (max-width: 64rem) {
     .carousel-image-container {
         flex: 0 0 40%;
         max-width: 40%;
@@ -1638,7 +1614,7 @@ textarea {
         flex-direction: column;
     }
 
-    @media (min-width: 769px) and (max-width: 1024px) {
+    @media (min-width: 48.06rem) and (max-width: 64rem) {
         .card,
         .card-avis,
         .card-connexion {

@@ -1,6 +1,6 @@
 {% extends 'admin/base.html.twig' %}
 
-{% block title %}Tableau de bord - Administration{% endblock %}
+{% block title %}Ecriture de Soie{% endblock %}
 
 {% block body %}
     <div class="container-fluid mt-4">
@@ -18,22 +18,11 @@
                                 <small>Avis en attente de validation</small>
                             </div>
                         </div>
-                        <div class="col-md-3">
-                            <div class="text-center">
-                                <h3 class="text-danger mb-0">{{ stats.nouveauxContacts }}</h3>
-                                <small>Contacts non traités</small>
-                            </div>
-                        </div>
+
                         <div class="col-md-3">
                             <div class="text-center">
                                 <h3 class="text-primary mb-0">{{ stats.totalAvisEnAttente }}</h3>
                                 <small>Total avis à valider</small>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="text-center">
-                                <h3 class="text-success mb-0">{{ stats.totalContactsNonTraites }}</h3>
-                                <small>Total contacts à traiter</small>
                             </div>
                         </div>
                     </div>

@@ -18,17 +18,14 @@ class ImageResizerService
 
     public function resize(UploadedFile $file): string
     {
-        // Générer un nom unique pour le fichier
+
         $fileName = md5(uniqid()) . '.' . $file->guessExtension();
 
-        // Chemin complet du fichier
         $filePath = $this->uploadDirectory . '/' . $fileName;
 
-        // Déterminer le type d'image
         $imageInfo = getimagesize($file->getPathname());
         $mimeType = $imageInfo['mime'];
 
-        // Charger l'image selon son type
         switch ($mimeType) {
             case 'image/jpeg':
                 $sourceImage = imagecreatefromjpeg($file->getPathname());
@@ -46,25 +43,20 @@ class ImageResizerService
                 throw new \Exception('Format d\'image non supporté');
         }
 
-        // Dimensions originales
         $origWidth = imagesx($sourceImage);
         $origHeight = imagesy($sourceImage);
 
-        // Calculer les nouvelles dimensions si nécessaire
         if ($origWidth > $this->maxWidth || $origHeight > $this->maxHeight) {
             $ratio = min($this->maxWidth / $origWidth, $this->maxHeight / $origHeight);
             $newWidth = (int)($origWidth * $ratio);
             $newHeight = (int)($origHeight * $ratio);
         } else {
-            // L'image est déjà dans les bonnes dimensions
             $newWidth = $origWidth;
             $newHeight = $origHeight;
         }
 
-        // Créer la nouvelle image
         $newImage = imagecreatetruecolor($newWidth, $newHeight);
 
-        // Préserver la transparence pour PNG et GIF
         if ($mimeType === 'image/png' || $mimeType === 'image/gif') {
             imagealphablending($newImage, false);
             imagesavealpha($newImage, true);
@@ -72,7 +64,6 @@ class ImageResizerService
             imagefilledrectangle($newImage, 0, 0, $newWidth, $newHeight, $transparent);
         }
 
-        // Redimensionner
         imagecopyresampled(
             $newImage, $sourceImage,
             0, 0, 0, 0,
@@ -80,7 +71,6 @@ class ImageResizerService
             $origWidth, $origHeight
         );
 
-        // Sauvegarder l'image redimensionnée
         switch ($mimeType) {
             case 'image/jpeg':
                 imagejpeg($newImage, $filePath, 95);
@@ -96,7 +86,6 @@ class ImageResizerService
                 break;
         }
 
-        // Libérer la mémoire
         imagedestroy($sourceImage);
         imagedestroy($newImage);
 

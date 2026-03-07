@@ -19,4 +19,6 @@ class UserControllerTest extends WebTestCase
         // La redirection doit pointer vers la page de login
         $this->assertResponseHeaderSame('Location', '/login');
     }
+
+
 }

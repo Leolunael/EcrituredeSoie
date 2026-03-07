@@ -64,8 +64,6 @@ class Atelier
         $this->inscriptions = new ArrayCollection();
     }
 
-    // Getters et Setters
-
     public function getId(): ?int
     {
         return $this->id;

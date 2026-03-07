@@ -15,12 +15,8 @@ class VisitorTrackerService
     ) {
     }
 
-    /**
-     * Enregistre une visite
-     */
     public function trackVisit(Request $request): void
     {
-        // Exclure les routes admin et les assets
         $route = $request->attributes->get('_route');
         if ($this->shouldExclude($route, $request->getPathInfo())) {
             return;
@@ -43,9 +39,6 @@ class VisitorTrackerService
         $this->entityManager->flush();
     }
 
-    /**
-     * Obtient l'IP réelle du client
-     */
     private function getClientIp(Request $request): string
     {
         $ipAddress = $request->getClientIp();
@@ -59,9 +52,6 @@ class VisitorTrackerService
         return $ipAddress ?? '0.0.0.0';
     }
 
-    /**
-     * Détermine si la route doit être exclue du tracking
-     */
     private function shouldExclude(?string $route, string $path): bool
     {
         // Exclure les routes admin
@@ -69,7 +59,6 @@ class VisitorTrackerService
             return true;
         }
 
-        // Exclure les assets, API, etc.
         $excludedPaths = [
             '/admin',
             '/api',
@@ -91,9 +80,6 @@ class VisitorTrackerService
         return false;
     }
 
-    /**
-     * Obtient toutes les statistiques
-     */
     public function getStatistics(): array
     {
         return [
