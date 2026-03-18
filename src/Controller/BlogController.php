@@ -82,17 +82,21 @@ class BlogController extends AbstractController
         $commentairesOrganises = [];
         foreach ($commentairesParents as $parent) {
             $parentIdString = $parent->getIdString();
+
+            // Encapsuler chaque réponse dans la même structure
+            $reponsesOrganisees = [];
+            foreach ($reponsesMap[$parentIdString] ?? [] as $reponse) {
+                $reponsesOrganisees[] = [
+                    'commentaire' => $reponse,
+                    'reponses' => [] // Pas de réponses imbriquées pour l'instant
+                ];
+            }
+
             $commentairesOrganises[] = [
                 'commentaire' => $parent,
-                'reponses' => $reponsesMap[$parentIdString] ?? []
+                'reponses' => $reponsesOrganisees
             ];
         }
-
-        return $this->render('blog/detail.html.twig', [
-            'blog' => $blog,
-            'form' => $form->createView(),
-            'commentairesOrganises' => $commentairesOrganises,
-        ]);
     }
 
     #[Route('/blog/{blogId}/repondre/{commentaireId}', name: 'app_blogCommentaire_repondre', methods: ['POST'])]
