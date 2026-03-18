@@ -97,6 +97,12 @@ class BlogController extends AbstractController
                 'reponses' => $reponsesOrganisees
             ];
         }
+
+        return $this->render('blog/detail.html.twig', [
+            'blog' => $blog,
+            'form' => $form->createView(),
+            'commentairesOrganises' => $commentairesOrganises,
+        ]);
     }
 
     #[Route('/blog/{blogId}/repondre/{commentaireId}', name: 'app_blogCommentaire_repondre', methods: ['POST'])]
