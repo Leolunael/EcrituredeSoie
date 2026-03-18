@@ -92,7 +92,7 @@
                 {# Liste des commentaires #}
                 {% if commentairesOrganises is not empty %}
                     {% for item in commentairesOrganises %}
-                        {{ _self.afficher_commentaire(item.commentaire, blog.id, item.reponses, 0) }}
+                        {{ _self.afficher_commentaire(item, blog.id, item.reponses, 0) }}
                     {% endfor %}
                 {% else %}
                     <p>Aucun commentaire pour le moment. Soyez le premier à commenter !</p>
@@ -115,7 +115,7 @@
             {% if reponses is not empty %}
                 <div class="reponse">
                     {% for item in reponses %}
-                        {{ _self.afficher_commentaire(item.commentaire, blogId, item.reponses, niveau + 1) }}
+                        {{ _self.afficher_commentaire(item, blogId, item.reponses, niveau + 1) }}
                     {% endfor %}
                 </div>
             {% endif %}
