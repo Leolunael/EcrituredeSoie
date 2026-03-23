@@ -45,6 +45,10 @@ class InscriptionVollon
     #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
     private ?User $user = null;
 
+    #[ORM\ManyToOne(targetEntity: Admin::class)]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?Admin $admin = null;
+
     public function __construct()
     {
         $this->dateInscription = new \DateTime();
@@ -146,6 +150,17 @@ class InscriptionVollon
     public function getUser(): ?User
     {
         return $this->user;
+    }
+
+    public function getAdmin(): ?Admin
+    {
+        return $this->admin;
+    }
+
+    public function setAdmin(?Admin $admin): static
+    {
+        $this->admin = $admin;
+        return $this;
     }
 
     public function setUser(?User $user): static
