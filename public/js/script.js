@@ -544,10 +544,10 @@ function initScrollAnimations() {
     elementsToAnimate.forEach((element, index) => {
 
 
-            element.style.opacity = '1';
-            element.style.transform = 'translateY(0)';
+        element.style.opacity = '1';
+        element.style.transform = 'translateY(0)';
 
-            element.style.transition = `opacity 0.5s ease ${index * 0.1}s, transform 0.5s ease ${index * 0.1}s`;
+        element.style.transition = `opacity 0.5s ease ${index * 0.1}s, transform 0.5s ease ${index * 0.1}s`;
 
     });
 }
@@ -764,33 +764,37 @@ function initDateTimeSync() {
 
 // ========== CASE A COCHER ET SUPPRESSION ==========
 
-const selectAll = document.getElementById('select-all');
-const checkboxes = document.querySelectorAll('.row-checkbox');
-const btnDelete = document.getElementById('btn-delete-selected');
-const bulkActions = document.getElementById('bulk-actions');
-const selectedCount = document.getElementById('selected-count');
+document.addEventListener('DOMContentLoaded', function () {
+    const selectAll = document.getElementById('select-all');
+    const checkboxes = document.querySelectorAll('.row-checkbox');
+    const btnDelete = document.getElementById('btn-delete-selected');
+    const bulkActions = document.getElementById('bulk-actions');
+    const selectedCount = document.getElementById('selected-count');
 
-function updateBulkActions() {
-    const checked = document.querySelectorAll('.row-checkbox:checked');
-    const count = checked.length;
-    selectedCount.textContent = count + ' sélectionné(s)';
-    btnDelete.disabled = count === 0;
-    bulkActions.style.display = count > 0 ? 'flex' : 'none';
-}
+    if (!selectAll || !btnDelete || !bulkActions || !selectedCount) return;
 
-selectAll.addEventListener('change', function () {
-    checkboxes.forEach(cb => cb.checked = this.checked);
-    updateBulkActions();
-});
-
-checkboxes.forEach(cb => cb.addEventListener('change', updateBulkActions));
-
-btnDelete.addEventListener('click', function () {
-    const checked = document.querySelectorAll('.row-checkbox:checked');
-    if (checked.length === 0) return;
-    if (confirm('Supprimer les ' + checked.length + ' utilisateur(s) sélectionné(s) ?')) {
-        document.getElementById('bulk-form').submit();
+    function updateBulkActions() {
+        const checked = document.querySelectorAll('.row-checkbox:checked');
+        const count = checked.length;
+        selectedCount.textContent = count + ' sélectionné(s)';
+        btnDelete.disabled = count === 0;
+        bulkActions.style.display = count > 0 ? 'flex' : 'none';
     }
+
+    selectAll.addEventListener('change', function () {
+        checkboxes.forEach(cb => cb.checked = this.checked);
+        updateBulkActions();
+    });
+
+    checkboxes.forEach(cb => cb.addEventListener('change', updateBulkActions));
+
+    btnDelete.addEventListener('click', function () {
+        const checked = document.querySelectorAll('.row-checkbox:checked');
+        if (checked.length === 0) return;
+        if (confirm('Supprimer les ' + checked.length + ' utilisateur(s) sélectionné(s) ?')) {
+            document.getElementById('bulk-form').submit();
+        }
+    });
 });
 
 function setupBulkActions(selectAllClass, checkboxClass, bulkActionsId, countId, btnId, formId) {
