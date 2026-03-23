@@ -761,3 +761,69 @@ function initDateTimeSync() {
         });
     }
 }
+
+// ========== CASE A COCHER ET SUPPRESSION ==========
+
+const selectAll = document.getElementById('select-all');
+const checkboxes = document.querySelectorAll('.row-checkbox');
+const btnDelete = document.getElementById('btn-delete-selected');
+const bulkActions = document.getElementById('bulk-actions');
+const selectedCount = document.getElementById('selected-count');
+
+function updateBulkActions() {
+    const checked = document.querySelectorAll('.row-checkbox:checked');
+    const count = checked.length;
+    selectedCount.textContent = count + ' sélectionné(s)';
+    btnDelete.disabled = count === 0;
+    bulkActions.style.display = count > 0 ? 'flex' : 'none';
+}
+
+selectAll.addEventListener('change', function () {
+    checkboxes.forEach(cb => cb.checked = this.checked);
+    updateBulkActions();
+});
+
+checkboxes.forEach(cb => cb.addEventListener('change', updateBulkActions));
+
+btnDelete.addEventListener('click', function () {
+    const checked = document.querySelectorAll('.row-checkbox:checked');
+    if (checked.length === 0) return;
+    if (confirm('Supprimer les ' + checked.length + ' utilisateur(s) sélectionné(s) ?')) {
+        document.getElementById('bulk-form').submit();
+    }
+});
+
+function setupBulkActions(selectAllClass, checkboxClass, bulkActionsId, countId, btnId, formId) {
+    const selectAll = document.querySelector('.' + selectAllClass);
+    const checkboxes = document.querySelectorAll('.' + checkboxClass);
+    const bulkActions = document.getElementById(bulkActionsId);
+    const countEl = document.getElementById(countId);
+    const btn = document.getElementById(btnId);
+    const form = document.getElementById(formId);
+
+    if (!selectAll) return;
+
+    function update() {
+        const checked = document.querySelectorAll('.' + checkboxClass + ':checked');
+        countEl.textContent = checked.length + ' sélectionné(s)';
+        bulkActions.style.display = checked.length > 0 ? 'flex' : 'none';
+    }
+
+    selectAll.addEventListener('change', function () {
+        checkboxes.forEach(cb => cb.checked = this.checked);
+        update();
+    });
+
+    checkboxes.forEach(cb => cb.addEventListener('change', update));
+
+    btn.addEventListener('click', function () {
+        const checked = document.querySelectorAll('.' + checkboxClass + ':checked');
+        if (checked.length === 0) return;
+        if (confirm('Supprimer les ' + checked.length + ' avis sélectionné(s) ?')) {
+            form.submit();
+        }
+    });
+}
+
+setupBulkActions('select-all-attente', 'cb-attente', 'bulk-actions-attente', 'count-attente', 'btn-delete-attente', 'form-attente');
+setupBulkActions('select-all-valides', 'cb-valides', 'bulk-actions-valides', 'count-valides', 'btn-delete-valides', 'form-valides');

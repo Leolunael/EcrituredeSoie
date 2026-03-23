@@ -174,4 +174,29 @@ class AdminAvisController extends AbstractController
             'avis_en_attente' => $avisEnAttente,
         ]);
     }
+
+    #[Route('/supprimer-bulk', name: 'admin_avis_delete_bulk', methods: ['POST'])]
+    public function supprimerBulk(Request $request, DocumentManager $dm): Response
+    {
+        if (!$this->isCsrfTokenValid('delete_bulk_avis', $request->request->get('_token'))) {
+            $this->addFlash('error', 'Token CSRF invalide.');
+            return $this->redirectToRoute('admin_avisList');
+        }
+
+        $ids = $request->request->all('ids');
+        $count = 0;
+
+        foreach ($ids as $id) {
+            $avis = $dm->getRepository(Avis::class)->find($id);
+            if ($avis) {
+                $dm->remove($avis);
+                $count++;
+            }
+        }
+
+        $dm->flush();
+        $this->addFlash('success', $count . ' avis supprimé(s) avec succès.');
+
+        return $this->redirectToRoute('admin_avisList');
+    }
 }

@@ -102,4 +102,37 @@ class UserManagementController extends AbstractController
         return $this->redirectToRoute('admin_users_registered');
     }
 
+    #[Route('/delete-bulk', name: 'admin_users_delete_bulk', methods: ['POST'])]
+    public function deleteBulk(Request $request): Response
+    {
+        if (!$this->isCsrfTokenValid('delete_bulk_users', $request->request->get('_token'))) {
+            $this->addFlash('error', 'Token CSRF invalide.');
+            return $this->redirectToRoute('admin_users_registered');
+        }
+
+        $ids = $request->request->all('ids');
+        $count = 0;
+
+        foreach ($ids as $id) {
+            $user = $this->userRepository->find($id);
+            if ($user) {
+                $connection = $this->entityManager->getConnection();
+                try {
+                    $connection->executeStatement(
+                        'DELETE FROM reset_password_request WHERE user_id = :userId',
+                        ['userId' => $user->getId()]
+                    );
+                } catch (\Exception $e) {}
+
+                $user->anonymize();
+                $count++;
+            }
+        }
+
+        $this->entityManager->flush();
+        $this->addFlash('success', $count . ' utilisateur(s) anonymisé(s) avec succès.');
+
+        return $this->redirectToRoute('admin_users_registered');
+    }
+
 }

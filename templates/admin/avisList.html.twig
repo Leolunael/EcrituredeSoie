@@ -26,31 +26,110 @@
         </div>
     {% endfor %}
 
-    {# AVIS EN ATTENTE DE VALIDATION #}
+    {# AVIS EN ATTENTE #}
     {% set avisEnAttente = avis|filter(a => not a.approuve) %}
     {% if avisEnAttente|length > 0 %}
         <div class="card mb-4 border-warning">
-            <div class="card-header bg-warning text-dark">
+            <div class="card-header bg-warning text-dark d-flex justify-content-between align-items-center">
                 <h5 class="mb-0">
                     <i class="bi bi-exclamation-triangle"></i>
-                    Avis en attente de validation ({{ avisEnAttente|length }})
+                    Avis en attente ({{ avisEnAttente|length }})
                 </h5>
+                <div id="bulk-actions-attente" style="display:none;">
+                    <span id="count-attente" class="me-2">0 sélectionné(s)</span>
+                    <button type="button" class="btn btn-danger btn-sm" id="btn-delete-attente">
+                        <i class="bi bi-trash"></i> Supprimer la sélection
+                    </button>
+                </div>
             </div>
             <div class="card-body">
+                <form id="form-attente" method="post" action="{{ path('admin_avis_delete_bulk') }}">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete_bulk_avis') }}">
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th><input type="checkbox" class="select-all-attente" title="Tout sélectionner"></th>
+                            <th>Auteur</th>
+                            <th>Email</th>
+                            <th>Note</th>
+                            <th>Contenu</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for avi in avisEnAttente %}
+                            <tr class="table-warning">
+                                <td><input type="checkbox" name="ids[]" value="{{ avi.id }}" class="cb-attente"></td>
+                                <td>{{ avi.nom }}</td>
+                                <td>
+                                    {% if avi.email %}
+                                        <a href="mailto:{{ avi.email }}" class="text-decoration-none">
+                                            <i class="bi bi-envelope"></i> {{ avi.email }}
+                                        </a>
+                                    {% else %}
+                                        <span class="text-muted fst-italic">Non renseigné</span>
+                                    {% endif %}
+                                </td>
+                                <td><span class="text-warning">{% for i in 1..avi.note %}✏️{% endfor %}</span></td>
+                                <td>{{ avi.commentaire|length > 80 ? avi.commentaire|slice(0, 80) ~ '...' : avi.commentaire }}</td>
+                                <td>{{ avi.dateCreation|date('d/m/Y H:i') }}</td>
+                                <td>
+                                    <form method="post" action="{{ path('admin_avis_valider', {id: avi.id}) }}" style="display:inline;" onsubmit="return confirm('Valider cet avis ?')">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('valider_' ~ avi.id) }}">
+                                        <button type="submit" class="btn btn-sm btn-success"><i class="bi bi-check-circle"></i> Valider</button>
+                                    </form>
+                                    <form method="post" action="{{ path('admin_avis_delete', {id: avi.id}) }}" style="display:inline;" onsubmit="return confirm('Supprimer cet avis ?')">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('delete_' ~ avi.id) }}">
+                                        <button type="submit" class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+        </div>
+    {% endif %}
+
+    {# AVIS VALIDÉS #}
+    {% set avisValides = avis|filter(a => a.approuve) %}
+    <div class="card">
+        <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">
+                <i class="bi bi-check-circle"></i>
+                Avis validés ({{ avisValides|length }})
+            </h5>
+            <div id="bulk-actions-valides" style="display:none;">
+                <span id="count-valides" class="me-2">0 sélectionné(s)</span>
+                <button type="button" class="btn btn-danger btn-sm" id="btn-delete-valides">
+                    <i class="bi bi-trash"></i> Supprimer la sélection
+                </button>
+            </div>
+        </div>
+        <div class="card-body">
+            <form id="form-valides" method="post" action="{{ path('admin_avis_delete_bulk') }}">
+                <input type="hidden" name="_token" value="{{ csrf_token('delete_bulk_avis') }}">
                 <table class="table table-hover">
                     <thead>
                     <tr>
+                        <th><input type="checkbox" class="select-all-valides" title="Tout sélectionner"></th>
+                        <th>ID</th>
                         <th>Auteur</th>
                         <th>Email</th>
                         <th>Note</th>
                         <th>Contenu</th>
                         <th>Date</th>
+                        <th>Réponse</th>
                         <th>Actions</th>
                     </tr>
                     </thead>
                     <tbody>
-                    {% for avi in avisEnAttente %}
-                        <tr class="table-warning">
+                    {% for avi in avisValides %}
+                        <tr>
+                            <td><input type="checkbox" name="ids[]" value="{{ avi.id }}" class="cb-valides"></td>
+                            <td>{{ loop.index }}</td>
                             <td>{{ avi.nom }}</td>
                             <td>
                                 {% if avi.email %}
@@ -61,132 +140,39 @@
                                     <span class="text-muted fst-italic">Non renseigné</span>
                                 {% endif %}
                             </td>
-                            <td>
-                                <span class="text-warning">
-                                    {% for i in 1..avi.note %}✏️{% endfor %}
-                                </span>
-                            </td>
+                            <td><span class="text-warning">{% for i in 1..avi.note %}✏️{% endfor %}</span></td>
                             <td>{{ avi.commentaire|length > 80 ? avi.commentaire|slice(0, 80) ~ '...' : avi.commentaire }}</td>
                             <td>{{ avi.dateCreation|date('d/m/Y H:i') }}</td>
                             <td>
-                                <form method="post"
-                                      action="{{ path('admin_avis_valider', {id: avi.id}) }}"
-                                      style="display: inline;"
-                                      onsubmit="return confirm('Valider cet avis ?')">
+                                {% if avi.hasReponse %}
+                                    <span class="badge bg-info"><i class="bi bi-reply-fill"></i> Répondu</span>
+                                {% else %}
+                                    <span class="badge bg-secondary"><i class="bi bi-reply"></i> Sans réponse</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href="{{ path('admin_avisEdit', {id: avi.id}) }}" class="btn btn-sm btn-primary"><i class="bi bi-pencil"></i> Répondre</a>
+                                <form method="post" action="{{ path('admin_avis_valider', {id: avi.id}) }}" style="display:inline;" onsubmit="return confirm('Retirer cet avis ?')">
                                     <input type="hidden" name="_token" value="{{ csrf_token('valider_' ~ avi.id) }}">
-                                    <button type="submit" class="btn btn-sm btn-success" title="Valider">
-                                        <i class="bi bi-check-circle"></i> Valider
-                                    </button>
+                                    <button type="submit" class="btn btn-sm btn-warning"><i class="bi bi-x-circle"></i></button>
                                 </form>
-
-                                <form method="post"
-                                      action="{{ path('admin_avis_delete', {id: avi.id}) }}"
-                                      style="display: inline;"
-                                      onsubmit="return confirm('Supprimer cet avis ?')">
+                                <form method="post" action="{{ path('admin_avis_delete', {id: avi.id}) }}" style="display:inline;" onsubmit="return confirm('Supprimer cet avis ?')">
                                     <input type="hidden" name="_token" value="{{ csrf_token('delete_' ~ avi.id) }}">
-                                    <button type="submit" class="btn btn-sm btn-danger" title="Supprimer">
-                                        <i class="bi bi-trash"></i>
-                                    </button>
+                                    <button type="submit" class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></button>
                                 </form>
                             </td>
                         </tr>
+                    {% else %}
+                        <tr><td colspan="9" class="text-center">Aucun avis validé</td></tr>
                     {% endfor %}
                     </tbody>
                 </table>
-            </div>
-        </div>
-    {% endif %}
-
-    {# AVIS VALIDÉS #}
-    {% set avisValides = avis|filter(a => a.approuve) %}
-    <div class="card">
-        <div class="card-header bg-success text-white">
-            <h5 class="mb-0">
-                <i class="bi bi-check-circle"></i>
-                Avis validés ({{ avisValides|length }})
-            </h5>
-        </div>
-        <div class="card-body">
-            <table class="table table-hover">
-                <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Auteur</th>
-                    <th>Email</th>
-                    <th>Note</th>
-                    <th>Contenu</th>
-                    <th>Date</th>
-                    <th>Réponse</th>
-                    <th>Actions</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for avi in avisValides %}
-                    <tr>
-                        <td>{{ loop.index }}</td>
-                        <td>{{ avi.nom }}</td>
-                        <td>
-                            {% if avi.email %}
-                                <a href="mailto:{{ avi.email }}" class="text-decoration-none">
-                                    <i class="bi bi-envelope"></i> {{ avi.email }}
-                                </a>
-                            {% else %}
-                                <span class="text-muted fst-italic">Non renseigné</span>
-                            {% endif %}
-                        </td>
-                        <td>
-                            <span class="text-warning">
-                                {% for i in 1..avi.note %}✏️{% endfor %}
-                            </span>
-                        </td>
-                        <td>{{ avi.commentaire|length > 80 ? avi.commentaire|slice(0, 80) ~ '...' : avi.commentaire }}</td>
-                        <td>{{ avi.dateCreation|date('d/m/Y H:i') }}</td>
-                        <td>
-                            {% if avi.hasReponse %}
-                                <span class="badge bg-info">
-                                    <i class="bi bi-reply-fill"></i> Répondu
-                                </span>
-                            {% else %}
-                                <span class="badge bg-secondary">
-                                    <i class="bi bi-reply"></i> Sans réponse
-                                </span>
-                            {% endif %}
-                        </td>
-                        <td>
-                            <a href="{{ path('admin_avisEdit', {id: avi.id}) }}"
-                               class="btn btn-sm btn-primary"
-                               title="Répondre à l'avis">
-                                <i class="bi bi-pencil"></i> Répondre
-                            </a>
-
-                            <form method="post"
-                                  action="{{ path('admin_avis_valider', {id: avi.id}) }}"
-                                  style="display: inline;"
-                                  onsubmit="return confirm('Retirer cet avis de la publication ?')">
-                                <input type="hidden" name="_token" value="{{ csrf_token('valider_' ~ avi.id) }}">
-                                <button type="submit" class="btn btn-sm btn-warning" title="Invalider">
-                                    <i class="bi bi-x-circle"></i>
-                                </button>
-                            </form>
-
-                            <form method="post"
-                                  action="{{ path('admin_avis_delete', {id: avi.id}) }}"
-                                  style="display: inline;"
-                                  onsubmit="return confirm('Supprimer cet avis ?')">
-                                <input type="hidden" name="_token" value="{{ csrf_token('delete_' ~ avi.id) }}">
-                                <button type="submit" class="btn btn-sm btn-danger" title="Supprimer">
-                                    <i class="bi bi-trash"></i>
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
-                {% else %}
-                    <tr>
-                        <td colspan="8" class="text-center">Aucun avis validé</td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
+            </form>
         </div>
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/script.js') }}"></script>
 {% endblock %}
