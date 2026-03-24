@@ -2,6 +2,11 @@
 
 {% block title %}Ecriture de Soie{% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/login.css') }}">
+{% endblock %}
+
 {% block body %}
     <a href="{{ path('app_home') }}" class="retour-button">Retour</a>
     <br>
