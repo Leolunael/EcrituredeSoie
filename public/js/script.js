@@ -143,6 +143,28 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // ========== SYNCHRONISATION DATE/HEURE ATELIER ==========
     initDateTimeSync();
+
+    // ========== ACTIONS INDIVIDUELLES AVIS (sans formulaires imbriqués) ==========
+    // CORRECTION : les boutons .btn-action-avis remplacent les <form> imbriqués du template Twig.
+    // Au clic, on crée dynamiquement un formulaire hors du DOM pour éviter tout conflit CSRF.
+    document.querySelectorAll('.btn-action-avis').forEach(btn => {
+        btn.addEventListener('click', function () {
+            if (!confirm(this.dataset.confirm)) return;
+
+            const form = document.createElement('form');
+            form.method = 'post';
+            form.action = this.dataset.action;
+
+            const token = document.createElement('input');
+            token.type = 'hidden';
+            token.name = '_token';
+            token.value = this.dataset.token;
+
+            form.appendChild(token);
+            document.body.appendChild(form);
+            form.submit();
+        });
+    });
 });
 
 // ========== FONCTION: CARROUSEL ==========

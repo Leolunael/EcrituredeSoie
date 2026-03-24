@@ -75,14 +75,21 @@
                                 <td>{{ avi.commentaire|length > 80 ? avi.commentaire|slice(0, 80) ~ '...' : avi.commentaire }}</td>
                                 <td>{{ avi.dateCreation|date('d/m/Y H:i') }}</td>
                                 <td>
-                                    <form method="post" action="{{ path('admin_avis_valider', {id: avi.id}) }}" style="display:inline;" onsubmit="return confirm('Valider cet avis ?')">
-                                        <input type="hidden" name="_token" value="{{ csrf_token('valider_' ~ avi.id) }}">
-                                        <button type="submit" class="btn btn-sm btn-success"><i class="bi bi-check-circle"></i> Valider</button>
-                                    </form>
-                                    <form method="post" action="{{ path('admin_avis_delete', {id: avi.id}) }}" style="display:inline;" onsubmit="return confirm('Supprimer cet avis ?')">
-                                        <input type="hidden" name="_token" value="{{ csrf_token('delete_' ~ avi.id) }}">
-                                        <button type="submit" class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></button>
-                                    </form>
+                                    {# CORRECTION : plus de <form> imbriqué — on utilise des boutons data-* #}
+                                    <button type="button"
+                                            class="btn btn-sm btn-success btn-action-avis"
+                                            data-action="{{ path('admin_avis_valider', {id: avi.id}) }}"
+                                            data-token="{{ csrf_token('valider_' ~ avi.id) }}"
+                                            data-confirm="Valider cet avis ?">
+                                        <i class="bi bi-check-circle"></i> Valider
+                                    </button>
+                                    <button type="button"
+                                            class="btn btn-sm btn-danger btn-action-avis"
+                                            data-action="{{ path('admin_avis_delete', {id: avi.id}) }}"
+                                            data-token="{{ csrf_token('delete_' ~ avi.id) }}"
+                                            data-confirm="Supprimer cet avis ?">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
                                 </td>
                             </tr>
                         {% endfor %}
@@ -151,15 +158,24 @@
                                 {% endif %}
                             </td>
                             <td>
-                                <a href="{{ path('admin_avisEdit', {id: avi.id}) }}" class="btn btn-sm btn-primary"><i class="bi bi-pencil"></i> Répondre</a>
-                                <form method="post" action="{{ path('admin_avis_valider', {id: avi.id}) }}" style="display:inline;" onsubmit="return confirm('Retirer cet avis ?')">
-                                    <input type="hidden" name="_token" value="{{ csrf_token('valider_' ~ avi.id) }}">
-                                    <button type="submit" class="btn btn-sm btn-warning"><i class="bi bi-x-circle"></i></button>
-                                </form>
-                                <form method="post" action="{{ path('admin_avis_delete', {id: avi.id}) }}" style="display:inline;" onsubmit="return confirm('Supprimer cet avis ?')">
-                                    <input type="hidden" name="_token" value="{{ csrf_token('delete_' ~ avi.id) }}">
-                                    <button type="submit" class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></button>
-                                </form>
+                                <a href="{{ path('admin_avisEdit', {id: avi.id}) }}" class="btn btn-sm btn-primary">
+                                    <i class="bi bi-pencil"></i> Répondre
+                                </a>
+                                {# CORRECTION : plus de <form> imbriqué — on utilise des boutons data-* #}
+                                <button type="button"
+                                        class="btn btn-sm btn-warning btn-action-avis"
+                                        data-action="{{ path('admin_avis_valider', {id: avi.id}) }}"
+                                        data-token="{{ csrf_token('valider_' ~ avi.id) }}"
+                                        data-confirm="Retirer cet avis ?">
+                                    <i class="bi bi-x-circle"></i>
+                                </button>
+                                <button type="button"
+                                        class="btn btn-sm btn-danger btn-action-avis"
+                                        data-action="{{ path('admin_avis_delete', {id: avi.id}) }}"
+                                        data-token="{{ csrf_token('delete_' ~ avi.id) }}"
+                                        data-confirm="Supprimer cet avis ?">
+                                    <i class="bi bi-trash"></i>
+                                </button>
                             </td>
                         </tr>
                     {% else %}
