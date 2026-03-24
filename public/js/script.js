@@ -279,8 +279,9 @@ function initAlerts() {
 }
 
 // ========== FONCTION: FORMULAIRES ==========
+// CORRECTION : on exclut #bulk-form pour ne pas interférer avec la soumission groupée
 function initForms() {
-    const forms = document.querySelectorAll('form');
+    const forms = document.querySelectorAll('form:not(#bulk-form)');
 
     forms.forEach(form => {
         form.addEventListener('submit', function(e) {
@@ -542,13 +543,9 @@ function initScrollAnimations() {
 
     const elementsToAnimate = document.querySelectorAll('.avis-card, .formulaire-avis');
     elementsToAnimate.forEach((element, index) => {
-
-
         element.style.opacity = '1';
         element.style.transform = 'translateY(0)';
-
         element.style.transition = `opacity 0.5s ease ${index * 0.1}s, transform 0.5s ease ${index * 0.1}s`;
-
     });
 }
 
@@ -691,14 +688,7 @@ function initDateTimeSync() {
     }
 
     console.log('🔍 Initialisation de la synchronisation date/heure');
-    console.log('📅 dateInput:', dateInput);
-    console.log('⏰ heureDebutInput:', heureDebutInput);
-    console.log('⏰ heureFinInput:', heureFinInput);
-    console.log('🔒 dateAtelierHidden:', dateAtelierHidden);
-    console.log('🔒 heureDebutHidden:', heureDebutHidden);
-    console.log('🔒 heureFinHidden:', heureFinHidden);
 
-    // Fonction pour synchroniser la date
     function syncDate() {
         if (dateInput && dateInput.value && dateAtelierHidden) {
             dateAtelierHidden.value = dateInput.value;
@@ -706,7 +696,6 @@ function initDateTimeSync() {
         }
     }
 
-    // Fonction pour synchroniser l'heure de début
     function syncHeureDebut() {
         if (heureDebutInput && heureDebutInput.value && heureDebutHidden) {
             heureDebutHidden.value = heureDebutInput.value;
@@ -714,7 +703,6 @@ function initDateTimeSync() {
         }
     }
 
-    // Fonction pour synchroniser l'heure de fin
     function syncHeureFin() {
         if (heureFinInput && heureFinInput.value && heureFinHidden) {
             heureFinHidden.value = heureFinInput.value;
@@ -722,7 +710,6 @@ function initDateTimeSync() {
         }
     }
 
-    // Charger les valeurs existantes (pour l'édition)
     if (dateAtelierHidden && dateAtelierHidden.value) {
         dateInput.value = dateAtelierHidden.value;
     }
@@ -733,7 +720,6 @@ function initDateTimeSync() {
         heureFinInput.value = heureFinHidden.value;
     }
 
-    // Écouter les changements sur les champs visibles
     if (dateInput) {
         dateInput.addEventListener('change', syncDate);
         dateInput.addEventListener('input', syncDate);
@@ -749,7 +735,6 @@ function initDateTimeSync() {
         heureFinInput.addEventListener('input', syncHeureFin);
     }
 
-    // Synchroniser avant la soumission du formulaire
     const form = document.querySelector('form[name="atelier"]');
     if (form) {
         console.log('📝 Formulaire trouvé, ajout du listener submit');
@@ -762,7 +747,7 @@ function initDateTimeSync() {
     }
 }
 
-// ========== CASE A COCHER ET SUPPRESSION ==========
+// ========== CASE A COCHER ET SUPPRESSION GROUPÉE ==========
 
 document.addEventListener('DOMContentLoaded', function () {
     const selectAll = document.getElementById('select-all');
@@ -788,12 +773,41 @@ document.addEventListener('DOMContentLoaded', function () {
 
     checkboxes.forEach(cb => cb.addEventListener('change', updateBulkActions));
 
-    btnDelete.addEventListener('click', function () {
-        const checked = document.querySelectorAll('.row-checkbox:checked');
-        if (checked.length === 0) return;
-        if (confirm('Supprimer les ' + checked.length + ' utilisateur(s) sélectionné(s) ?')) {
-            document.getElementById('bulk-form').submit();
-        }
+    // CORRECTION : le bouton est maintenant type="submit" dans le formulaire,
+    // mais on garde la confirmation ici via un listener sur le formulaire
+    const bulkForm = document.getElementById('bulk-form');
+    if (bulkForm) {
+        bulkForm.addEventListener('submit', function (e) {
+            const checked = document.querySelectorAll('.row-checkbox:checked');
+            if (checked.length === 0) {
+                e.preventDefault();
+                return;
+            }
+            if (!confirm('Supprimer les ' + checked.length + ' utilisateur(s) sélectionné(s) ?')) {
+                e.preventDefault();
+            }
+        });
+    }
+
+    // ========== SUPPRESSION INDIVIDUELLE (sans formulaire imbriqué) ==========
+    // CORRECTION : on crée dynamiquement un formulaire hors du tableau pour éviter l'imbrication
+    document.querySelectorAll('.btn-delete-single').forEach(btn => {
+        btn.addEventListener('click', function () {
+            if (!confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?')) return;
+
+            const form = document.createElement('form');
+            form.method = 'post';
+            form.action = this.dataset.action;
+
+            const token = document.createElement('input');
+            token.type = 'hidden';
+            token.name = '_token';
+            token.value = this.dataset.token;
+
+            form.appendChild(token);
+            document.body.appendChild(form);
+            form.submit();
+        });
     });
 });
 
