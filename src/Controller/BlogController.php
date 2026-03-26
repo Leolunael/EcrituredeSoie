@@ -13,7 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class BlogController extends AbstractController
 {
-    #[Route('/blog', name: 'blog_index')]
+    #[Route('/notes', name: 'blog_index')]
     public function liste(DocumentManager $dm): Response
     {
         $blogs = $dm->getRepository(Blog::class)
@@ -28,7 +28,7 @@ class BlogController extends AbstractController
         ]);
     }
 
-    #[Route('/blog/{id}', name: 'app_blog_detail')]
+    #[Route('/notes/{id}', name: 'app_blog_detail')]
     public function detail(string $id, Request $request, DocumentManager $dm): Response
     {
         $blog = $dm->getRepository(Blog::class)->find($id);
@@ -105,7 +105,7 @@ class BlogController extends AbstractController
         ]);
     }
 
-    #[Route('/blog/{blogId}/repondre/{commentaireId}', name: 'app_blogCommentaire_repondre', methods: ['POST'])]
+    #[Route('/notes/{blogId}/repondre/{commentaireId}', name: 'app_blogCommentaire_repondre', methods: ['POST'])]
     public function repondre(string $blogId, string $commentaireId, Request $request, DocumentManager $dm): Response
     {
         $contenu = $request->request->get('contenu');

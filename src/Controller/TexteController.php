@@ -13,7 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class TexteController extends AbstractController
 {
-    #[Route('/texte', name: 'texte_index')]
+    #[Route('/ecrits', name: 'texte_index')]
     public function liste(DocumentManager $dm): Response
     {
         $textes = $dm->getRepository(Texte::class)
@@ -28,7 +28,7 @@ class TexteController extends AbstractController
         ]);
     }
 
-    #[Route('/texte/{id}', name: 'app_texte_detail')]
+    #[Route('/ecrits/{id}', name: 'app_texte_detail')]
     public function detail(string $id, Request $request, DocumentManager $dm): Response
     {
         $texte = $dm->getRepository(Texte::class)->find($id);
@@ -104,7 +104,7 @@ class TexteController extends AbstractController
         return $commentairesRacines;
     }
 
-    #[Route('/texte/{texteId}/repondre/{commentaireId}', name: 'app_commentaire_repondre', methods: ['POST'])]
+    #[Route('/ecrits/{texteId}/repondre/{commentaireId}', name: 'app_commentaire_repondre', methods: ['POST'])]
     public function repondre(string $texteId, string $commentaireId, Request $request, DocumentManager $dm): Response
     {
         $contenu = $request->request->get('contenu');
