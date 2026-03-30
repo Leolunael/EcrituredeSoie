@@ -569,7 +569,6 @@ label input[type="radio"] {
     padding-left: 6rem;
     padding-right: 6rem;
     margin-top: 2rem;
-    white-space: pre-line;
 }
 
 .card .button {
