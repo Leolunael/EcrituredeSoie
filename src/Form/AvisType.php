@@ -40,11 +40,11 @@ class AvisType extends AbstractType
             ->add('note', ChoiceType::class, [
                 'label' => 'Votre note',
                 'choices' => [
-                    '✏️✏️✏️✏️✏️' => 5,
-                    '✏️✏️✏️✏️' => 4,
-                    '✏️✏️✏️' => 3,
-                    '✏️✏️' => 2,
-                    '✏️' => 1,
+                    '🍓🍓🍓🍓🍓' => 5,
+                    '🍓🍓🍓🍓' => 4,
+                    '🍓🍓🍓' => 3,
+                    '🍓🍓' => 2,
+                    '🍓' => 1,
                 ],
                 'expanded' => false,
                 'attr' => ['class' => 'form-control rating-select']
