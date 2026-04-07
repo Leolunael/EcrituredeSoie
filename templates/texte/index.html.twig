@@ -26,8 +26,8 @@
                         <br>
                         <p class="card-body">
                             {{ texte.contenu|length > 300 ?
-                            (texte.contenu|nl2br|slice(0, 300) ~ '...')|raw :
-                            texte.contenu|raw }}
+                            (texte.contenu|slice(0, 300) ~ '...')|nl2br|raw :
+                            texte.contenu|nl2br|raw }}
                         </p>
                         <br>
                         <p class="card-body">
