@@ -177,9 +177,9 @@
                                         <img src="{{ asset('uploads/blogs/' ~ blog.image) }}" alt="{{ blog.titre }}">
                                     </div>
                                 {% endif %}
-                                <div class="carousel-text">
+                                <div>
                                     <h2>{{ blog.titre }}</h2>
-                                    <div>{{ blog.contenu|striptags|nl2br|slice(0, 200)|raw }}...</div>
+                                    <div class="carousel-text">{{ blog.contenu|striptags|nl2br|slice(0, 200)|raw }}...</div>
                                     <br>
                                     <p class="text-muted">{{ blog.dateCreation|date('d/m/Y') }}</p>
                                     <br>
