@@ -33,7 +33,7 @@
 
 body {
     font-family: 'Atkinson Hyperlegible', sans-serif;
-    font-size: 1.15rem;
+    font-size: 1.25rem;
     line-height: 2;
     color: #392e5f;
     background-color: #e8e6ee;
@@ -63,14 +63,14 @@ h4 { font-size: 1.5rem; }
 h5 { font-size: 1.30rem; }
 
 p, li, a, span, label, input, textarea, button {
-    font-size: 1.18rem;
+    font-size: 1.25rem;
     min-height: 0.75rem;
     line-height: 2;
 }
 
 .texte {
     text-align: center;
-    font-size: 1.20rem;
+    font-size: 1.25rem;
     min-height: 0.75rem;
     line-height: 2;
 }
@@ -1246,7 +1246,7 @@ textarea {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    text-align: center;
+    /*text-align: center;*/
     gap: 1rem;
 }
 
