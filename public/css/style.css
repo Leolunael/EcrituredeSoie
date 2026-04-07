@@ -1246,7 +1246,7 @@ textarea {
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
-    text-align: center;
+    text-align: left;
     gap: 1rem;
 }
 
