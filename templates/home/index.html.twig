@@ -124,9 +124,9 @@
                                         <img src="{{ asset('uploads/textes/' ~ texte.image) }}" alt="{{ texte.titre }}">
                                     </div>
                                 {% endif %}
-                                <div class="carousel-text">
+                                <div>
                                     <h2>{{ texte.titre }}</h2>
-                                    <div>{{ texte.contenu|striptags|nl2br|slice(0, 200)|raw }}...</div>
+                                    <div class="carousel-text">{{ texte.contenu|striptags|nl2br|slice(0, 200)|raw }}...</div>
                                     <br>
                                     <p>{% if texte.auteur %}{{ texte.auteur }}{% endif %}</p>
                                     <br>
