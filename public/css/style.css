@@ -11,28 +11,35 @@
    TYPOGRAPHIE
    ================================ */
 @font-face {
-    font-family: 'Atkinson Hyperlegible';
-    src: url('../fonts/AtkinsonHyperlegible-Regular.ttf') format('truetype');
+    font-family: 'Roboto';
+    src: url('../fonts/Roboto-Regular.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
 }
 
 @font-face {
-    font-family: 'Atkinson Hyperlegible';
-    src: url('../fonts/AtkinsonHyperlegible-Italic.ttf') format('truetype');
+    font-family: 'Roboto';
+    src: url('../fonts/Roboto-Italic.ttf') format('truetype');
     font-weight: normal;
     font-style: italic;
 }
 
 @font-face {
-    font-family: 'Atkinson Hyperlegible';
-    src: url('../fonts/AtkinsonHyperlegible-BoldItalic.ttf') format('truetype');
+    font-family: 'Roboto';
+    src: url('../fonts/Roboto-BoldItalic.ttf') format('truetype');
     font-weight: bold;
     font-style: italic;
 }
 
+@font-face {
+    font-family: 'Roboto';
+    src: url('../fonts/Roboto-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
 body {
-    font-family: 'Atkinson Hyperlegible', sans-serif;
+    font-family: Roboto, sans-serif;
     font-size: 1.25rem;
     line-height: 2;
     color: #392e5f;
