@@ -90,6 +90,19 @@ p, li, a, span, label, input, textarea, button {
 
 
 /* ================================
+   LIEU / ADRESSE
+   ================================ */
+.lieu-adresse {
+    display: flex;
+    gap: 0.4rem;
+    margin-bottom: 0.75rem;
+}
+
+.lieu-adresse .lieu-label {
+    white-space: nowrap;
+}
+
+/* ================================
    NAVIGATION
    ================================ */
 .navbar {

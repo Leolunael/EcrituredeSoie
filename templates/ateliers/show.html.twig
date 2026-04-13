@@ -8,10 +8,10 @@
 {% endblock %}
 
 {% block body %}
-        <a href="{{ path('app_ateliers') }}" type="submit" class="button">Retour</a>
+    <a href="{{ path('app_ateliers') }}" type="submit" class="button">Retour</a>
     <h1>{{ atelier.titre }}</h1>
 
-                <!-- Messages flash -->
+    <!-- Messages flash -->
     {% for message in app.flashes('success') %}
         <div class="message">{{ message }}</div>
     {% endfor %}
@@ -30,82 +30,88 @@
                     </p>
                 {% endif %}
 
-
-                {% if atelier.lieu %}
-                <p style="margin-bottom: 0.75rem;">📍 <strong>Lieu :</strong> {{ atelier.lieu }}</p>
+                {% if atelier.lieu or atelier.rue or atelier.ville %}
+                    <p class="lieu-adresse">
+                        <span class="lieu-label">📍 <strong>Lieu :</strong></span>
+                        <span>
+                            {% if atelier.lieu %}{{ atelier.lieu }}{% endif %}
+                            {% if atelier.rue %}<br>{{ atelier.rue }}{% endif %}
+                            {% if atelier.ville %}<br>{{ atelier.ville }}{% endif %}
+                        </span>
+                    </p>
                 {% endif %}
 
                 {% if atelier.prix %}
                     <p>💶 <strong>Prix :</strong> {{ atelier.prix }} €</p>
                 {% endif %}
 
-            <br>
+                <br>
 
-        <!-- Description -->
+                <!-- Description -->
                 {% if atelier.description %}
                     <h5 class="card">Description</h5>
-                        <p>{{ atelier.description|nl2br }}</p>
+                    <p>{{ atelier.description|nl2br }}</p>
                 {% endif %}
 
 
-                    <!-- Informations complémentaires -->
+                <!-- Informations complémentaires -->
                 {% if atelier.informations %}
                     <h5 class="card">Informations complémentaires</h5>
-                        <p>{{ atelier.informations|nl2br }}</p>
+                    <p>{{ atelier.informations|nl2br }}</p>
                 {% endif %}
             </div>
         </div>
     </section>
 
-                <!-- Formulaire d'inscription -->
+    <!-- Formulaire d'inscription -->
     <section class="cards-container">
         <div class="card">
             <h5 class="titre">Inscription</h5>
             <div class="card-body">
                 {% if inscrit %}
-            <!-- Message de confirmation après inscription -->
+                    <!-- Message de confirmation après inscription -->
                     <h5>Merci pour votre inscription !</h5>
                 {% else %}
-            <!-- Afficher le formulaire d'inscription -->
+                    <!-- Afficher le formulaire d'inscription -->
                     {{ form_start(form) }}
-                        <div class="form">
-                            {{ form_label(form.name) }}
-                            {{ form_widget(form.name) }}
-                            {{ form_errors(form.name) }}
-                        </div>
-                        <div class="form">
-                            {{ form_label(form.prenom) }}
-                            {{ form_widget(form.prenom) }}
-                            {{ form_errors(form.prenom) }}
-                        </div>
-
-                        <div class="form">
-                            {{ form_label(form.email) }}
-                            {{ form_widget(form.email) }}
-                            {{ form_errors(form.email) }}
-                        </div>
-
-                        <div class="form">
-                            {{ form_label(form.telephone) }}
-                            {{ form_widget(form.telephone) }}
-                            {{ form_errors(form.telephone) }}
-                        </div>
-
-                        <div class="form">
-                            {{ form_label(form.moyenPaiement) }}
-                            <div class="radio-group">
-                            {{ form_widget(form.moyenPaiement) }}
-                            </div>
-                            {{ form_errors(form.moyenPaiement) }}
-                        </div>
-
-                {# Le lien HelloAsso, caché par défaut #}
-                {% if atelier.lienHelloAsso %}
-                    <div id="helloasso-link" {# style="display: none;" #}>
-                        <strong>Pour finaliser votre paiement par CB :</strong><br>
-                        Après validation du formulaire, vous serez redirigé vers HelloAsso pour effectuer le paiement.
+                    <div class="form">
+                        {{ form_label(form.name) }}
+                        {{ form_widget(form.name) }}
+                        {{ form_errors(form.name) }}
                     </div>
-                {% endif %}
+                    <div class="form">
+                        {{ form_label(form.prenom) }}
+                        {{ form_widget(form.prenom) }}
+                        {{ form_errors(form.prenom) }}
+                    </div>
+
+                    <div class="form">
+                        {{ form_label(form.email) }}
+                        {{ form_widget(form.email) }}
+                        {{ form_errors(form.email) }}
+                    </div>
+
+                    <div class="form">
+                        {{ form_label(form.telephone) }}
+                        {{ form_widget(form.telephone) }}
+                        {{ form_errors(form.telephone) }}
+                    </div>
+
+                    <div class="form">
+                        {{ form_label(form.moyenPaiement) }}
+                        <div class="radio-group">
+                            {{ form_widget(form.moyenPaiement) }}
+                        </div>
+                        {{ form_errors(form.moyenPaiement) }}
+                    </div>
+
+                    {# Le lien HelloAsso, caché par défaut #}
+                    {% if atelier.lienHelloAsso %}
+                        <div id="helloasso-link" {# style="display: none;" #}>
+                            <strong>Pour finaliser votre paiement par CB :</strong><br>
+                            Après validation du formulaire, vous serez redirigé vers HelloAsso pour effectuer le paiement.
+                        </div>
+                    {% endif %}
 
                     {# Case CGV #}
                     <div class="form-check">

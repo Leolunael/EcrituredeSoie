@@ -19,7 +19,13 @@
                     </div>
                     <div class="card-body">
                         <p><strong>Date :</strong> {{ inscription.atelier.dateAtelier|date('d/m/Y H:i') }}</p>
-                        <p><strong>Lieu :</strong> {{ inscription.atelier.lieu }}</p>
+                        {% if inscription.atelier.lieu or inscription.atelier.rue or inscription.atelier.ville %}
+                            <p>
+                                <strong>Lieu :</strong>{% if inscription.atelier.lieu %}{{ inscription.atelier.lieu }}{% endif %}
+                                                       {% if inscription.atelier.rue %} — {{ inscription.atelier.rue }}{% endif %}
+                                                       {% if inscription.atelier.ville %} — {{ inscription.atelier.ville }}{% endif %}
+                            </p>
+                        {% endif %}
                     </div>
                 </div>
 
