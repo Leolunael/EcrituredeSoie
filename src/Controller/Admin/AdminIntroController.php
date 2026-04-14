@@ -23,7 +23,6 @@ class AdminIntroController extends AbstractController
     {
         $intros = $introRepository->findAll();
 
-
         return $this->render('admin/intro.html.twig', [
             'intros' => $intros,
         ]);
@@ -66,7 +65,6 @@ class AdminIntroController extends AbstractController
             'form' => $form->createView(),
             'intro' => $intro,
         ]);
-
     }
 
     #[Route('/{id}/deleteImage', name: 'admin_intro_delete_image', methods: ['POST'])]
@@ -101,8 +99,20 @@ class AdminIntroController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $imageFile = $form->get('imageFile')->getData();
 
+            // Supprimer l'image si la case est cochée
+            if ($request->request->get('remove_image')) {
+                if ($intro->getImage()) {
+                    $oldImagePath = $this->getParameter('intros_images_directory') . '/' . $intro->getImage();
+                    if (file_exists($oldImagePath)) {
+                        unlink($oldImagePath);
+                    }
+                    $intro->setImage(null);
+                }
+            }
+
+            // Gérer le nouvel upload d'image
+            $imageFile = $form->get('imageFile')->getData();
             if ($imageFile) {
                 if ($intro->getImage()) {
                     $oldImagePath = $this->getParameter('intros_images_directory') . '/' . $intro->getImage();
@@ -157,5 +167,4 @@ class AdminIntroController extends AbstractController
 
         return $this->redirectToRoute('admin_intro');
     }
-
 }

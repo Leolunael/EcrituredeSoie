@@ -83,8 +83,20 @@ class AdminInformationController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $imageFile = $form->get('imageFile')->getData();
 
+            // Supprimer l'image si la case est cochée
+            if ($request->request->get('remove_image')) {
+                if ($information->getImage()) {
+                    $oldImagePath = $this->getParameter('informations_images_directory') . '/' . $information->getImage();
+                    if (file_exists($oldImagePath)) {
+                        unlink($oldImagePath);
+                    }
+                    $information->setImage(null);
+                }
+            }
+
+            // Gérer le nouvel upload d'image
+            $imageFile = $form->get('imageFile')->getData();
             if ($imageFile) {
                 if ($information->getImage()) {
                     $oldImagePath = $this->getParameter('informations_images_directory').'/'.$information->getImage();

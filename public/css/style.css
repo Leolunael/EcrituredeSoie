@@ -1266,9 +1266,11 @@ textarea {
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
-    text-align: left;
+    /*text-align: left;*/
     gap: 1rem;
 }
+
+
 
 .carousel-text h2,
 .carousel-text h3 {
@@ -1296,6 +1298,14 @@ textarea {
     display: block;
 }
 
+.carousel-content > div {
+    text-align: center;
+}
+
+.carousel-content > div .carousel-text {
+    text-align: left;
+}
+
 /* Pas d'image - texte centré */
 .carousel-content.no-image {
     justify-content: center;
@@ -1304,7 +1314,7 @@ textarea {
 
 .carousel-content.no-image .carousel-text {
     max-width: 50rem;
-    text-align: center;
+    text-align: left;
     flex: 1 1 100%;
 }
 

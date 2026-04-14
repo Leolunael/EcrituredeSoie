@@ -114,11 +114,22 @@ class AdminTexteController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $texte->setDateModification(new \DateTime());
-            $imageFile = $form->get('imageFile')->getData();
 
+            // Supprimer l'image si la case est cochée
+            if ($request->request->get('remove_image')) {
+                if ($texte->getImage()) {
+                    $oldImagePath = $this->getParameter('textes_images_directory') . '/' . $texte->getImage();
+                    if (file_exists($oldImagePath)) {
+                        unlink($oldImagePath);
+                    }
+                    $texte->setImage(null);
+                }
+            }
+
+            // Gérer le nouvel upload d'image
+            $imageFile = $form->get('imageFile')->getData();
             if ($imageFile) {
                 try {
-                    // Supprimer l'ancienne image si elle existe
                     if ($texte->getImage()) {
                         $oldImagePath = $this->getParameter('textes_images_directory') . '/' . $texte->getImage();
                         if (file_exists($oldImagePath)) {
@@ -126,13 +137,11 @@ class AdminTexteController extends AbstractController
                         }
                     }
 
-                    // Définir le répertoire de destination
                     $uploadDir = $this->getParameter('textes_images_directory');
                     if (!is_dir($uploadDir)) {
                         mkdir($uploadDir, 0777, true);
                     }
 
-                    // Configurer le service et redimensionner l'image
                     $imageResizer->setUploadDirectory($uploadDir);
                     $fileName = $imageResizer->resize($imageFile);
                     $texte->setImage($fileName);
@@ -171,6 +180,7 @@ class AdminTexteController extends AbstractController
             'texte' => $texte,
         ]);
     }
+
 
     #[Route('/{id}/supprimer', name: 'app_admin_texte_supprimer', methods: ['POST'])]
     public function supprimer(string $id, DocumentManager $dm): Response

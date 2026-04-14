@@ -20,10 +20,15 @@
             {{ form_row(form.imageFile) }}
             {% if intro.image %}
                 <div class="mt-2">
-                    <img src="{{ asset('uploads/informations/' ~ intro.image) }}"
+                    <small class="text-muted">Image actuelle :</small><br>
+                    <img src="{{ asset('uploads/intros/' ~ intro.image) }}"
                          alt="Image actuelle"
-                         style="max-width: 200px;">
-                    <p class="text-muted">Image actuelle</p>
+                         style="max-width: 200px; max-height: 200px;"
+                         class="img-thumbnail">
+                </div>
+                <div class="mt-2 form-check">
+                    <input type="checkbox" class="form-check-input" id="removeImage" name="remove_image" value="1">
+                    <label class="form-check-label text-danger" for="removeImage">Supprimer l'image</label>
                 </div>
             {% endif %}
         </div>
