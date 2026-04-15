@@ -38,8 +38,11 @@ class Vollon
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $lieu = null;
 
-    #[ORM\Column(length: 500, nullable: true)]
-    private ?string $adresse = null;
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $rue = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $ville = null;
 
     #[ORM\Column(type: 'boolean', options: ['default' => false])]
     private bool $isArchive = false;
@@ -160,14 +163,25 @@ class Vollon
         return $this;
     }
 
-    public function getAdresse(): ?string
+    public function getRue(): ?string
     {
-        return $this->adresse;
+        return $this->rue;
     }
 
-    public function setAdresse(?string $adresse): self
+    public function setRue(?string $rue): self
     {
-        $this->adresse = $adresse;
+        $this->rue = $rue;
+        return $this;
+    }
+
+    public function getVille(): ?string
+    {
+        return $this->ville;
+    }
+
+    public function setVille(?string $ville): self
+    {
+        $this->ville = $ville;
         return $this;
     }
 

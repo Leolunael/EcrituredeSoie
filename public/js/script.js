@@ -867,3 +867,23 @@ function setupBulkActions(selectAllClass, checkboxClass, bulkActionsId, countId,
 
 setupBulkActions('select-all-attente', 'cb-attente', 'bulk-actions-attente', 'count-attente', 'btn-delete-attente', 'form-attente');
 setupBulkActions('select-all-valides', 'cb-valides', 'bulk-actions-valides', 'count-valides', 'btn-delete-valides', 'form-valides');
+
+
+// ========== MODAL VALIDATION AVIS ==========
+document.addEventListener('DOMContentLoaded', function () {
+    const modalAvis = document.getElementById('modalAvis');
+    if (!modalAvis) return;
+
+    // On écoute le clic sur les boutons "Valider" pour mémoriser les données
+    document.querySelectorAll('[data-bs-target="#modalAvis"]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            document.getElementById('modal-nom').textContent = this.dataset.nom || '';
+            document.getElementById('modal-commentaire').textContent = this.dataset.commentaire || '';
+            const note = parseInt(this.dataset.note) || 0;
+            document.getElementById('modal-note').textContent = '🍓'.repeat(note);
+            const form = document.getElementById('modal-form-valider');
+            form.action = this.dataset.action;
+            document.getElementById('modal-token').value = this.dataset.token;
+        });
+    });
+});

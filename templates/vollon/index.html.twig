@@ -24,15 +24,22 @@
             <div class="card-body">
                 {% if vollon.dateVollon %}
                     <p>
-                        📅 <strong>Date :</strong> {{ vollon.dateAtelier|date('d/m/Y') }}
+                        📅 <strong>Date :</strong> {{ vollon.dateVollon|date('d/m/Y') }}
                         De {{ vollon.heureDebut ? vollon.heureDebut|date('H\\hi') : 'NULL' }}
                         à {{ vollon.heureFin ? vollon.heureFin|date('H\\hi') : 'NULL' }}
                     </p>
                 {% endif %}
 
 
-                {% if vollon.lieu %}
-                    <p style="margin-bottom: 0.75rem;">📍 <strong>Lieu :</strong> {{ vollon.lieu }}</p>
+                {% if vollon.lieu or vollon.rue or vollon.ville %}
+                    <p class="lieu-adresse">
+                        <span class="lieu-label">📍 <strong>Lieu :</strong></span>
+                        <span>
+                            {% if vollon.lieu %}{{ vollon.lieu }}{% endif %}
+                            {% if vollon.rue %}<br>{{ vollon.rue }}{% endif %}
+                            {% if vollon.ville %}<br>{{ vollon.ville }}{% endif %}
+                        </span>
+                    </p>
                 {% endif %}
 
                 {% if vollon.prix %}
@@ -100,7 +107,7 @@
                     </div>
 
                     {# Le lien HelloAsso, caché par défaut #}
-                    {% if atelier.lienHelloAsso %}
+                    {% if vollon.lienHelloAsso %}
                         <div id="helloasso-link" {# style="display: none;" #}>
                             <strong>Pour finaliser votre paiement par CB :</strong><br>
                             Après validation du formulaire, vous serez redirigé vers HelloAsso pour effectuer le paiement.

@@ -31,12 +31,15 @@
                 {% endif %}
 
 
-                {% if vollon.lieu %}
-                    <p style="margin-bottom: 0.75rem;">📍 <strong>Lieu :</strong> {{ vollon.lieu }}</p>
-                {% endif %}
-
-                {% if vollon.prix %}
-                    <p>💶 <strong>Prix :</strong> {{ vollon.prix }} €</p>
+                {% if vollon.lieu or vollon.rue or vollon.ville %}
+                    <p class="lieu-adresse">
+                        <span class="lieu-label">📍 <strong>Lieu :</strong></span>
+                        <span>
+                            {% if vollon.lieu %}{{ vollon.lieu }}{% endif %}
+                            {% if vollon.rue %}<br>{{ vollon.rue }}{% endif %}
+                            {% if vollon.ville %}<br>{{ vollon.ville }}{% endif %}
+                        </span>
+                    </p>
                 {% endif %}
 
                 <br>

@@ -71,17 +71,21 @@
                                         <span class="text-muted fst-italic">Non renseigné</span>
                                     {% endif %}
                                 </td>
-                                <td><span class="text-warning">{% for i in 1..avi.note %}✏️{% endfor %}</span></td>
+                                <td><span class="text-warning">{% for i in 1..avi.note %}🍓{% endfor %}</span></td>
                                 <td>{{ avi.commentaire|length > 80 ? avi.commentaire|slice(0, 80) ~ '...' : avi.commentaire }}</td>
                                 <td>{{ avi.dateCreation|date('d/m/Y H:i') }}</td>
                                 <td>
                                     {# CORRECTION : plus de <form> imbriqué — on utilise des boutons data-* #}
                                     <button type="button"
-                                            class="btn btn-sm btn-success btn-action-avis"
+                                            class="btn btn-sm btn-success"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#modalAvis"
+                                            data-nom="{{ avi.nom }}"
+                                            data-note="{{ avi.note }}"
+                                            data-commentaire="{{ avi.commentaire|e('html_attr') }}"
                                             data-action="{{ path('admin_avis_valider', {id: avi.id}) }}"
-                                            data-token="{{ csrf_token('valider_' ~ avi.id) }}"
-                                            data-confirm="Valider cet avis ?">
-                                        <i class="bi bi-check-circle"></i> Valider
+                                            data-token="{{ csrf_token('valider_' ~ avi.id) }}">
+                                        <i class="bi bi-eye"></i> Valider
                                     </button>
                                     <button type="button"
                                             class="btn btn-sm btn-danger btn-action-avis"
@@ -99,6 +103,33 @@
             </div>
         </div>
     {% endif %}
+
+    {# MODALE DE PRÉVISUALISATION #}
+    <div class="modal fade" id="modalAvis" tabindex="-1" aria-labelledby="modalAvisLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-warning">
+                    <h5 class="modal-title" id="modalAvisLabel">Lire l&#39;avis avant validation</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p><strong>Auteur :</strong> <span id="modal-nom"></span></p>
+                    <p><strong>Note :</strong> <span id="modal-note"></span></p>
+                    <hr>
+                    <p id="modal-commentaire" class="fs-5"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                    <form id="modal-form-valider" method="post">
+                        <input type="hidden" name="_token" id="modal-token">
+                        <button type="submit" class="btn btn-success">
+                            <i class="bi bi-check-circle"></i> Confirmer la validation
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
     {# AVIS VALIDÉS #}
     {% set avisValides = avis|filter(a => a.approuve) %}
@@ -147,7 +178,7 @@
                                     <span class="text-muted fst-italic">Non renseigné</span>
                                 {% endif %}
                             </td>
-                            <td><span class="text-warning">{% for i in 1..avi.note %}✏️{% endfor %}</span></td>
+                            <td><span class="text-warning">{% for i in 1..avi.note %}🍓{% endfor %}</span></td>
                             <td>{{ avi.commentaire|length > 80 ? avi.commentaire|slice(0, 80) ~ '...' : avi.commentaire }}</td>
                             <td>{{ avi.dateCreation|date('d/m/Y H:i') }}</td>
                             <td>

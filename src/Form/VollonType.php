@@ -61,6 +61,16 @@ class VollonType extends AbstractType
                 'attr' => ['class' => 'form-control', 'placeholder' => 'Ex: Café des Arts, 12 rue de la Paix'],
                 'required' => false
             ])
+            ->add('rue', TextType::class, [
+                'label' => 'rue',
+                'attr' => ['class' => 'form-control', 'placeholder' => 'Ex: Café des Arts, 12 rue de la Paix'],
+                'required' => false
+            ])
+            ->add('ville', TextType::class, [
+                'label' => 'ville',
+                'attr' => ['class' => 'form-control', 'placeholder' => 'Ex: Café des Arts, 12 rue de la Paix'],
+                'required' => false
+            ])
             ->add('description', TextareaType::class, [
                 'label' => 'Description',
                 'attr' => [

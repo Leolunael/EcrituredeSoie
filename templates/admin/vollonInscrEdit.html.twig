@@ -18,8 +18,14 @@
                         <h5 class="mb-0">Atelier : {{ inscription.vollon.titre }}</h5>
                     </div>
                     <div class="card-body">
-                        <p><strong>Date :</strong> {{ inscription.vollon.dateVollon|date('d/m/Y H:i') }}</p>
-                        <p><strong>Lieu :</strong> {{ inscription.vollon.lieu }}</p>
+                        <p><strong>Date :</strong> {{ inscription.vollon.datevollon|date('d/m/Y H:i') }}</p>
+                        {% if inscription.vollon.lieu or inscription.vollon.rue or inscription.vollon.ville %}
+                            <p>
+                                <strong>Lieu :</strong>{% if inscription.vollon.lieu %}{{ inscription.vollon.lieu }}{% endif %}
+                                {% if inscription.vollon.rue %} — {{ inscription.vollon.rue }}{% endif %}
+                                {% if inscription.vollon.ville %} — {{ inscription.vollon.ville }}{% endif %}
+                            </p>
+                        {% endif %}
                     </div>
                 </div>
 
