@@ -24,7 +24,7 @@ class AteliersController extends AbstractController
 {
     // ==================== PAGE D'ACCUEIL (TOUT) ====================
 
-    #[Route('/inscription', name: 'app_ateliers')]
+    #[Route('/inscriptions', name: 'app_ateliers')]
     public function list(
         AtelierRepository $atelierRepo,
         VisioRepository $visioRepo,
@@ -60,7 +60,7 @@ class AteliersController extends AbstractController
 
     // ==================== ATELIERS ====================
 
-    #[Route('/inscription/{id}', name: 'app_atelier_show', requirements: ['id' => '\d+'])]
+    #[Route('/inscriptions/{id}', name: 'app_atelier_show', requirements: ['id' => '\d+'])]
     public function show(
         int $id,
         Request $request,
