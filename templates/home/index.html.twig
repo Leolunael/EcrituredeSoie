@@ -1,10 +1,10 @@
 {% extends 'base.html.twig' %}
 
     {# ===== SEO : Title ===== #}
-<title>{% block title %}Écriture de Soie - Ateliers d'écriture à Lyon{% endblock %}</title>
+{% block title %}Écriture de Soie - Ateliers d'écriture à Lyon{% endblock %}
 
 {# ===== SEO : Meta description (à surcharger dans chaque page) ===== #}
-<meta name="description" content="{% block meta_description %}Écriture de Soie, association d'ateliers d'écriture créative à Lyon. Rejoignez nos groupes, partagez vos textes et développez votre écriture.{% endblock %}">
+{% block meta_description %}Écriture de Soie est une association d'ateliers d'écriture créative à Lyon. Rejoignez nos groupes d'écriture, découvrez les textes de nos membres.{% endblock %}
 
 {# ===== SEO : URL canonique (évite les pages en double) ===== #}
 <link rel="canonical" href="{% block canonical %}{{ app.request.schemeAndHttpHost }}{{ app.request.pathInfo }}{% endblock %}">
