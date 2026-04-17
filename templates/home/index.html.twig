@@ -1,6 +1,42 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Ecriture de Soie{% endblock %}
+    {# ===== SEO : Title ===== #}
+<title>{% block title %}Écriture de Soie - Ateliers d'écriture à Lyon{% endblock %}</title>
+
+{# ===== SEO : Meta description (à surcharger dans chaque page) ===== #}
+<meta name="description" content="{% block meta_description %}Écriture de Soie, association d'ateliers d'écriture créative à Lyon. Rejoignez nos groupes, partagez vos textes et développez votre écriture.{% endblock %}">
+
+{# ===== SEO : URL canonique (évite les pages en double) ===== #}
+<link rel="canonical" href="{% block canonical %}{{ app.request.schemeAndHttpHost }}{{ app.request.pathInfo }}{% endblock %}">
+
+{# ===== SEO : Données structurées Schema.org (organisation locale) ===== #}
+    {% block schema_org %}
+        <script type="application/ld+json">
+            {
+                "@context": "https://schema.org",
+                "@type": "Association",
+                "name": "Écriture de Soie",
+                "description": "Association d'ateliers d'écriture créative à Lyon",
+                "url": "https://www.ecrituredesoie.fr",
+                "address": {
+                    "@type": "PostalAddress",
+                    "addressLocality": "Lyon",
+                    "addressCountry": "FR"
+                },
+                "knowsAbout": [
+                    "Ateliers d'écriture créative",
+                    "Écriture littéraire",
+                    "Écriture poétique",
+                    "Ateliers d'écriture à Lyon",
+                    "Association Lyon",
+                    "Kamon Shoten"
+                ],
+                "slogan": "Ici, on écrit autrement",
+                "keywords": "ateliers écriture Lyon, écriture créative, association écriture Lyon, Kamon Shoten, Ateliers d'écriture créative, Association Lyon"
+            }
+        </script>
+    {% endblock %}
+
 
 {% block stylesheets %}
     {{ parent() }}
@@ -8,6 +44,9 @@
 {% endblock %}
 
 {% block body %}
+
+    {# ===== SEO : H1 visible par Google (peut être stylisé en CSS pour qu'il s'intègre visuellement) ===== #}
+    <h1>Ateliers d'écriture à Lyon</h1>
 
         {# Card mise en avant fixe #}
     {% for key, intro in intros %}
