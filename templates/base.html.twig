@@ -1,31 +1,66 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="google-site-verification" content="_I8dJ87veqpUrF8JsJO9zOy-Xplyf6BJjrywekmsTnQ" />
-        <meta name="msvalidate.01" content="7F9FFEB0540513CD87508F7F660EFEF8" />
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="_I8dJ87veqpUrF8JsJO9zOy-Xplyf6BJjrywekmsTnQ" />
+    <meta name="msvalidate.01" content="7F9FFEB0540513CD87508F7F660EFEF8" />
 
-        <title>{% block title %}Écriture de Soie{% endblock %}</title>
+    {# ===== SEO : Title ===== #}
+    <title>{% block title %}Écriture de Soie - Ateliers d'écriture à Lyon{% endblock %}</title>
 
-        {% block stylesheets %}
+    {# ===== SEO : Meta description (à surcharger dans chaque page) ===== #}
+    <meta name="description" content="{% block meta_description %}Écriture de Soie, association d'ateliers d'écriture créative à Lyon. Rejoignez nos groupes, partagez vos textes et développez votre écriture.{% endblock %}">
+
+    {# ===== SEO : URL canonique (évite les pages en double) ===== #}
+    <link rel="canonical" href="{% block canonical %}{{ app.request.schemeAndHttpHost }}{{ app.request.pathInfo }}{% endblock %}">
+
+    {# ===== SEO : Données structurées Schema.org (organisation locale) ===== #}
+    {% block schema_org %}
+        <script type="application/ld+json">
+            {
+                "@context": "https://schema.org",
+                "@type": "Association",
+                "name": "Écriture de Soie",
+                "description": "Association d'ateliers d'écriture créative à Lyon",
+                "url": "https://www.ecrituredesoie.fr",
+                "address": {
+                    "@type": "PostalAddress",
+                    "addressLocality": "Lyon",
+                    "addressCountry": "FR"
+                },
+                "knowsAbout": [
+                    "Ateliers d'écriture créative",
+                    "Écriture littéraire",
+                    "Écriture poétique",
+                    "Ateliers d'écriture à Lyon",
+                    "Association Lyon",
+                    "Kamon Shoten"
+                ],
+                "slogan": "Ici, on écrit autrement",
+                "keywords": "ateliers écriture Lyon, écriture créative, association écriture Lyon, Kamon Shoten, Ateliers d'écriture créative, Association Lyon"
+            }
+        </script>
+    {% endblock %}
+
+    {% block stylesheets %}
         <link rel="stylesheet" href="{{ asset('css/style.css') }}">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    {% endblock %}
+
+    {% block javascript %}
+    <script src="{{ asset('js/script.js') }}" defer></script>
         {% endblock %}
 
-        {% block javascript %}
-        <script src="{{ asset('js/script.js') }}" defer></script>
-        {% endblock %}
+</head>
+<body>
+{% include 'partial/navbar.html.twig' %}
 
-    </head>
-    <body>
-        {% include 'partial/navbar.html.twig' %}
+<main class="container">
+    {% block body %}{% endblock %}
+</main>
 
-        <main class="container">
-            {% block body %}{% endblock %}
-        </main>
+{% include 'partial/footer.html.twig' %}
 
-        {% include 'partial/footer.html.twig' %}
-
-    </body>
+</body>
 </html>
