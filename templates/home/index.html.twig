@@ -7,7 +7,7 @@
 {% block meta_description %}Écriture de Soie est une association d'ateliers d'écriture créative à Lyon. Rejoignez nos groupes d'écriture, découvrez les textes de nos membres.{% endblock %}
 
 {# ===== SEO : URL canonique (évite les pages en double) ===== #}
-<link rel="canonical" href="{% block canonical %}{{ app.request.schemeAndHttpHost }}{{ app.request.pathInfo }}{% endblock %}">
+{% block canonical %}{{ app.request.schemeAndHttpHost }}{{ app.request.pathInfo }}{% endblock %}"
 
 {# ===== SEO : Données structurées Schema.org (organisation locale) ===== #}
     {% block schema_org %}
