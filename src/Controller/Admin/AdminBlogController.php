@@ -229,15 +229,41 @@ class AdminBlogController extends AbstractController
     #[Route('/commentaires', name: 'app_admin_blogCommentaires')]
     public function commentaires(DocumentManager $dm): Response
     {
-        $commentaires = $dm->getRepository(BlogCommentaire::class)
+        return $this->redirectToRoute('admin_blog');
+    }
+
+    #[Route('/{id}/commentaires', name: 'app_admin_blogCommentaires_blog')]
+    public function commentairesParBlog(string $id, DocumentManager $dm): Response
+    {
+        $blog = $dm->getRepository(Blog::class)->find($id);
+
+        if (!$blog) {
+            throw $this->createNotFoundException("Cet article n'existe pas.");
+        }
+
+        $tousCommentaires = $dm->getRepository(BlogCommentaire::class)
             ->createQueryBuilder()
-            ->sort('dateCreation', 'DESC')
+            ->field('blogId')->equals($id)
+            ->sort('dateCreation', 'ASC')
             ->getQuery()
-            ->execute();
+            ->execute()
+            ->toArray();
+
+        $commentairesPrincipaux = [];
+        $reponses = [];
+        foreach ($tousCommentaires as $c) {
+            if ($c->isReponse()) {
+                $reponses[$c->getCommentaireParentId()][] = $c;
+            } else {
+                $commentairesPrincipaux[] = $c;
+            }
+        }
 
         return $this->render('admin/blogCom.html.twig', [
-            'commentaires' => $commentaires,
-            'blog' => null,
+            'blog' => $blog,
+            'commentairesPrincipaux' => $commentairesPrincipaux,
+            'reponses' => $reponses,
+            'tousCommentaires' => $tousCommentaires,
         ]);
     }
 
@@ -248,7 +274,7 @@ class AdminBlogController extends AbstractController
             throw $this->createAccessDeniedException('Token CSRF invalide.');
         }
 
-        $commentaire->setApprouve(!$commentaire->isApprouve()); // toggle
+        $commentaire->setApprouve(!$commentaire->isApprouve());
         $dm->flush();
 
         $message = $commentaire->isApprouve()
@@ -257,13 +283,15 @@ class AdminBlogController extends AbstractController
 
         $this->addFlash('success', $message);
 
-        return $this->redirectToRoute('app_admin_blogCommentaires');
+        $blogId = $commentaire->getBlogId();
+        return $this->redirectToRoute('app_admin_blogCommentaires_blog', ['id' => $blogId]);
     }
 
     #[Route('/commentaires/{id}/supprimer', name: 'app_admin_blogCommentaire_supprimer', methods: ['POST'])]
     public function supprimerCommentaire(string $id, DocumentManager $dm): Response
     {
         $commentaire = $dm->getRepository(BlogCommentaire::class)->find($id);
+        $blogId = $commentaire?->getBlogId();
 
         if ($commentaire) {
             if (!$commentaire->isReponse()) {
@@ -283,6 +311,6 @@ class AdminBlogController extends AbstractController
             $this->addFlash('success', 'Le commentaire a été supprimé avec succès !');
         }
 
-        return $this->redirectToRoute('app_admin_blogCommentaires');
+        return $this->redirectToRoute('app_admin_blogCommentaires_blog', ['id' => $blogId]);
     }
 }

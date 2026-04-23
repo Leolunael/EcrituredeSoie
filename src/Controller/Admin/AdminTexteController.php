@@ -233,15 +233,44 @@ class AdminTexteController extends AbstractController
     #[Route('/commentaires', name: 'app_admin_commentaires')]
     public function commentaires(DocumentManager $dm): Response
     {
-        $commentaires = $dm->getRepository(Commentaire::class)
+        // Redirige vers la liste des textes si on arrive sans ID
+        return $this->redirectToRoute('admin_texte');
+    }
+
+    #[Route('/{id}/commentaires', name: 'app_admin_commentaires_texte')]
+    public function commentairesParTexte(string $id, DocumentManager $dm): Response
+    {
+        $texte = $dm->getRepository(Texte::class)->find($id);
+
+        if (!$texte) {
+            throw $this->createNotFoundException('Ce texte n\'existe pas.');
+        }
+
+        // Récupérer tous les commentaires du texte (principaux + réponses)
+        $tousCommentaires = $dm->getRepository(Commentaire::class)
             ->createQueryBuilder()
-            ->sort('dateCreation', 'DESC')
+            ->field('texteId')->equals($id)
+            ->sort('dateCreation', 'ASC')
             ->getQuery()
-            ->execute();
+            ->execute()
+            ->toArray();
+
+        // Séparer commentaires principaux et réponses
+        $commentairesPrincipaux = [];
+        $reponses = [];
+        foreach ($tousCommentaires as $c) {
+            if ($c->isReponse()) {
+                $reponses[$c->getCommentaireParentId()][] = $c;
+            } else {
+                $commentairesPrincipaux[] = $c;
+            }
+        }
 
         return $this->render('admin/textCommentaire.html.twig', [
-            'commentaires' => $commentaires,
-            'texte' => null,
+            'texte' => $texte,
+            'commentairesPrincipaux' => $commentairesPrincipaux,
+            'reponses' => $reponses,
+            'tousCommentaires' => $tousCommentaires,
         ]);
     }
 
@@ -261,13 +290,15 @@ class AdminTexteController extends AbstractController
 
         $this->addFlash('success', $message);
 
-        return $this->redirectToRoute('app_admin_commentaires');
+        $texteId = $commentaire->getTexteId();
+        return $this->redirectToRoute('app_admin_commentaires_texte', ['id' => $texteId]);
     }
 
     #[Route('/commentaires/{id}/supprimer', name: 'app_admin_commentaire_supprimer', methods: ['POST'])]
     public function supprimerCommentaire(string $id, DocumentManager $dm): Response
     {
         $commentaire = $dm->getRepository(Commentaire::class)->find($id);
+        $texteId = $commentaire?->getTexteId();
 
         if ($commentaire) {
             if (!$commentaire->isReponse()) {
@@ -287,6 +318,8 @@ class AdminTexteController extends AbstractController
             $this->addFlash('success', 'Le commentaire a été supprimé avec succès !');
         }
 
-        return $this->redirectToRoute('app_admin_commentaires');
+        return $this->redirectToRoute('app_admin_commentaires_texte', ['id' => $texteId]);
     }
 }
+
+
