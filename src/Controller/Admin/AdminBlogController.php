@@ -26,8 +26,25 @@ class AdminBlogController extends AbstractController
             ->getQuery()
             ->execute();
 
+        // Récupérer tous les commentaires non approuvés en une seule requête
+        $commentairesEnAttente = $dm->getRepository(BlogCommentaire::class)
+            ->createQueryBuilder()
+            ->field('approuve')->equals(false)
+            ->getQuery()
+            ->execute();
+
+        // Indexer par blogId => nombre de commentaires en attente
+        $nbEnAttenteParBlog = [];
+        foreach ($commentairesEnAttente as $commentaire) {
+            $bid = $commentaire->getBlogId();
+            if ($bid) {
+                $nbEnAttenteParBlog[$bid] = ($nbEnAttenteParBlog[$bid] ?? 0) + 1;
+            }
+        }
+
         return $this->render('admin/blog.html.twig', [
-            'blogs' => $blogs,
+            'blogs'            => $blogs,
+            'nbEnAttenteParBlog' => $nbEnAttenteParBlog,
         ]);
     }
 
@@ -39,23 +56,16 @@ class AdminBlogController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Gérer l'upload de l'image avec redimensionnement
             $imageFile = $form->get('imageFile')->getData();
             if ($imageFile) {
                 try {
-                    // Définir le répertoire de destination
                     $uploadDir = $this->getParameter('blogs_images_directory');
                     if (!is_dir($uploadDir)) {
                         mkdir($uploadDir, 0777, true);
                     }
-
-                    // Configurer le service avec le bon répertoire
                     $imageResizer->setUploadDirectory($uploadDir);
-
-                    // Redimensionner et sauvegarder l'image (max 720x1280)
                     $fileName = $imageResizer->resize($imageFile);
                     $blog->setImage($fileName);
-
                 } catch (\Exception $e) {
                     $this->addFlash('error', 'Erreur lors du traitement de l\'image : ' . $e->getMessage());
                     return $this->render('admin/blogForm.html.twig', [
@@ -65,7 +75,6 @@ class AdminBlogController extends AbstractController
                 }
             }
 
-            // Si on met ce blog à la une, retirer les autres
             if ($blog->isALaUne()) {
                 $blogsALaUne = $dm->getRepository(Blog::class)
                     ->createQueryBuilder()
@@ -112,7 +121,6 @@ class AdminBlogController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $blog->setDateModification(new \DateTime());
 
-            // Supprimer l'image si la case est cochée
             if ($request->request->get('remove_image')) {
                 if ($blog->getImage()) {
                     $oldImagePath = $this->getParameter('blogs_images_directory') . '/' . $blog->getImage();
@@ -123,7 +131,6 @@ class AdminBlogController extends AbstractController
                 }
             }
 
-            // Gérer le nouvel upload d'image
             $imageFile = $form->get('imageFile')->getData();
             if ($imageFile) {
                 try {
@@ -133,28 +140,24 @@ class AdminBlogController extends AbstractController
                             unlink($oldImagePath);
                         }
                     }
-
                     $uploadDir = $this->getParameter('blogs_images_directory');
                     if (!is_dir($uploadDir)) {
                         mkdir($uploadDir, 0777, true);
                     }
-
                     $imageResizer->setUploadDirectory($uploadDir);
                     $fileName = $imageResizer->resize($imageFile);
                     $blog->setImage($fileName);
-
                 } catch (\Exception $e) {
                     $this->addFlash('error', 'Erreur lors du traitement de l\'image : ' . $e->getMessage());
-                    return $this->render('admin/textForm.html.twig', [
+                    return $this->render('admin/blogForm.html.twig', [
                         'form' => $form->createView(),
                         'blog' => $blog,
                     ]);
                 }
             }
 
-            // Si on met ce texte à la une, retirer les autres
             if ($blog->isALaUne()) {
-                $autresBlogs = $dm->getRepository(blog::class)
+                $autresBlogs = $dm->getRepository(Blog::class)
                     ->createQueryBuilder()
                     ->field('aLaUne')->equals(true)
                     ->field('id')->notEqual($id)
@@ -168,7 +171,7 @@ class AdminBlogController extends AbstractController
 
             $dm->flush();
 
-            $this->addFlash('success', 'Le texte a été modifié avec succès !');
+            $this->addFlash('success', 'La note a été modifiée avec succès !');
             return $this->redirectToRoute('admin_blog');
         }
 
@@ -184,7 +187,6 @@ class AdminBlogController extends AbstractController
         $blog = $dm->getRepository(Blog::class)->find($id);
 
         if ($blog) {
-            // Supprimer l'image associée si elle existe
             if ($blog->getImage()) {
                 $imagePath = $this->getParameter('blogs_images_directory').'/'.$blog->getImage();
                 if (file_exists($imagePath)) {
@@ -260,10 +262,10 @@ class AdminBlogController extends AbstractController
         }
 
         return $this->render('admin/blogCom.html.twig', [
-            'blog' => $blog,
+            'blog'                   => $blog,
             'commentairesPrincipaux' => $commentairesPrincipaux,
-            'reponses' => $reponses,
-            'tousCommentaires' => $tousCommentaires,
+            'reponses'               => $reponses,
+            'tousCommentaires'       => $tousCommentaires,
         ]);
     }
 

@@ -26,8 +26,25 @@ class AdminTexteController extends AbstractController
             ->getQuery()
             ->execute();
 
+        // Récupérer tous les commentaires non approuvés en une seule requête
+        $commentairesEnAttente = $dm->getRepository(Commentaire::class)
+            ->createQueryBuilder()
+            ->field('approuve')->equals(false)
+            ->getQuery()
+            ->execute();
+
+        // Indexer par texteId => nombre de commentaires en attente
+        $nbEnAttenteParTexte = [];
+        foreach ($commentairesEnAttente as $commentaire) {
+            $tid = $commentaire->getTexteId();
+            if ($tid) {
+                $nbEnAttenteParTexte[$tid] = ($nbEnAttenteParTexte[$tid] ?? 0) + 1;
+            }
+        }
+
         return $this->render('admin/texte.html.twig', [
-            'textes' => $textes,
+            'textes'              => $textes,
+            'nbEnAttenteParTexte' => $nbEnAttenteParTexte,
         ]);
     }
 
@@ -39,23 +56,16 @@ class AdminTexteController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Gérer l'upload de l'image avec redimensionnement
             $imageFile = $form->get('imageFile')->getData();
             if ($imageFile) {
                 try {
-                    // Définir le répertoire de destination
                     $uploadDir = $this->getParameter('textes_images_directory');
                     if (!is_dir($uploadDir)) {
                         mkdir($uploadDir, 0777, true);
                     }
-
-                    // Configurer le service avec le bon répertoire
                     $imageResizer->setUploadDirectory($uploadDir);
-
-                    // Redimensionner et sauvegarder l'image (max 720x1280)
                     $fileName = $imageResizer->resize($imageFile);
                     $texte->setImage($fileName);
-
                 } catch (\Exception $e) {
                     $this->addFlash('error', 'Erreur lors du traitement de l\'image : ' . $e->getMessage());
                     return $this->render('admin/textForm.html.twig', [
@@ -65,7 +75,6 @@ class AdminTexteController extends AbstractController
                 }
             }
 
-            // Si on met ce texte à la une, retirer les autres
             if ($texte->isALaUne()) {
                 $textesALaUne = $dm->getRepository(Texte::class)
                     ->createQueryBuilder()
@@ -83,9 +92,6 @@ class AdminTexteController extends AbstractController
                     }
                 }
             }
-//            $contenu = $texte->getContenu();
-//            $protection = "\n\nÂ© Tous droits rÃ©servÃ©s. Ce texte est protÃ©gÃ© par le droit d'auteur.";
-//            $texte->setContenu($contenu . $auteur . $protection);
 
             $dm->persist($texte);
             $dm->flush();
@@ -115,7 +121,6 @@ class AdminTexteController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $texte->setDateModification(new \DateTime());
 
-            // Supprimer l'image si la case est cochée
             if ($request->request->get('remove_image')) {
                 if ($texte->getImage()) {
                     $oldImagePath = $this->getParameter('textes_images_directory') . '/' . $texte->getImage();
@@ -126,7 +131,6 @@ class AdminTexteController extends AbstractController
                 }
             }
 
-            // Gérer le nouvel upload d'image
             $imageFile = $form->get('imageFile')->getData();
             if ($imageFile) {
                 try {
@@ -136,16 +140,13 @@ class AdminTexteController extends AbstractController
                             unlink($oldImagePath);
                         }
                     }
-
                     $uploadDir = $this->getParameter('textes_images_directory');
                     if (!is_dir($uploadDir)) {
                         mkdir($uploadDir, 0777, true);
                     }
-
                     $imageResizer->setUploadDirectory($uploadDir);
                     $fileName = $imageResizer->resize($imageFile);
                     $texte->setImage($fileName);
-
                 } catch (\Exception $e) {
                     $this->addFlash('error', 'Erreur lors du traitement de l\'image : ' . $e->getMessage());
                     return $this->render('admin/textForm.html.twig', [
@@ -155,7 +156,6 @@ class AdminTexteController extends AbstractController
                 }
             }
 
-            // Si on met ce texte à la une, retirer les autres
             if ($texte->isALaUne()) {
                 $autresTextes = $dm->getRepository(Texte::class)
                     ->createQueryBuilder()
@@ -181,14 +181,12 @@ class AdminTexteController extends AbstractController
         ]);
     }
 
-
     #[Route('/{id}/supprimer', name: 'app_admin_texte_supprimer', methods: ['POST'])]
     public function supprimer(string $id, DocumentManager $dm): Response
     {
         $texte = $dm->getRepository(Texte::class)->find($id);
 
         if ($texte) {
-            // Supprimer l'image associée si elle existe
             if ($texte->getImage()) {
                 $imagePath = $this->getParameter('textes_images_directory').'/'.$texte->getImage();
                 if (file_exists($imagePath)) {
@@ -233,7 +231,6 @@ class AdminTexteController extends AbstractController
     #[Route('/commentaires', name: 'app_admin_commentaires')]
     public function commentaires(DocumentManager $dm): Response
     {
-        // Redirige vers la liste des textes si on arrive sans ID
         return $this->redirectToRoute('admin_texte');
     }
 
@@ -246,7 +243,6 @@ class AdminTexteController extends AbstractController
             throw $this->createNotFoundException('Ce texte n\'existe pas.');
         }
 
-        // Récupérer tous les commentaires du texte (principaux + réponses)
         $tousCommentaires = $dm->getRepository(Commentaire::class)
             ->createQueryBuilder()
             ->field('texteId')->equals($id)
@@ -255,7 +251,6 @@ class AdminTexteController extends AbstractController
             ->execute()
             ->toArray();
 
-        // Séparer commentaires principaux et réponses
         $commentairesPrincipaux = [];
         $reponses = [];
         foreach ($tousCommentaires as $c) {
@@ -267,10 +262,10 @@ class AdminTexteController extends AbstractController
         }
 
         return $this->render('admin/textCommentaire.html.twig', [
-            'texte' => $texte,
+            'texte'                  => $texte,
             'commentairesPrincipaux' => $commentairesPrincipaux,
-            'reponses' => $reponses,
-            'tousCommentaires' => $tousCommentaires,
+            'reponses'               => $reponses,
+            'tousCommentaires'       => $tousCommentaires,
         ]);
     }
 
@@ -321,5 +316,3 @@ class AdminTexteController extends AbstractController
         return $this->redirectToRoute('app_admin_commentaires_texte', ['id' => $texteId]);
     }
 }
-
-

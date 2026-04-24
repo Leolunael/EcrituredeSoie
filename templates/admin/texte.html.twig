@@ -5,11 +5,8 @@
 {% block body %}
     <div class="container mt-4">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            {#  <a href="{{ path('admin_index') }}" class="btn btn-secondary">
-                <i class="fas fa-arrow-left"></i> Retour au Dashboard
-            </a>#}
             <h1>Gestion des textes</h1>
-            <div style="width: 180px;"></div> {# Espaceur pour centrer le titre #}
+            <div style="width: 180px;"></div>
             <a href="{{ path('admin_index') }}" class="btn btn-secondary">
                 <i class="bi bi-arrow-left"></i> Tableau de bord principal
             </a>
@@ -37,8 +34,17 @@
                     </thead>
                     <tbody>
                     {% for texte in textes %}
-                        <tr>
-                            <td style="padding-right: 50px;">{{ texte.titre }}</td>
+                        {% set nbEnAttente = nbEnAttenteParTexte[texte.id] ?? 0 %}
+
+                        <tr class="{{ nbEnAttente > 0 ? 'table-warning' : '' }}">
+                            <td style="padding-right: 50px;">
+                                {{ texte.titre }}
+                                {% if nbEnAttente > 0 %}
+                                    <span class="badge bg-danger ms-1" title="Commentaire(s) en attente de validation">
+                                        {{ nbEnAttente }} 💬
+                                    </span>
+                                {% endif %}
+                            </td>
                             <td style="padding-right: 50px;">{{ texte.dateCreation|date('d/m/Y H:i') }}</td>
                             <td style="padding-right: 50px;">
                                 {% if texte.dateModification %}
@@ -55,8 +61,12 @@
                                 {% endif %}
                             </td>
                             <td style="padding-right: 50px;">
-                                <a href="{{ path('app_admin_commentaires_texte', {id: texte.id}) }}" class="btn btn-sm btn-secondary">
+                                <a href="{{ path('app_admin_commentaires_texte', {id: texte.id}) }}"
+                                   class="btn btn-sm {{ nbEnAttente > 0 ? 'btn-warning' : 'btn-secondary' }}">
                                     Commentaires
+                                    {% if nbEnAttente > 0 %}
+                                        <span class="badge bg-danger ms-1">{{ nbEnAttente }}</span>
+                                    {% endif %}
                                 </a>
                             </td>
                             <td>

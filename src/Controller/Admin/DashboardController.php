@@ -3,8 +3,8 @@
 namespace App\Controller\Admin;
 
 use App\Document\Avis;
-use App\Document\Texte;
-use App\Document\Blog;
+use App\Document\Commentaire;
+use App\Document\BlogCommentaire;
 use App\Document\Information;
 use App\Repository\ContactRepository;
 use App\Repository\AtelierRepository;
@@ -32,7 +32,8 @@ class DashboardController extends AbstractController
 
         $stats = [
             'nouveauxAvis' => count($dm->getRepository(Avis::class)->findBy(['approuve' => false])),
-            'totalAvisEnAttente' => count($dm->getRepository(Avis::class)->findBy(['approuve' => false])),
+            'commentairesTextesEnAttente' => count($dm->getRepository(Commentaire::class)->findBy(['approuve' => false])),
+            'commentairesNotesEnAttente' => count($dm->getRepository(BlogCommentaire::class)->findBy(['approuve' => false])),
         ];
 
         $visitorStats = $visitorTracker->getStatistics();
