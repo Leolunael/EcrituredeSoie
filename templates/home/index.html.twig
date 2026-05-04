@@ -48,32 +48,32 @@
     {# ===== SEO : H1 visible par Google (peut être stylisé en CSS pour qu'il s'intègre visuellement) ===== #}
     <h1>Ateliers d'écriture à Lyon</h1>
 
-        {# Card mise en avant fixe #}
+    {# Card mise en avant fixe #}
     {% for key, intro in intros %}
         <div class="carousel {% if key == 0 %}active{% endif %}">
             <div class="carousel-content {% if intro.imagePosition == 'gauche' %}image-left{% endif %}{% if not intro.image %} no-image{% endif %}">
-        {% if intro.imagePosition == 'gauche' and intro.image %}
-            <div class="carousel-image-container">
-                <img src="{{ asset('uploads/intros/' ~ intro.image) }}"
-                     alt="{{ intro.titre }}">
-            </div>
-        {% endif %}
+                {% if intro.imagePosition == 'gauche' and intro.image %}
+                    <div class="carousel-image-container">
+                        <img src="{{ asset('uploads/intros/' ~ intro.image) }}"
+                             alt="{{ intro.titre }}">
+                    </div>
+                {% endif %}
 
-        <div class="carousel-text">
-            <h3 class="intro">{{ intro.titre }}</h3>
-            {% if intro.contenu %}
-                <p class="intro-cont">{{ intro.contenu|nl2br|raw }}</p>
-            {% endif %}
-        </div>
-        {% if (intro.imagePosition == 'droite' or intro.imagePosition is null) and intro.image %}
-            <div class="carousel-image-container">
-                <img src="{{ asset('uploads/intros/' ~ intro.image) }}"
-                     alt="{{ intro.titre }}">
+                <div class="carousel-text">
+                    <h3 class="intro">{{ intro.titre }}</h3>
+                    {% if intro.contenu %}
+                        <p class="intro-cont">{{ intro.contenu|nl2br|raw }}</p>
+                    {% endif %}
+                </div>
+                {% if (intro.imagePosition == 'droite' or intro.imagePosition is null) and intro.image %}
+                    <div class="carousel-image-container">
+                        <img src="{{ asset('uploads/intros/' ~ intro.image) }}"
+                             alt="{{ intro.titre }}">
+                    </div>
+                {% endif %}
             </div>
-        {% endif %}
-    </div>
-</div>
-{% endfor %}
+        </div>
+    {% endfor %}
     {% if intros|length > 1 %}
         <button class="carousel-control-prev" type="button">
             <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" viewBox="0 0 16 16">
@@ -96,58 +96,210 @@
     <br>
 
     {# Carrousel Information #}
-    <div  class="titre">À LA UNE</div>
+    {% if informations|length > 0 %}
+        <div  class="titre">À LA UNE</div>
 
-    <div class="carousel" data-autoplay="true">
-        <div class="carousel-inner">
-            {% for key, information in informations %}
-                <div class="carousel-item {% if key == 0 %}active{% endif %}">
-                    <div class="carousel-content {% if information.imagePosition == 'gauche' %}image-left{% endif %}{% if not information.image %} no-image{% endif %}">
-                        {% if information.imagePosition == 'gauche' and information.image %}
-                        <div class="carousel-image-container">
-                            <img src="{{ asset('uploads/informations/' ~ information.image) }}"
-                                 alt="{{ information.titre }}">
-                        </div>
-                    {% endif %}
+        <div class="carousel" data-autoplay="true">
+            <div class="carousel-inner">
+                {% for key, information in informations %}
+                    <div class="carousel-item {% if key == 0 %}active{% endif %}">
+                        <div class="carousel-content {% if information.imagePosition == 'gauche' %}image-left{% endif %}{% if not information.image %} no-image{% endif %}">
+                            {% if information.imagePosition == 'gauche' and information.image %}
+                                <div class="carousel-image-container">
+                                    <img src="{{ asset('uploads/informations/' ~ information.image) }}"
+                                         alt="{{ information.titre }}">
+                                </div>
+                            {% endif %}
 
-                        <div class="carousel-text">
-                            <h3>{{ information.titre }}</h3>
-                            {% if information.contenu %}
-                                <p class="texte">{{ information.contenu|nl2br|raw }}</p>
+                            <div class="carousel-text">
+                                <h3>{{ information.titre }}</h3>
+                                {% if information.contenu %}
+                                    <p class="texte">{{ information.contenu|nl2br|raw }}</p>
+                                {% endif %}
+                            </div>
+                            {% if (information.imagePosition == 'droite' or information.imagePosition is null) and information.image %}
+                                <div class="carousel-image-container">
+                                    <img src="{{ asset('uploads/informations/' ~ information.image) }}"
+                                         alt="{{ information.titre }}">
+                                </div>
                             {% endif %}
                         </div>
-                        {% if (information.imagePosition == 'droite' or information.imagePosition is null) and information.image %}
-                           <div class="carousel-image-container">
-                              <img src="{{ asset('uploads/informations/' ~ information.image) }}"
-                                    alt="{{ information.titre }}">
-                           </div>
-                        {% endif %}
                     </div>
-                </div>
-            {% endfor %}
-
-        </div>
-
-        {% if informations|length > 1 %}
-            <button class="carousel-control-prev" type="button">
-                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" viewBox="0 0 16 16">
-                    <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
-                </svg>
-            </button>
-            <button class="carousel-control-next" type="button">
-                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" viewBox="0 0 16 16">
-                    <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.6 0 0 1 0-.708z"/>
-                </svg>
-            </button>
-
-            <div class="carousel-indicators">
-                {% for key, information in informations %}
-                    <button type="button" class="{% if key == 0 %}active{% endif %}"></button>
                 {% endfor %}
+
             </div>
-        {% endif %}
-    </div>
+
+            {% if informations|length > 1 %}
+                <button class="carousel-control-prev" type="button">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
+                    </svg>
+                </button>
+                <button class="carousel-control-next" type="button">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.6 0 0 1 0-.708z"/>
+                    </svg>
+                </button>
+
+                <div class="carousel-indicators">
+                    {% for key, information in informations %}
+                        <button type="button" class="{% if key == 0 %}active{% endif %}"></button>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+    {% endif %}
+
+    {# Carrousel mixte "À la une" : Ateliers, Visios, Vollons, Lettres #}
+    {% set itemsALaUne = [] %}
+    {% if atelierALaUne is defined and atelierALaUne %}
+        {% set itemsALaUne = itemsALaUne|merge([{
+            'type':        'Atelier',
+            'titre':       atelierALaUne.titre,
+            'description': atelierALaUne.description,
+            'prix':        atelierALaUne.prix,
+            'date':        atelierALaUne.dateAtelier,
+            'heureDebut':  atelierALaUne.heureDebut,
+            'heureFin':    atelierALaUne.heureFin,
+            'lieu':        atelierALaUne.lieu is defined ? atelierALaUne.lieu : null,
+            'ville':       atelierALaUne.ville is defined ? atelierALaUne.ville : null,
+            'lien':        atelierALaUne.lienHelloAsso
+        }]) %}
+    {% endif %}
+    {% if visioALaUne is defined and visioALaUne %}
+        {% set itemsALaUne = itemsALaUne|merge([{
+            'type':        'Visio',
+            'titre':       visioALaUne.titre,
+            'description': visioALaUne.description,
+            'prix':        visioALaUne.prix,
+            'date':        visioALaUne.dateVisio,
+            'heureDebut':  visioALaUne.heureDebut,
+            'heureFin':    visioALaUne.heureFin,
+            'lieu':        null,
+            'ville':       null,
+            'lien':        visioALaUne.lienHelloAsso
+        }]) %}
+    {% endif %}
+    {% if vollonALaUne is defined and vollonALaUne %}
+        {% set itemsALaUne = itemsALaUne|merge([{
+            'type':        'Vollon',
+            'titre':       vollonALaUne.titre,
+            'description': vollonALaUne.description,
+            'prix':        vollonALaUne.prix,
+            'date':        vollonALaUne.dateVollon,
+            'heureDebut':  vollonALaUne.heureDebut,
+            'heureFin':    vollonALaUne.heureFin,
+            'lieu':        vollonALaUne.lieu is defined ? vollonALaUne.lieu : null,
+            'ville':       vollonALaUne.ville is defined ? vollonALaUne.ville : null,
+            'lien':        vollonALaUne.lienHelloAsso
+        }]) %}
+    {% endif %}
+    {% if lettreALaUne is defined and lettreALaUne %}
+        {% set itemsALaUne = itemsALaUne|merge([{
+            'type':        'Lettre',
+            'titre':       lettreALaUne.titre,
+            'description': lettreALaUne.description,
+            'prix':        lettreALaUne.prix,
+            'date':        null,
+            'heureDebut':  null,
+            'heureFin':    null,
+            'lieu':        null,
+            'ville':       null,
+            'lien':        lettreALaUne.lienHelloAsso
+        }]) %}
+    {% endif %}
+
+    {% if itemsALaUne|length > 0 %}
+        <div class="une-section">
+            <div class="titre">ATELIERS DU MOIS</div>
+
+            <div id="carouselALaUne" class="carousel slide" data-bs-ride="carousel">
+
+                {# Indicateurs #}
+                {% if itemsALaUne|length > 1 %}
+                    <div class="carousel-indicators">
+                        {% for i in 0..(itemsALaUne|length - 1) %}
+                            <button type="button"
+                                    data-bs-target="#carouselALaUne"
+                                    data-bs-slide-to="{{ i }}"
+                                    class="{% if i == 0 %}active{% endif %}"
+                                    aria-label="Slide {{ i + 1 }}">
+                            </button>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                {# Slides #}
+                <div class="carousel-inner">
+                    {% for item in itemsALaUne %}
+                        <div class="carousel-item {% if loop.first %}active{% endif %}">
+                            <div class="carousel-content no-image">
+                                <div>
+                                    {# Badge type
+                                    <span class="badge-type">{{ item.type }}</span>#}
+
+                                    <h2>{{ item.titre }}</h2>
+
+                                    {# Date et horaires #}
+                                    {% if item.date %}
+                                        {% set jours = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'] %}
+                                        <p class="text-muted">
+                                            {{ jours[item.date|date('w')] }}
+                                            {{ item.date|date('d/m/Y') }}
+                                            {% if item.heureDebut %}de {{ item.heureDebut|date('H\\hi') }}{% endif %}
+                                            {% if item.heureFin %}à {{ item.heureFin|date('H\\hi') }}{% endif %}
+                                        </p>
+                                    {% endif %}
+
+                                    {# Lieu #}
+                                    {% if item.lieu %}
+                                        <p class="text-muted">📍 {{ item.lieu }}{% if item.ville %}, {{ item.ville }}{% endif %}</p>
+                                    {% endif %}
+
+                                    {# Description #}
+                                    {% if item.description %}
+                                        <div class="carousel-text">
+                                            {{ item.description|nl2br|slice(0, 200)|raw }}...
+                                        </div>
+                                    {% endif %}
+
+                                    {# Prix #}
+                                    {% if item.prix %}
+                                        <p><strong>{{ item.prix }} €</strong></p>
+                                    {% endif %}
+
+                                    {% if item.lien %}
+                                        <br>
+                                        <a href="{{ item.lien }}" target="_blank" rel="noopener" class="button">
+                                            S'inscrire
+                                        </a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                {# Contrôles précédent / suivant #}
+                {% if itemsALaUne|length > 1 %}
+                    <button class="carousel-control-prev" type="button">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
+                        </svg>
+                    </button>
+                    <button class="carousel-control-next" type="button">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.6 0 0 1 0-.708z"/>
+                        </svg>
+                    </button>
+                {% endif %}
+
+            </div>
+        </div>
+    {% endif %}
+
     <br>
+
 
     {# Carrousel Texte à la une #}
     {% if textesALaUne|length > 0 %}
@@ -201,6 +353,8 @@
         </div>
         <a href="{{ path('texte_index') }}" class="bouton">Voir tous les écrits</a>
     {% endif %}
+
+
 
     {# Carrousel Blog à la une #}
     {% if blogsALaUne|length > 0 %}

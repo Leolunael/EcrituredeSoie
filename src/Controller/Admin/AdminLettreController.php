@@ -46,6 +46,10 @@ class AdminLettreController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            if ($lettre->isALaUne()) {
+                $this->retirerAncienALaUne($em, null);
+            }
+
             $em->persist($lettre);
             $em->flush();
 
@@ -67,6 +71,10 @@ class AdminLettreController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            if ($lettre->isALaUne()) {
+                $this->retirerAncienALaUne($em, $lettre->getId());
+            }
+
             $em->flush();
 
             $this->addFlash('success', 'La lettre a été modifiée avec succès.');
@@ -86,6 +94,27 @@ class AdminLettreController extends AbstractController
         return $this->render('admin/lettreShow.html.twig', [
             'lettre' => $lettre,
         ]);
+    }
+
+    #[Route('/mettre-a-la-une/{id}', name: 'admin_lettre_mettre_a_la_une', requirements: ['id' => '\d+'], methods: ['POST'])]
+    public function mettreALaUne(Lettre $lettre, EntityManagerInterface $em, Request $request): Response
+    {
+        if (!$this->isCsrfTokenValid('a_la_une_' . $lettre->getId(), $request->request->get('_token'))) {
+            throw $this->createAccessDeniedException('Token CSRF invalide.');
+        }
+
+        $this->retirerAncienALaUne($em, $lettre->getId());
+
+        $lettre->setALaUne(!$lettre->isALaUne());
+        $em->flush();
+
+        $message = $lettre->isALaUne()
+            ? 'La lettre a été mis à la une !'
+            : 'La lettre a été retiré de la une.';
+
+        $this->addFlash('success', $message);
+
+        return $this->redirectToRoute('admin_atelier_list');
     }
 
     #[Route('/toggle-archive/{id}', name: 'admin_lettre_toggle', requirements: ['id' => '\d+'], methods: ['POST'])]
@@ -127,5 +156,23 @@ class AdminLettreController extends AbstractController
         }
 
         return $this->redirectToRoute('admin_lettre_show', ['id' => $lettre->getId()]);
+    }
+
+    private function retirerAncienALaUne(EntityManagerInterface $em, ?int $excludeId): void
+    {
+        $qb = $em->getRepository(Lettre::class)
+            ->createQueryBuilder('a')
+            ->andWhere('a.aLaUne = true');
+
+        if ($excludeId !== null) {
+            $qb->andWhere('a.id != :id')
+                ->setParameter('id', $excludeId);
+        }
+
+        $ancienALaUne = $qb->getQuery()->getOneOrNullResult();
+
+        if ($ancienALaUne) {
+            $ancienALaUne->setALaUne(false);
+        }
     }
 }

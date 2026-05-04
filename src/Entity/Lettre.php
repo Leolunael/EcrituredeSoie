@@ -37,6 +37,9 @@ class Lettre
     #[ORM\Column(type: 'boolean', options: ['default' => false])]
     private bool $isArchive = false;
 
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
+    private bool $aLaUne = false;
+
     public function __construct()
     {
         $this->isArchive = false;
@@ -100,6 +103,17 @@ class Lettre
     public function setIsArchive(bool $isArchive): self
     {
         $this->isArchive = $isArchive;
+        return $this;
+    }
+
+    public function isALaUne(): bool
+    {
+        return $this->aLaUne;
+    }
+
+    public function setALaUne(bool $aLaUne): static
+    {
+        $this->aLaUne = $aLaUne;
         return $this;
     }
 

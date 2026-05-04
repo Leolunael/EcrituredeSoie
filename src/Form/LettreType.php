@@ -54,6 +54,11 @@ class LettreType extends AbstractType
                 'required' => false,
                 'help' => 'URL complète du formulaire de paiement HelloAsso'
             ])
+            ->add('aLaUne', CheckboxType::class, [
+                'label' => 'Mettre à la une',
+                'required' => false,
+                'attr' => ['class' => 'form-check-input']
+            ])
             ->add('isArchive', CheckboxType::class, [
                 'label' => 'Archiver cette Lettre',
                 'required' => false

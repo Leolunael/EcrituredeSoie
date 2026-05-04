@@ -46,6 +46,11 @@ class AdminAtelierController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // Si le nouvel atelier est mis à la une, on retire l'ancien
+            if ($atelier->isALaUne()) {
+                $this->retirerAncienALaUne($em, null);
+            }
+
             $em->persist($atelier);
             $em->flush();
 
@@ -67,6 +72,10 @@ class AdminAtelierController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            if ($atelier->isALaUne()) {
+                $this->retirerAncienALaUne($em, $atelier->getId());
+            }
+
             $em->flush();
 
             $this->addFlash('success', 'L\'atelier a été modifié avec succès.');
@@ -86,6 +95,29 @@ class AdminAtelierController extends AbstractController
         return $this->render('admin/atelierShow.html.twig', [
             'atelier' => $atelier,
         ]);
+    }
+
+    #[Route('/mettre-a-la-une/{id}', name: 'admin_atelier_mettre_a_la_une', requirements: ['id' => '\d+'], methods: ['POST'])]
+    public function mettreALaUne(Atelier $atelier, EntityManagerInterface $em, Request $request): Response
+    {
+        if (!$this->isCsrfTokenValid('a_la_une_' . $atelier->getId(), $request->request->get('_token'))) {
+            throw $this->createAccessDeniedException('Token CSRF invalide.');
+        }
+
+        // Retirer l'atelier actuellement à la une (sauf si c'est déjà celui-ci)
+        $this->retirerAncienALaUne($em, $atelier->getId());
+
+        // Basculer : si déjà à la une, on le retire ; sinon on le met à la une
+        $atelier->setALaUne(!$atelier->isALaUne());
+        $em->flush();
+
+        $message = $atelier->isALaUne()
+            ? 'L\'atelier a été mis à la une !'
+            : 'L\'atelier a été retiré de la une.';
+
+        $this->addFlash('success', $message);
+
+        return $this->redirectToRoute('admin_atelier_list');
     }
 
     #[Route('/toggle-archive/{id}', name: 'admin_atelier_toggle', requirements: ['id' => '\d+'], methods: ['POST'])]
@@ -127,5 +159,24 @@ class AdminAtelierController extends AbstractController
         }
 
         return $this->redirectToRoute('admin_atelier_show', ['id' => $atelier->getId()]);
+    }
+
+
+    private function retirerAncienALaUne(EntityManagerInterface $em, ?int $excludeId): void
+    {
+        $qb = $em->getRepository(Atelier::class)
+            ->createQueryBuilder('a')
+            ->andWhere('a.aLaUne = true');
+
+        if ($excludeId !== null) {
+            $qb->andWhere('a.id != :id')
+                ->setParameter('id', $excludeId);
+        }
+
+        $ancienALaUne = $qb->getQuery()->getOneOrNullResult();
+
+        if ($ancienALaUne) {
+            $ancienALaUne->setALaUne(false);
+        }
     }
 }

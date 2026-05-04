@@ -4,8 +4,12 @@ namespace App\Controller;
 
 use App\Document\Information;
 use App\Entity\Admin;
+use App\Entity\Atelier;
 use App\Entity\Intro;
 use App\Entity\User;
+use App\Entity\Visio;
+use App\Entity\Vollon;
+use App\Entity\Lettre;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -67,6 +71,42 @@ final class HomeController extends AbstractController
             ->getQuery()
             ->execute();
 
+        $atelierALaUne = $em->createQueryBuilder()
+            ->select('a')
+            ->from(Atelier::class, 'a')
+            ->where('a.aLaUne = :aLaUne')
+            ->setParameter('aLaUne', true)
+            ->setMaxResults(3)
+            ->getQuery()
+            ->getOneOrNullResult();
+
+        $visioALaUne = $em->createQueryBuilder()
+            ->select('a')
+            ->from(Visio::class, 'a')
+            ->where('a.aLaUne = :aLaUne')
+            ->setParameter('aLaUne', true)
+            ->setMaxResults(3)
+            ->getQuery()
+            ->getOneOrNullResult();
+
+        $vollonALaUne = $em->createQueryBuilder()
+            ->select('a')
+            ->from(Vollon::class, 'a')
+            ->where('a.aLaUne = :aLaUne')
+            ->setParameter('aLaUne', true)
+            ->setMaxResults(3)
+            ->getQuery()
+            ->getOneOrNullResult();
+
+        $lettreALaUne = $em->createQueryBuilder()
+            ->select('a')
+            ->from(Lettre::class, 'a')
+            ->where('a.aLaUne = :aLaUne')
+            ->setParameter('aLaUne', true)
+            ->setMaxResults(3)
+            ->getQuery()
+            ->getOneOrNullResult();
+
         return $this->render('home/index.html.twig', [
             'informations' => $informations,
             'controller_name' => 'HomeController',
@@ -74,6 +114,10 @@ final class HomeController extends AbstractController
             'blogsALaUne' => $blogsALaUne,
             'intros' => $intros,
             'intro' => $intro,
+            'atelierALaUne' => $atelierALaUne,
+            'visioALaUne'  => $visioALaUne,
+            'vollonALaUne' => $vollonALaUne,
+            'lettreALaUne' => $lettreALaUne,
         ]);
     }
 

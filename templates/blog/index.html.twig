@@ -22,13 +22,16 @@
                     {# Contenu #}
                     <div>
                         <h3 class="titre">{{ blog.titre }}</h3>
-                        <br>
+
                         <p class="card-body">
-                            {{ blog.contenu|length > 250 ?
-                            (blog.contenu|nl2br|slice(0, 250) ~ '...')|raw :
+                            {{ blog.contenu|length > 150 ?
+                            (blog.contenu|nl2br|slice(0, 150) ~ '...')|raw :
                             blog.contenu|nl2br|raw }}
                         </p>
                         <br>
+                        <br>
+                        <br>
+
                         <p class="txt3">Agnès</p>
                         <br>
                         <p class="txt2">

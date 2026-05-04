@@ -62,6 +62,9 @@ class Vollon
     #[ORM\OneToMany(targetEntity: InscriptionVollon::class, mappedBy: 'vollon', orphanRemoval: true)]
     private Collection $inscriptions;
 
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
+    private bool $aLaUne = false;
+
     public function __construct()
     {
         $this->isArchive = false;
@@ -258,6 +261,17 @@ class Vollon
                 $inscription->setVollon(null);
             }
         }
+        return $this;
+    }
+
+    public function isALaUne(): bool
+    {
+        return $this->aLaUne;
+    }
+
+    public function setALaUne(bool $aLaUne): static
+    {
+        $this->aLaUne = $aLaUne;
         return $this;
     }
 

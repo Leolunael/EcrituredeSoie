@@ -57,6 +57,7 @@
                                 <th>Description (aperçu)</th>
                                 <th>Prix</th>
                                 <th>Statut</th>
+                                <th class="text-center">À la une</th>
                                 <th class="text-center">Archiver</th>
                                 <th class="text-end">Actions</th>
                             </tr>
@@ -70,8 +71,8 @@
                                             {% set jours = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'] %}
                                             {% set jourSemaine = jours[atelier.dateAtelier|date('w')] %}
                                             <p>{{ jourSemaine }} {{ atelier.dateAtelier|date('d/m/Y') }}
-                                                    {% if atelier.heureDebut %}de {{ atelier.heureDebut|date('H\\hi') }}{% endif %}
-                                                    {% if atelier.heureFin %}à {{ atelier.heureFin|date('H\\hi') }}{% endif %}
+                                                {% if atelier.heureDebut %}de {{ atelier.heureDebut|date('H\\hi') }}{% endif %}
+                                                {% if atelier.heureFin %}à {{ atelier.heureFin|date('H\\hi') }}{% endif %}
                                             </p>
                                         {% endif %}
                                     </td>
@@ -93,6 +94,16 @@
                                                 <i class="bi bi-check-circle"></i> Actif
                                             </span>
                                         {% endif %}
+                                    </td>
+                                    <td class="text-center">
+                                        <form method="post" action="{{ path('admin_atelier_mettre_a_la_une', {id: atelier.id}) }}" style="display: inline;">
+                                            <input type="hidden" name="_token" value="{{ csrf_token('a_la_une_' ~ atelier.id) }}">
+                                            <button type="submit"
+                                                    class="btn btn-sm {% if atelier.aLaUne %}btn-warning{% else %}btn-outline-warning{% endif %}"
+                                                    title="{% if atelier.aLaUne %}Retirer de la une{% else %}Mettre à la une{% endif %}">
+                                                ⭐
+                                            </button>
+                                        </form>
                                     </td>
                                     <td class="text-center">
                                         <form method="post" action="{{ path('admin_atelier_toggle', {id: atelier.id}) }}" style="display: inline;">
@@ -161,6 +172,7 @@
                                 <th>Description (aperçu)</th>
                                 <th>Prix</th>
                                 <th>Statut</th>
+                                <th class="text-center">À la une</th>
                                 <th class="text-center">Archiver</th>
                                 <th class="text-end">Actions</th>
                             </tr>
@@ -174,8 +186,8 @@
                                             {% set jours = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'] %}
                                             {% set jourSemaine = jours[visio.dateVisio|date('w')] %}
                                             <p>{{ jourSemaine }} {{ visio.dateVisio|date('d/m/Y') }}
-                                                    {% if visio.heureDebut %}de {{ visio.heureDebut|date('H\\hi') }}{% endif %}
-                                                    {% if visio.heureFin %}à {{ visio.heureFin|date('H\\hi') }}{% endif %}
+                                                {% if visio.heureDebut %}de {{ visio.heureDebut|date('H\\hi') }}{% endif %}
+                                                {% if visio.heureFin %}à {{ visio.heureFin|date('H\\hi') }}{% endif %}
                                             </p>
                                         {% endif %}
                                     </td>
@@ -195,6 +207,16 @@
                                         <i class="bi bi-check-circle"></i> Actif
                                     </span>
                                         {% endif %}
+                                    </td>
+                                    <td class="text-center">
+                                        <form method="post" action="{{ path('admin_visio_mettre_a_la_une', {id: visio.id}) }}" style="display: inline;">
+                                            <input type="hidden" name="_token" value="{{ csrf_token('a_la_une_' ~ visio.id) }}">
+                                            <button type="submit"
+                                                    class="btn btn-sm {% if visio.aLaUne %}btn-warning{% else %}btn-outline-warning{% endif %}"
+                                                    title="{% if visio.aLaUne %}Retirer de la une{% else %}Mettre à la une{% endif %}">
+                                                ⭐
+                                            </button>
+                                        </form>
                                     </td>
                                     <td class="text-center">
                                         <form method="post" action="{{ path('admin_visio_toggle', {id: visio.id}) }}" style="display: inline;">
@@ -263,6 +285,7 @@
                                 <th>Description (aperçu)</th>
                                 <th>Prix</th>
                                 <th>Statut</th>
+                                <th class="text-center">À la une</th>
                                 <th class="text-center">Archiver</th>
                                 <th class="text-end">Actions</th>
                             </tr>
@@ -299,6 +322,16 @@
                                                 <i class="bi bi-check-circle"></i> Actif
                                             </span>
                                         {% endif %}
+                                    </td>
+                                    <td class="text-center">
+                                        <form method="post" action="{{ path('admin_vollon_mettre_a_la_une', {id: vollon.id}) }}" style="display: inline;">
+                                            <input type="hidden" name="_token" value="{{ csrf_token('a_la_une_' ~ vollon.id) }}">
+                                            <button type="submit"
+                                                    class="btn btn-sm {% if vollon.aLaUne %}btn-warning{% else %}btn-outline-warning{% endif %}"
+                                                    title="{% if vollon.aLaUne %}Retirer de la une{% else %}Mettre à la une{% endif %}">
+                                                ⭐
+                                            </button>
+                                        </form>
                                     </td>
                                     <td class="text-center">
                                         <form method="post" action="{{ path('admin_vollon_toggle', {id: vollon.id}) }}" style="display: inline;">
@@ -367,6 +400,7 @@
                                 <th>Description (aperçu)</th>
                                 <th>Prix</th>
                                 <th>Statut</th>
+                                <th class="text-center">À la une</th>
                                 <th class="text-center">Archiver</th>
                                 <th class="text-end">Actions</th>
                             </tr>
@@ -399,6 +433,16 @@
                                                 <i class="bi bi-check-circle"></i> Actif
                                             </span>
                                         {% endif %}
+                                    </td>
+                                    <td class="text-center">
+                                        <form method="post" action="{{ path('admin_lettre_mettre_a_la_une', {id: lettre.id}) }}" style="display: inline;">
+                                            <input type="hidden" name="_token" value="{{ csrf_token('a_la_une_' ~ lettre.id) }}">
+                                            <button type="submit"
+                                                    class="btn btn-sm {% if lettre.aLaUne %}btn-warning{% else %}btn-outline-warning{% endif %}"
+                                                    title="{% if lettre.aLaUne %}Retirer de la une{% else %}Mettre à la une{% endif %}">
+                                                ⭐
+                                            </button>
+                                        </form>
                                     </td>
                                     <td class="text-center">
                                         <form method="post" action="{{ path('admin_lettre_toggle', {id: lettre.id}) }}" style="display: inline;">

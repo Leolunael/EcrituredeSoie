@@ -61,6 +61,9 @@ class Atelier
     #[ORM\OneToMany(targetEntity: InscriptionAtelier::class, mappedBy: 'atelier', orphanRemoval: true)]
     private Collection $inscriptions;
 
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
+    private bool $aLaUne = false;
+
     public function __construct()
     {
         $this->isArchive = false;
@@ -228,6 +231,17 @@ class Atelier
     public function setLienHelloAsso(?string $lienHelloAsso): self
     {
         $this->lienHelloAsso = $lienHelloAsso;
+        return $this;
+    }
+
+    public function isALaUne(): bool
+    {
+        return $this->aLaUne;
+    }
+
+    public function setALaUne(bool $aLaUne): self
+    {
+        $this->aLaUne = $aLaUne;
         return $this;
     }
 

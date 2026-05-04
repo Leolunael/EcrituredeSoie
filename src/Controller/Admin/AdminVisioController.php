@@ -63,13 +63,18 @@ class AdminVisioController extends AbstractController
     #[Route('/{id}/modifier', name: 'admin_visio_edit', requirements: ['id' => '\d+'])]
     public function edit(Request $request, Visio $visio, EntityManagerInterface $em): Response
     {
-        $form = $this->createForm(AdminVisioType::class, $visio);  // ✅ CHANGÉ
+        $form = $this->createForm(AdminVisioType::class, $visio);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // Si cet atelier est mis à la une, on retire l'éventuel ancien (sauf lui-même)
+            if ($visio->isALaUne()) {
+                $this->retirerAncienALaUne($em, $visio->getId());
+            }
+
             $em->flush();
 
-            $this->addFlash('success', 'La visio a été modifiée avec succès.');
+            $this->addFlash('success', 'L\'atelier a été modifié avec succès.');
 
             return $this->redirectToRoute('admin_gestion');
         }
@@ -86,6 +91,28 @@ class AdminVisioController extends AbstractController
         return $this->render('admin/visioShow.html.twig', [
             'visio' => $visio,
         ]);
+    }
+
+    #[Route('/mettre-a-la-une/{id}', name: 'admin_visio_mettre_a_la_une', requirements: ['id' => '\d+'], methods: ['POST'])]
+    public function mettreALaUne(Visio $visio, EntityManagerInterface $em, Request $request): Response
+    {
+        if (!$this->isCsrfTokenValid('a_la_une_' . $visio->getId(), $request->request->get('_token'))) {
+            throw $this->createAccessDeniedException('Token CSRF invalide.');
+        }
+
+        $this->retirerAncienALaUne($em, $visio->getId());
+
+        // Basculer : si déjà à la une, on le retire ; sinon on le met à la une
+        $visio->setALaUne(!$visio->isALaUne());
+        $em->flush();
+
+        $message = $visio->isALaUne()
+            ? 'La visio a été mis à la une !'
+            : 'La visio a été retiré de la une.';
+
+        $this->addFlash('success', $message);
+
+        return $this->redirectToRoute('admin_visio_list');
     }
 
     #[Route('/toggle-archive/{id}', name: 'admin_visio_toggle', requirements: ['id' => '\d+'], methods: ['POST'])]
@@ -127,5 +154,23 @@ class AdminVisioController extends AbstractController
         }
 
         return $this->redirectToRoute('admin_visio_show', ['id' => $visio->getId()]);
+    }
+
+    private function retirerAncienALaUne(EntityManagerInterface $em, ?int $excludeId): void
+    {
+        $qb = $em->getRepository(Visio::class)
+            ->createQueryBuilder('a')
+            ->andWhere('a.aLaUne = true');
+
+        if ($excludeId !== null) {
+            $qb->andWhere('a.id != :id')
+                ->setParameter('id', $excludeId);
+        }
+
+        $ancienALaUne = $qb->getQuery()->getOneOrNullResult();
+
+        if ($ancienALaUne) {
+            $ancienALaUne->setALaUne(false);
+        }
     }
 }
