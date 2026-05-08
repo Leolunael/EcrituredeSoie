@@ -11,18 +11,14 @@
             <h1 class="titre">{{ blog.titre }}</h1>
 
 
-            <div class="carousel-content
-                {% if blog.image %}
-                    {% if blog.imageAlignment == 'left' %}image-left{% endif %}
-                {% else %}
-                    no-image
-                {% endif %}">
+            {# Image à gauche #}
+            <div class="image">
 
-                {# Image à gauche #}
-                {% if blog.image and blog.imageAlignment == 'left' %}
-                    <div class="carousel-image-container">
+                {% if blog.imageAlignment == 'left' and blog.image %}
+                    <div>
                         <img src="{{ asset('uploads/blogs/' ~ blog.image) }}"
-                             alt="{{ blog.titre }}">
+                             alt="{{ blog.titre }}"
+                             class="img">
                     </div>
                 {% endif %}
 
@@ -39,11 +35,12 @@
                     <p class="txt">© Tous droits réservés. Ce texte est protégé par le droit d'auteur.</p>
                 </div>
 
-                {# Image à droite #}
-                {% if blog.image and (blog.imageAlignment == 'right' or blog.imageAlignment is null) %}
-                    <div class="carousel-image-container">
+                {# Image à droite ou position par défaut #}
+                {% if (blog.imageAlignment == 'right' or blog.imageAlignment is null) and blog.image %}
+                    <div>
                         <img src="{{ asset('uploads/blogs/' ~ blog.image) }}"
-                             alt="{{ blog.titre }}">
+                             alt="{{ blog.titre }}"
+                             class="img">
                     </div>
                 {% endif %}
             </div>
@@ -103,7 +100,7 @@
     </div>
 
     {# Macro pour afficher un commentaire et ses réponses #}
-    {% macro afficher_commentaire(commentaire, blogId, reponses, niveau) %}
+    {% macro afficher_commentaire(commentaire, texteId, reponses, niveau) %}
         <article class="commentaire" id="commentaire-{{ commentaire.id }}">
             <div>
                 <strong>{{ commentaire.auteur }}</strong>
@@ -112,16 +109,7 @@
 
             <p>{{ commentaire.contenu|nl2br }}</p>
 
-            {# Affichage des réponses AVANT le bouton #}
-            {% if reponses is not empty %}
-                <div class="reponse">
-                    {% for item in reponses %}
-                        {{ _self.afficher_commentaire(item.commentaire, blogId, item.reponses, niveau + 1) }}
-                    {% endfor %}
-                </div>
-            {% endif %}
-
-            {# Bouton Répondre APRÈS les réponses #}
+            {# Bouton Répondre AVANT les réponses #}
             <button class="btn btn-repondre-{{ commentaire.id }}"
                     data-commentaire-id="{{ commentaire.id }}"
                     data-auteur="{{ commentaire.auteur }}">
@@ -129,8 +117,8 @@
             </button>
 
             {# Formulaire de réponse #}
-            <form action="{{ path('app_blogCommentaire_repondre', {
-                blogId: blogId,
+            <form action="{{ path('app_commentaire_repondre', {
+                texteId: texteId,
                 commentaireId: commentaire.id
             }) }}"
                   method="post"
@@ -156,6 +144,16 @@
                 <button type="submit" class="btn">Envoyer</button>
                 <button type="button" class="btn btn-annuler" data-commentaire-id="{{ commentaire.id }}">Annuler</button>
             </form>
+
+            {# Affichage des réponses APRÈS le bouton #}
+            {% if reponses is not empty %}
+                <div class="reponse">
+                    {% for item in reponses %}
+                        {{ _self.afficher_commentaire(item.commentaire, texteId, item.reponses, niveau + 1) }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+
         </article>
     {% endmacro %}
 {% endblock %}

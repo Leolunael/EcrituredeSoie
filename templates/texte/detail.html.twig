@@ -10,7 +10,7 @@
         <article class="card">
             <h1 class="titre">{{ texte.titre }}</h1>
 
-            {# Image à gauche
+            {# Image à gauche #}
             <div class="image">
 
                 {% if texte.imageAlignment == 'left' and texte.image %}
@@ -19,7 +19,7 @@
                              alt="{{ texte.titre }}"
                              class="img">
                     </div>
-                {% endif %}#}
+                {% endif %}
 
 
             <div class="card-body">
@@ -39,14 +39,14 @@
                     © Tous droits réservés. Ce texte est protégé par le droit d'auteur.
                 </p>
             </div>
-            {# Image à droite ou position par défaut
+            {# Image à droite ou position par défaut #}
             {% if (texte.imageAlignment == 'right' or texte.imageAlignment is null) and texte.image %}
                 <div>
                     <img src="{{ asset('uploads/textes/' ~ texte.image) }}"
                          alt="{{ texte.titre }}"
                          class="img">
                 </div>
-            {% endif %}#}
+            {% endif %}
         </article>
 
         {% for message in app.flashes('success') %}
@@ -113,16 +113,7 @@
 
             <p>{{ commentaire.contenu|nl2br }}</p>
 
-            {# Affichage des réponses AVANT le bouton #}
-            {% if reponses is not empty %}
-                <div class="reponse">
-                    {% for item in reponses %}
-                        {{ _self.afficher_commentaire(item.commentaire, texteId, item.reponses, niveau + 1) }}
-                    {% endfor %}
-                </div>
-            {% endif %}
-
-            {# Bouton Répondre APRÈS les réponses #}
+            {# Bouton Répondre AVANT les réponses #}
             <button class="btn btn-repondre-{{ commentaire.id }}"
                     data-commentaire-id="{{ commentaire.id }}"
                     data-auteur="{{ commentaire.auteur }}">
@@ -137,26 +128,25 @@
                   method="post"
                   id="form-reponse-{{ commentaire.id }}"
                   style="display: none;">
-
-                <input type="text"
-                       name="auteur"
-                       placeholder="Votre nom"
-                       required>
-
-                <textarea name="contenu"
-                          rows="3"
-                          placeholder="Répondre à {{ commentaire.auteur }}..."
-                          maxlength="500"
-                          required></textarea>
-
+                <input type="text" name="auteur" placeholder="Votre nom" required>
+                <textarea name="contenu" rows="3" placeholder="Répondre à {{ commentaire.auteur }}..." maxlength="500" required></textarea>
                 <div>
                     <small>Min. 2 caractères</small>
                     <small><span>0</span> / 500</small>
                 </div>
-
                 <button type="submit" class="btn">Envoyer</button>
                 <button type="button" class="btn btn-annuler" data-commentaire-id="{{ commentaire.id }}">Annuler</button>
             </form>
+
+            {# Affichage des réponses APRÈS le bouton #}
+            {% if reponses is not empty %}
+                <div class="reponse">
+                    {% for item in reponses %}
+                        {{ _self.afficher_commentaire(item.commentaire, texteId, item.reponses, niveau + 1) }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+
         </article>
     {% endmacro %}
 
