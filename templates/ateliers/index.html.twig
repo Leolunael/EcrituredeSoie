@@ -30,7 +30,7 @@
     {% if ateliers|length > 0 %}
         {% for atelier in ateliers %}
             <div class="card">
-                <h5 class="titre">{{ atelier.titre }}</h5>
+                <h3 class="titre">{{ atelier.titre }}</h3>
                 <div class="card-body">
                     {% if atelier.dateAtelier %}
                         {% set jours = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'] %}
@@ -100,7 +100,7 @@
         {% if visios|length > 0 %}
             {% for visio in visios %}
                 <div class="card">
-                    <h5 class="titre">{{ visio.titre }}</h5>
+                    <h3 class="titre">{{ visio.titre }}</h3>
                     <div class="card-body">
                         {% if visio.dateVisio %}
                             {% set jours = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'] %}
@@ -155,7 +155,7 @@
     {% if vollons|length > 0 %}
         {% for vollon in vollons %}
             <div class="card">
-                <h5 class="titre">{{ vollon.titre }}</h5>
+                <h3 class="titre">{{ vollon.titre }}</h3>
                 <div class="card-body">
                     {% if vollon.dateVollon %}
                         {% set jours = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'] %}
@@ -229,7 +229,7 @@
         {% if lettres|length > 0 %}
             {% for lettre in lettres %}
                 <div class="card">
-                    <h5 class="titre">{{ lettre.titre }}</h5>
+                    <h3 class="titre">{{ lettre.titre }}</h3>
                     <div class="card-body">
                         <p>💶 <strong>{{ lettre.prix }} €</strong></p>
 

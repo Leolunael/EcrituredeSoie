@@ -60,7 +60,7 @@
                 {% endif %}
 
                 <div class="carousel-text">
-                    <h3 class="intro">{{ intro.titre }}</h3>
+                    <h4 class="intro">{{ intro.titre }}</h4>
                     {% if intro.contenu %}
                         <p class="intro-cont">{{ intro.contenu|nl2br|raw }}</p>
                     {% endif %}
@@ -238,7 +238,7 @@
                                     {# Badge type
                                     <span class="badge-type">{{ item.type }}</span>#}
 
-                                    <h2>{{ item.titre }}</h2>
+                                    <h3>{{ item.titre }}</h3>
 
                                     {# Date et horaires #}
                                     {% if item.date %}
@@ -316,7 +316,7 @@
                                     </div>
                                 {% endif %}
                                 <div>
-                                    <h2>{{ texte.titre }}</h2>
+                                    <h3>{{ texte.titre }}</h3>
                                     <div class="carousel-text">{{ texte.contenu|striptags|nl2br|slice(0, 200)|raw }}...</div>
                                     <br>
                                     <p>{% if texte.auteur %}{{ texte.auteur }}{% endif %}</p>
@@ -371,7 +371,7 @@
                                     </div>
                                 {% endif %}
                                 <div>
-                                    <h2>{{ blog.titre }}</h2>
+                                    <h3>{{ blog.titre }}</h3>
                                     <div class="carousel-text">{{ blog.contenu|striptags|nl2br|slice(0, 200)|raw }}...</div>
                                     <br>
                                     <p class="text-muted">{{ blog.dateCreation|date('d/m/Y') }}</p>

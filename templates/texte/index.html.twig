@@ -4,7 +4,7 @@
 
 {% block body %}
     <a href="{{ path('app_home') }}" class="retour-button">Retour</a>
-    <h1>Tous les écrits</h1>
+    <h1>Les écrits</h1>
 
         {% if textes is empty %}
             <div>Aucun article publié pour le moment.</div>
@@ -22,7 +22,7 @@
 
                         {# Contenu #}
                     <div>
-                        <h3 class="titre">{{ texte.titre }}</h3>
+                        <h2 class="titre">{{ texte.titre }}</h2>
 
                         <p class="card-body">
                             {{ texte.contenu|length > 300 ?

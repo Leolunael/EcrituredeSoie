@@ -38,6 +38,13 @@
     font-style: normal;
 }
 
+@font-face {
+    font-family: 'SendFlowers';
+    src: url('../fonts/SendFlowers-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
 body {
     font-family: Roboto, sans-serif;
     font-size: 1.25rem;
@@ -50,24 +57,32 @@ body {
 }
 
 h1 {
-    font-weight: bold;
+    font-family: SendFlowers, sans-serif;
+    font-weight: Bold;
     color: #392e5f;
     margin-bottom: 1rem;
     text-align: center;
 }
 
-h2, h3, h4, h5, h6 {
-    font-family: Georgia,sans-serif;
+h2, h3{
+    font-family: SendFlowers, sans-serif;
     font-weight: normal;
     color: #392e5f;
     margin-bottom: 1rem;
 }
 
-h1 { font-size: 2.25rem; }
-h2 { font-size: 2rem; }
-h3 { font-size: 1.75rem; }
-h4 { font-size: 1.5rem; }
-h5 { font-size: 1.30rem; }
+h4, h5, h6 {
+    font-family: Georgia, sans-serif;
+    font-weight: normal;
+    color: #392e5f;
+    margin-bottom: 1rem;
+}
+
+h1 { font-size: 3.5rem; }
+h2 { font-size: 2.75rem; }
+h3 { font-size: 2.5rem; }
+h4 { font-size: 2rem; }
+h5 { font-size: 1.5rem; }
 
 p, li, a, span, label, input, textarea, button {
     font-size: 1.25rem;
@@ -786,7 +801,7 @@ tr:hover {
 .titre {
     text-align: center;
     background-color: #392e5f;
-    padding: 0.75rem;
+    padding: 0.3rem;
     color: white;
     border-radius: 0.5rem;
     margin-bottom: 1.5rem;
@@ -1228,9 +1243,9 @@ textarea {
     position: relative;
     width: 100%;
     background-color: #d9d6e1;
-    padding: 2rem;
+    padding: 0.5rem 2rem 2rem 2rem;
     border-radius: 0.5rem;
-    margin: 0.5rem 0;
+    margin: 0.3rem 0;
     overflow: visible;
 }
 
@@ -1254,14 +1269,14 @@ textarea {
     display: flex;
     align-items: center;
     gap: 2rem;
-    padding: 2rem;
+    padding: 0.3rem 2rem 2rem 2rem;
     min-height: 20rem;
 }
 
 .carousel-text {
     flex: 1 1 50%;
     min-width: 0;
-    padding: 1rem;
+    padding: 0.3rem 2rem 2rem 2rem;
     display: flex;
     flex-direction: column;
     /*justify-content: center;*/
@@ -1381,7 +1396,7 @@ textarea {
     width: 0.75rem;
     height: 0.75rem;
     border-radius: 50%;
-    border: 2px solid #c72c48;
+    border: 0.13rem solid #c72c48;
     background-color: transparent;
     cursor: pointer;
     transition: all 0.3s ease;
