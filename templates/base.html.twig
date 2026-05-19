@@ -11,7 +11,14 @@
     <title>{% block title %}Écriture de Soie - Ateliers d'écriture à Lyon{% endblock %}</title>
 
     {# ===== SEO : Meta description (à surcharger dans chaque page) ===== #}
-    <meta name="description" content="{% block meta_description %}Écriture de Soie, association d'ateliers d'écriture créative à Lyon. Rejoignez nos groupes, partagez vos textes et développez votre écriture.{% endblock %}">
+    <meta name="description" content="{% block meta_description %}Écriture de Soie, association d'écriture à Lyon. Débutants ou confirmés.
+        Un espace pour écrire sans pression, sans performance.
+        Un accompagnement sensible pour explorer, imaginer, avancer à son rythme.
+        Chaque atelier propose des consignes d’écriture, des temps de partage, et un cadre bienveillant, sans jugement.
+
+        Ici, l’écriture se cherche, se découvre, se transforme.
+
+        Ici, on écrit autrement.{% endblock %}">
 
     {# ===== SEO : URL canonique (évite les pages en double) ===== #}
     <link rel="canonical" href="{% block canonical %}{{ app.request.schemeAndHttpHost }}{{ app.request.pathInfo }}{% endblock %}">
